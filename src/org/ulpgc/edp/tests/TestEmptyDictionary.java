@@ -32,14 +32,10 @@ public class TestEmptyDictionary {
                 "El tamaño debe ser 1 al insertar una nueva pareja clave - valor en un diccionario vacío",
                 1, dictionaryLen
         );
-    }
-
-    @Test
-    public void testPop() {
         Object value = dictionary.pop("1");
-        int dictionaryLen = dictionary.length();
+        dictionaryLen = dictionary.length();
         assertEquals(
-                "El tamaño debe ser 1 al insertar una nueva pareja clave - valor en un diccionario vacío",
+                "El tamaño debe ser 0 al eliminar una pareja clave - valor en un diccionario de un elemento",
                 1, dictionaryLen
         );
         assertEquals(
@@ -48,7 +44,17 @@ public class TestEmptyDictionary {
     }
 
     @Test(expected = KeyErrorException.class)
+    public void testPop() {
+        dictionary.pop("1");
+    }
+
+    @Test(expected = KeyErrorException.class)
     public void testGet() {
         dictionary.get("1");
+    }
+
+    @Test(expected = EmptyDictionaryException.class)
+    public void testEmptyPop() {
+        dictionary.popitem();
     }
 }
