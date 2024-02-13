@@ -1,7 +1,5 @@
 package org.ulpgc.edp.model;
 
-import java.util.Objects;
-
 public class Dictionary {
     private Node[] entries;
     private Node lastItem;
@@ -38,34 +36,6 @@ public class Dictionary {
                 }
             }
             if (counter == 0) return num;
-        }
-    }
-
-    private int hash(Object key) {
-        return Objects.hash(key) % length;
-    }
-
-    private class Node {
-        private Object key;
-        private Object value;
-        private Node prevNode;
-        private Node nextIntroducedNode;
-        private Node prevIntroducedNode;
-        private boolean isRoot;
-
-        private Node(Object key, Object value, boolean isRoot) {
-            this.key = key;
-            this.value = value;
-            this.isRoot = isRoot;
-            Dictionary.this.lastItem = this;
-        }
-
-        @Override
-        public boolean equals(Object object) {
-            if (this == object) return true;
-            if (object == null || getClass() != object.getClass()) return false;
-            Node node = (Node) object;
-            return Objects.equals(key, node.key) && Objects.equals(value, node.value);
         }
     }
 }
