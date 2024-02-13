@@ -12,7 +12,7 @@ public class TestEmptyDictionary {
 
     @Before
     public void init() {
-        Dictionary dictionary = new Dictionary();
+        this.dictionary = new Dictionary();
     }
 
     @Test
@@ -48,7 +48,7 @@ public class TestEmptyDictionary {
     }
 
     @Test
-    public void testPutAndPop() {
+    public void testPutAndPop1() {
         dictionary.put("1", 1);
         int dictionaryLen = dictionary.length();
         assertEquals(
@@ -64,6 +64,37 @@ public class TestEmptyDictionary {
         assertEquals(
                 "El elemento eliminado debería ser 1 para un diccionario con pareja clave - valor {'1': 1}",
                 1, value);
+    }
+
+    @Test
+    public void testPutAndPop2() {
+        dictionary.put("1", 1);
+        int dictionaryLen = dictionary.length();
+        assertEquals(
+                "El tamaño debe ser 1 al insertar una nueva pareja clave - valor en un diccionario vacío",
+                1, dictionaryLen
+        );
+        dictionary.put("2", 2);
+        dictionaryLen = dictionary.length();
+        assertEquals(
+                "El tamaño debe ser 2 al insertar una nueva pareja clave - valor en un diccionario de un elemento",
+                2, dictionaryLen
+        );
+        Object value1 = dictionary.pop("1");
+        Object value2 = dictionary.pop("2");
+        dictionaryLen = dictionary.length();
+        assertEquals(
+                "El tamaño debe ser 0 al eliminar una pareja clave - valor en un diccionario de un elemento",
+                1, dictionaryLen
+        );
+        assertEquals(
+                "El elemento eliminado debería ser 1 para un diccionario con parejas clave - valor {'1': 1, '2': 2}",
+                1, value1
+        );
+        assertEquals(
+                "El elemento eliminado debería ser 2 para un diccionario con parejas clave - valor {'2': 2}",
+                2, value2
+        );
     }
 
     @Test(expected = KeyErrorException.class)
