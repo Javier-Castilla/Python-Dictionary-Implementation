@@ -2,7 +2,7 @@ package org.ulpgc.edp.tests;
 
 import org.junit.*;
 import org.junit.runner.JUnitCore;
-import org.ulpgc.edp.exceptions.KeyErrorException;
+import org.ulpgc.edp.exceptions.*;
 import org.ulpgc.edp.model.Dictionary;
 
 import static org.junit.Assert.*;
