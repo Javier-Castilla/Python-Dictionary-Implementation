@@ -98,6 +98,52 @@ public class TestEmptyDictionary {
     }
 
     @Test
+    public void replace1() {
+        dictionary.put("1", 1);
+        dictionary.put("1", 100);
+        Object item = dictionary.get("1");
+        assertEquals(
+                "El elemento devuelto al actualizar ('1': 1) no coincide con el esperado",
+                100, item
+        );
+    }
+
+    @Test
+    public void replace2() {
+        dictionary.put("1", 1);
+        dictionary.put("2", 2);
+        dictionary.put("3", 3);
+        dictionary.put("1", 100);
+        Object item = dictionary.get("1");
+        assertEquals(
+                "El elemento devuelto al actualizar ('1': 1) no coincide con el esperado",
+                100, item
+        );
+        item = dictionary.get("2");
+        assertEquals(
+                "El elemento devuelto al obtener ('2': 2) después de actualizar ('1': 1) no coincide con el esperado",
+                2, item
+        );
+        dictionary.put("2", 200);
+        item = dictionary.get("2");
+        assertEquals(
+                "El elemento devuelto al actualizar ('2': 2) no coincide con el esperado",
+                200, item
+        );
+        item = dictionary.get("3");
+        assertEquals(
+                "El elemento devuelto al obtener ('3': 3) después de actualizar ('1': 1) y ('2': 2) no coincide con el esperado",
+                3, item
+        );
+        dictionary.put("3", 300);
+        item = dictionary.get("3");
+        assertEquals(
+                "El elemento devuelto al actualizar ('3': 3) no coincide con el esperado",
+                300, item
+        );
+    }
+
+    @Test
     public void testString1() {
         dictionary.put("1", 1);
         String str = dictionary.toString();
