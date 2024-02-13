@@ -16,7 +16,7 @@ public class TestEmptyDictionary {
     }
 
     @Test
-    public void testLen() {
+    public void testLen1() {
         int dictionaryLen = dictionary.length();
         assertEquals(
                 "El tamaño debe ser 0 al inicializar el diccionario sin un tamaño determinado",
@@ -25,7 +25,30 @@ public class TestEmptyDictionary {
     }
 
     @Test
-    public void testPut() {
+    public void testLen2() {
+        dictionary.put("1", 1);
+        dictionary.put("2", 2);
+        int dictionaryLen = dictionary.length();
+        assertEquals(
+                "El tamaño debe ser 2 al insertar dos nuevas parejas clave - valor en un diccionario vacío",
+                2, dictionaryLen
+        );
+    }
+
+    @Test
+    public void testLen3() {
+        dictionary.put("1", 1);
+        dictionary.put("2", 2);
+        dictionary.put("3", 3);
+        int dictionaryLen = dictionary.length();
+        assertEquals(
+                "El tamaño debe ser 3 al insertar tres nuevas parejas clave - valor en un diccionario vacío",
+                3, dictionaryLen
+        );
+    }
+
+    @Test
+    public void testPutAndPop() {
         dictionary.put("1", 1);
         int dictionaryLen = dictionary.length();
         assertEquals(
@@ -44,17 +67,23 @@ public class TestEmptyDictionary {
     }
 
     @Test(expected = KeyErrorException.class)
-    public void testPop() {
-        dictionary.pop("1");
-    }
-
-    @Test(expected = KeyErrorException.class)
-    public void testGet() {
+    public void testGetNoneExistingKey() {
+        dictionary.put("1", 1);
         dictionary.get("1");
     }
 
     @Test(expected = EmptyDictionaryException.class)
-    public void testEmptyPop() {
+    public void tesEmptyPop() {
+        dictionary.pop("1");
+    }
+
+    @Test(expected = EmptyDictionaryException.class)
+    public void testEmptyGet() {
+        dictionary.get("1");
+    }
+
+    @Test(expected = EmptyDictionaryException.class)
+    public void testEmptyPopItem() {
         dictionary.popitem();
     }
 }
