@@ -39,6 +39,21 @@ public class Dictionary {
         }
     }
 
+    public Object pop(Object key){
+        int index = hash(key);
+        Node nodo = entries[index];
+
+        while(){
+            if(nodo.key() == key){
+
+            }
+
+        }
+
+        length -= 1;
+        return nodo.value();
+    }
+
     /**
      * Internal and private class used to store the given pairs key - value.
      * It has its own String representation.
