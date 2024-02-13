@@ -97,10 +97,126 @@ public class TestEmptyDictionary {
         );
     }
 
+    @Test
+    public void replace1() {
+        dictionary.put("1", 1);
+        dictionary.put("1", 100);
+        Object item = dictionary.get("1");
+        assertEquals(
+                "El elemento devuelto al actualizar ('1': 1) no coincide con el esperado",
+                100, item
+        );
+    }
+
+    @Test
+    public void replace2() {
+        dictionary.put("1", 1);
+        dictionary.put("2", 2);
+        dictionary.put("3", 3);
+        dictionary.put("1", 100);
+        Object item = dictionary.get("1");
+        assertEquals(
+                "El elemento devuelto al actualizar ('1': 1) no coincide con el esperado",
+                100, item
+        );
+        item = dictionary.get("2");
+        assertEquals(
+                "El elemento devuelto al obtener ('2': 2) después de actualizar ('1': 1) no coincide con el esperado",
+                2, item
+        );
+        dictionary.put("2", 200);
+        item = dictionary.get("2");
+        assertEquals(
+                "El elemento devuelto al actualizar ('2': 2) no coincide con el esperado",
+                200, item
+        );
+        item = dictionary.get("3");
+        assertEquals(
+                "El elemento devuelto al obtener ('3': 3) después de actualizar ('1': 1) y ('2': 2) no coincide con el esperado",
+                3, item
+        );
+        dictionary.put("3", 300);
+        item = dictionary.get("3");
+        assertEquals(
+                "El elemento devuelto al actualizar ('3': 3) no coincide con el esperado",
+                300, item
+        );
+    }
+
+    @Test
+    public void testString1() {
+        dictionary.put("1", 1);
+        String str = dictionary.toString();
+        assertEquals(
+                "La representación como string del diccionario no coincide con la esperada al insertar un elemento",
+                "{'1': 1}", str
+        );
+    }
+
+    @Test
+    public void testString2() {
+        dictionary.put("1", 1);
+        dictionary.put("2", 2);
+        String str = dictionary.toString();
+        assertEquals(
+                "La representación como string del diccionario no coincide con la esperada al isnertar dos elementos",
+                "{'1': 1, '2': 2}", str
+        );
+    }
+
+    @Test
+    public void testString3() {
+        dictionary.put(1, 1);
+        String str = dictionary.toString();
+        assertEquals(
+                "La representación como string del diccionario no coincide con la esperada al insertar un elemento",
+                "{1: 1}", str
+        );
+    }
+
+    @Test
+    public void testString4() {
+        dictionary.put(1, 1);
+        dictionary.put(2, 2);
+        String str = dictionary.toString();
+        assertEquals(
+                "La representación como string del diccionario no coincide con la esperada al isnertar dos elementos",
+                "{1: 1, 2: 2}", str
+        );
+    }
+
+    @Test
+    public void testString5() {
+        dictionary.put("1", 1);
+        dictionary.put("1", 100);
+        String str = dictionary.toString();
+        assertEquals(
+                "La representación como string del diccionario no coincide con la esperada al isnertar dos elementos",
+                "{'1': 100}", str
+        );
+    }
+
+    @Test
+    public void testString6() {
+        dictionary.put("1", 1);
+        dictionary.put("2", 2);
+        dictionary.put("1", 100);
+        String str = dictionary.toString();
+        assertEquals(
+                "La representación como string del diccionario no coincide con la esperada al isnertar dos elementos",
+                "{'1': 100, '2': 2}", str
+        );
+    }
+
     @Test(expected = KeyErrorException.class)
     public void testGetNoneExistingKey() {
         dictionary.put("1", 1);
         dictionary.get("1");
+    }
+
+    @Test(expected = KeyErrorException.class)
+    public void testUnhasheableKey() {
+        dictionary.put(new String[3], 1);
     }
 
     @Test(expected = EmptyDictionaryException.class)
