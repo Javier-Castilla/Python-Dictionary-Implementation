@@ -97,10 +97,80 @@ public class TestEmptyDictionary {
         );
     }
 
+    @Test
+    public void testString1() {
+        dictionary.put("1", 1);
+        String str = dictionary.toString();
+        assertEquals(
+                "La representación como string del diccionario no coincide con la esperada al insertar un elemento",
+                "{'1': 1}", str
+        );
+    }
+
+    @Test
+    public void testString2() {
+        dictionary.put("1", 1);
+        dictionary.put("2", 2);
+        String str = dictionary.toString();
+        assertEquals(
+                "La representación como string del diccionario no coincide con la esperada al isnertar dos elementos",
+                "{'1': 1, '2': 2}", str
+        );
+    }
+
+    @Test
+    public void testString3() {
+        dictionary.put(1, 1);
+        String str = dictionary.toString();
+        assertEquals(
+                "La representación como string del diccionario no coincide con la esperada al insertar un elemento",
+                "{1: 1}", str
+        );
+    }
+
+    @Test
+    public void testString4() {
+        dictionary.put(1, 1);
+        dictionary.put(2, 2);
+        String str = dictionary.toString();
+        assertEquals(
+                "La representación como string del diccionario no coincide con la esperada al isnertar dos elementos",
+                "{1: 1, 2: 2}", str
+        );
+    }
+
+    @Test
+    public void testString5() {
+        dictionary.put("1", 1);
+        dictionary.put("1", 100);
+        String str = dictionary.toString();
+        assertEquals(
+                "La representación como string del diccionario no coincide con la esperada al isnertar dos elementos",
+                "{'1': 100}", str
+        );
+    }
+
+    @Test
+    public void testString6() {
+        dictionary.put("1", 1);
+        dictionary.put("2", 2);
+        dictionary.put("1", 100);
+        String str = dictionary.toString();
+        assertEquals(
+                "La representación como string del diccionario no coincide con la esperada al isnertar dos elementos",
+                "{'1': 100, '2': 2}", str
+        );
+    }
+
     @Test(expected = KeyErrorException.class)
     public void testGetNoneExistingKey() {
         dictionary.put("1", 1);
         dictionary.get("1");
+    }
+
+    @Test(expected = KeyErrorException.class)
+    public void testUnhasheableKey() {
+        dictionary.put(new String[3], 1);
     }
 
     @Test(expected = EmptyDictionaryException.class)
