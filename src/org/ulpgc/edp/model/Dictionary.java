@@ -39,6 +39,9 @@ public class Dictionary {
         }
     }
 
+    public void put(Object key, Object value){
+
+    }
     /**
      * Internal and private class used to store the given pairs key - value.
      * It has its own String representation.
