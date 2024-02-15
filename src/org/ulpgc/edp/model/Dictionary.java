@@ -63,6 +63,40 @@ public class Dictionary {
         }
     }
 
+    public Object pop(Object key){
+        int index = hash(key);
+        Node nodo = entries[index];
+        if(nodo.key().equals(key)){
+            if(nodo.nextNode() == null) {
+                entries[index] = null;
+            } else {
+                entries[index] = nodo.nextNode();
+            }
+            return nodo.value();
+        }
+
+        while(nodo.nextNode() != null && nodo.key() != key){
+            nodo = nodo.nextNode();
+        }
+
+        if(nodo.nextNode() == null){
+            nodo.prevNode().setnextNode(null);
+        } else {
+            nodo.prevNode().setnextNode(nodo.nextNode());
+            nodo.nextNode().setPrevNode(nodo.prevNode());
+        }
+
+        if(nodo.nextIntroducedNode() == null){
+            nodo.prevIntroducedNode().setNextIntroducedNode(null);
+        } else {
+            nodo.prevIntroducedNode().setNextIntroducedNode(nodo.nextIntroducedNode());
+            nodo.nextIntroducedNode().setPrevIntroducedNode(nodo.prevIntroducedNode());
+        }
+
+        length -= 1;
+        return nodo.value();
+    }
+
     /**
      * Internal and private class used to store the given pairs key - value.
      * It has its own String representation.
