@@ -44,6 +44,7 @@ public class Dictionary {
         Node nodo = entries[index];
         while(nodo.nextNode() != null && nodo.key().equals(key)){
             entries[index] = nodo.nextNode();
+
         }
     }
     /**
