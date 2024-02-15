@@ -97,6 +97,14 @@ public class Dictionary {
         return nodo.value();
     }
 
+    public void put(Object key, Object value){
+        int index = hash(key);
+        Node nodo = entries[index];
+        while(nodo.nextNode() != null && nodo.key().equals(key)){
+            entries[index] = nodo.nextNode();
+
+        }
+    }
     /**
      * Internal and private class used to store the given pairs key - value.
      * It has its own String representation.
