@@ -2,6 +2,7 @@ package org.ulpgc.edp.model;
 
 public class Dictionary {
     private Node[] entries;
+    private Node firstItem;
     private Node lastItem;
     private int length;
     private int occupiedBoxes;
@@ -75,7 +76,6 @@ public class Dictionary {
         private Node nextNode;
         private Node nextIntroducedNode;
         private Node prevIntroducedNode;
-        private boolean isRoot;
 
         /**
          * Constructor of the Node Class.
