@@ -4,6 +4,7 @@ import org.junit.*;
 import org.junit.runner.JUnitCore;
 import org.ulpgc.edp.exceptions.*;
 import org.ulpgc.edp.model.Dictionary;
+import org.ulpgc.edp.model.LinkedList;
 
 import static org.junit.Assert.*;
 
@@ -16,7 +17,7 @@ public class TestEmptyDictionary {
     }
 
     @Test
-    public void testLen() {
+    public void testLen() throws KeyErrorException  {
         int dictionaryLen = dictionary.length();
         assertEquals(
                 "El tamaño debe ser 0 al inicializar el diccionario" +
@@ -49,7 +50,7 @@ public class TestEmptyDictionary {
     }
 
     @Test
-    public void testPutAndPop() {
+    public void testPutAndPop() throws EmptyDictionaryException, KeyErrorException  {
         dictionary.put("1", 1);
         int dictionaryLen = dictionary.length();
         assertEquals(
@@ -62,7 +63,7 @@ public class TestEmptyDictionary {
         assertEquals(
                 "El tamaño debe ser 0 al eliminar una pareja clave" +
                         "- valor en un diccionario de un elemento",
-                1, dictionaryLen
+                0, dictionaryLen
         );
         assertEquals(
                 "El elemento eliminado debería ser 1 para un" +
@@ -90,9 +91,9 @@ public class TestEmptyDictionary {
         Object value2 = dictionary.pop("2");
         dictionaryLen = dictionary.length();
         assertEquals(
-                "El tamaño debe ser 0 al eliminar una pareja clave" +
-                        "- valor en un diccionario de un elemento",
-                1, dictionaryLen
+                "El tamaño debe ser 0 al eliminar dos parejas clave" +
+                        "- valor en un diccionario de dos elemento",
+                0, dictionaryLen
         );
         assertEquals(
                 "El elemento eliminado debería ser 1 para un" +
@@ -105,14 +106,10 @@ public class TestEmptyDictionary {
                         "diccionario con parejas clave - valor {'2': 2}",
                 2, value2
         );
-
-        this.dictionary = new Dictionary();
-
-
     }
 
     @Test
-    public void replace() {
+    public void replace() throws EmptyDictionaryException, KeyErrorException  {
         dictionary.put("1", 1);
         dictionary.put("1", 100);
         Object item = dictionary.get("1");
@@ -128,7 +125,7 @@ public class TestEmptyDictionary {
         dictionary.put("2", 2);
         dictionary.put("3", 3);
         dictionary.put("1", 100);
-        Object item = dictionary.get("1");
+        item = dictionary.get("1");
         assertEquals(
                 "El elemento devuelto al actualizar ('1': 1) no" +
                         "coincide con el esperado",
@@ -166,9 +163,16 @@ public class TestEmptyDictionary {
     }
 
     @Test
-    public void testString() {
-        dictionary.put("1", 1);
+    public void testString() throws KeyErrorException  {
         String str = dictionary.toString();
+        assertEquals(
+                "La representación como string del diccionario" +
+                        "vacío no coincide con la esperada",
+                "{}", str
+        );
+
+        dictionary.put("1", 1);
+        str = dictionary.toString();
         assertEquals(
                 "La representación como string del diccionario no" +
                         "coincide con la esperada al insertar un elemento",
@@ -231,29 +235,49 @@ public class TestEmptyDictionary {
         );
     }
 
-    @Test(expected = KeyErrorException.class)
-    public void testGetNoneExistingKey() {
+    @Test
+    public void testPopItem() throws EmptyDictionaryException, KeyErrorException {
         dictionary.put("1", 1);
-        dictionary.get("1");
+        dictionary.put("2", 2);
+        dictionary.put("3", 3);
+        dictionary.put("4", 4);
+
+        Object value;
+
+        for (int i = 4; i > 0; i--) {
+            value = dictionary.popitem();
+
+            assertEquals(
+                    "El elemento devuelto al llamar a popitem() no" +
+                            "coincide con el último elemento introducido.",
+                    i, value
+            );
+        }
     }
 
     @Test(expected = KeyErrorException.class)
-    public void testUnhasheableKey() {
+    public void testGetNoneExistingKey() throws EmptyDictionaryException, KeyErrorException  {
+        dictionary.put("1", 1);
+        dictionary.get("2");
+    }
+
+    @Test(expected = KeyErrorException.class)
+    public void testUnhasheableKey() throws KeyErrorException {
         dictionary.put(new String[3], 1);
     }
 
     @Test(expected = EmptyDictionaryException.class)
-    public void tesEmptyPop() {
+    public void tesEmptyPop() throws EmptyDictionaryException, KeyErrorException  {
         dictionary.pop("1");
     }
 
     @Test(expected = EmptyDictionaryException.class)
-    public void testEmptyGet() {
+    public void testEmptyGet() throws EmptyDictionaryException, KeyErrorException  {
         dictionary.get("1");
     }
 
     @Test(expected = EmptyDictionaryException.class)
-    public void testEmptyPopItem() {
+    public void testEmptyPopItem() throws EmptyDictionaryException {
         dictionary.popitem();
     }
 }

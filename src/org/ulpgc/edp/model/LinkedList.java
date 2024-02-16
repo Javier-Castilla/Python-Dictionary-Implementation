@@ -53,8 +53,16 @@ public class LinkedList implements Iterable<LinkedList.Node> {
             return nextIntroducedNode;
         }
 
+        void nextIntroducedNode(LinkedList.Node nextIntroducedNode) {
+            this.nextIntroducedNode = nextIntroducedNode;
+        }
+
         LinkedList.Node prevIntroducedNode() {
             return prevIntroducedNode;
+        }
+
+        void prevIntroducedNode(LinkedList.Node prevIntroducedNode) {
+            this.prevIntroducedNode = prevIntroducedNode;
         }
 
         /**

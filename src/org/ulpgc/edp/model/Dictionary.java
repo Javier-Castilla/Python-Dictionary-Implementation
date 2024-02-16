@@ -4,7 +4,8 @@ import org.ulpgc.edp.exceptions.*;
 
 /**
  * Class which represents a dictionary data structure.
- * It stores pairs of keys - values on an efficient way. Accessing an element is almost O(1).
+ * It stores pairs of keys - values on an efficient way.
+ * Accessing an element is almost O(1).
  */
 public class Dictionary {
     private LinkedList[] entries;
@@ -30,7 +31,8 @@ public class Dictionary {
     }
 
     /**
-     * Constructor given a data structure of pairs or tuples key - value to put into the new dictionary.
+     * Constructor given a data structure of pairs or tuples key - value
+     * to put into the new dictionary.
      *
      * @param items to put into the new dictionary
      */
@@ -95,6 +97,7 @@ public class Dictionary {
         if (list == null) {
             list = new LinkedList();
             entries[index] = list;
+            occupiedBoxes++;
         }
 
         LinkedList.Node node = list.append(key, value, lastIntroducedNode);
@@ -130,11 +133,33 @@ public class Dictionary {
         return node.value();
     }
 
-    public Object popitem() throws EmptyDictionaryException, KeyErrorException {
+    /**
+     * Removes the last introduced pair key - value.
+     *
+     * @return the removed pair key - value
+     * @throws EmptyDictionaryException
+     */
+    public Object popitem() throws EmptyDictionaryException {
         if (length == 0) {
             throw new EmptyDictionaryException("The dictionary is empty.");
         }
-        return null;
+
+        int index = hash(lastIntroducedNode.key());
+
+        LinkedList list = entries[index];
+
+        LinkedList.Node node = list.pop(lastIntroducedNode.key());
+
+        LinkedList.Node prev = node.prevIntroducedNode();
+
+        if (prev != null) {
+            prev.nextIntroducedNode(null);
+        }
+
+        lastIntroducedNode = node.prevIntroducedNode();
+
+        length--;
+        return node.value();
     }
 
     /**
@@ -169,7 +194,8 @@ public class Dictionary {
     }
 
     /**
-     * Returns an Array containing all the keys in the dictionary. Order of insertion is preserved.
+     * Returns an Array containing all the keys in the dictionary.
+     * Order of insertion is preserved.
      *
      * @return all the dictionary's keys
      */
@@ -189,7 +215,8 @@ public class Dictionary {
     }
 
     /**
-     * Returns an Array containing all the values in the dictionary. Order of insertion is preserved.
+     * Returns an Array containing all the values in the dictionary. Order of
+     * insertion is preserved.
      *
      * @return all the dictionary's values
      */
@@ -209,7 +236,8 @@ public class Dictionary {
     }
 
     /**
-     * Returns an Array of arrays containing all the pairs key - value in the dictionary. Order of insertion is preserved.
+     * Returns an Array of arrays containing all the pairs key - value in the
+     * dictionary. Order of insertion is preserved.
      *
      * @return all the dictionary's pairs key - value
      */
