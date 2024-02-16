@@ -3,7 +3,7 @@ package org.ulpgc.edp.tests;
 import org.junit.*;
 import org.junit.runner.JUnitCore;
 import org.ulpgc.edp.exceptions.*;
-import org.ulpgc.edp.model.Dictionary;
+import org.ulpgc.edp.model.*;
 
 import static org.junit.Assert.*;
 
@@ -25,7 +25,7 @@ public class TestEmptyDictionary {
     }
 
     @Test
-    public void testLen2() {
+    public void testLen2() throws KeyErrorException {
         dictionary.put("1", 1);
         dictionary.put("2", 2);
         int dictionaryLen = dictionary.length();
@@ -36,7 +36,7 @@ public class TestEmptyDictionary {
     }
 
     @Test
-    public void testLen3() {
+    public void testLen3() throws KeyErrorException {
         dictionary.put("1", 1);
         dictionary.put("2", 2);
         dictionary.put("3", 3);
@@ -48,7 +48,7 @@ public class TestEmptyDictionary {
     }
 
     @Test
-    public void testPutAndPop1() {
+    public void testPutAndPop1() throws EmptyDictionaryException, KeyErrorException {
         dictionary.put("1", 1);
         int dictionaryLen = dictionary.length();
         assertEquals(
@@ -59,7 +59,7 @@ public class TestEmptyDictionary {
         dictionaryLen = dictionary.length();
         assertEquals(
                 "El tamaño debe ser 0 al eliminar una pareja clave - valor en un diccionario de un elemento",
-                1, dictionaryLen
+                0, dictionaryLen
         );
         assertEquals(
                 "El elemento eliminado debería ser 1 para un diccionario con pareja clave - valor {'1': 1}",
@@ -67,7 +67,7 @@ public class TestEmptyDictionary {
     }
 
     @Test
-    public void testPutAndPop2() {
+    public void testPutAndPop2() throws EmptyDictionaryException, KeyErrorException {
         dictionary.put("1", 1);
         int dictionaryLen = dictionary.length();
         assertEquals(
@@ -85,7 +85,7 @@ public class TestEmptyDictionary {
         dictionaryLen = dictionary.length();
         assertEquals(
                 "El tamaño debe ser 0 al eliminar una pareja clave - valor en un diccionario de un elemento",
-                1, dictionaryLen
+                0, dictionaryLen
         );
         assertEquals(
                 "El elemento eliminado debería ser 1 para un diccionario con parejas clave - valor {'1': 1, '2': 2}",
@@ -98,7 +98,7 @@ public class TestEmptyDictionary {
     }
 
     @Test
-    public void replace1() {
+    public void replace1() throws EmptyDictionaryException, KeyErrorException {
         dictionary.put("1", 1);
         dictionary.put("1", 100);
         Object item = dictionary.get("1");
@@ -109,7 +109,7 @@ public class TestEmptyDictionary {
     }
 
     @Test
-    public void replace2() {
+    public void replace2() throws EmptyDictionaryException, KeyErrorException {
         dictionary.put("1", 1);
         dictionary.put("2", 2);
         dictionary.put("3", 3);
@@ -144,7 +144,7 @@ public class TestEmptyDictionary {
     }
 
     @Test
-    public void testString1() {
+    public void testString1() throws EmptyDictionaryException, KeyErrorException {
         dictionary.put("1", 1);
         String str = dictionary.toString();
         assertEquals(
@@ -154,7 +154,7 @@ public class TestEmptyDictionary {
     }
 
     @Test
-    public void testString2() {
+    public void testString2() throws KeyErrorException {
         dictionary.put("1", 1);
         dictionary.put("2", 2);
         String str = dictionary.toString();
@@ -165,7 +165,7 @@ public class TestEmptyDictionary {
     }
 
     @Test
-    public void testString3() {
+    public void testString3() throws KeyErrorException {
         dictionary.put(1, 1);
         String str = dictionary.toString();
         assertEquals(
@@ -175,7 +175,7 @@ public class TestEmptyDictionary {
     }
 
     @Test
-    public void testString4() {
+    public void testString4() throws KeyErrorException {
         dictionary.put(1, 1);
         dictionary.put(2, 2);
         String str = dictionary.toString();
@@ -186,7 +186,7 @@ public class TestEmptyDictionary {
     }
 
     @Test
-    public void testString5() {
+    public void testString5() throws KeyErrorException {
         dictionary.put("1", 1);
         dictionary.put("1", 100);
         String str = dictionary.toString();
@@ -197,7 +197,7 @@ public class TestEmptyDictionary {
     }
 
     @Test
-    public void testString6() {
+    public void testString6() throws KeyErrorException {
         dictionary.put("1", 1);
         dictionary.put("2", 2);
         dictionary.put("1", 100);
@@ -209,28 +209,28 @@ public class TestEmptyDictionary {
     }
 
     @Test(expected = KeyErrorException.class)
-    public void testGetNoneExistingKey() {
+    public void testGetNoneExistingKey() throws EmptyDictionaryException, KeyErrorException {
         dictionary.put("1", 1);
-        dictionary.get("1");
+        dictionary.get("2");
     }
 
     @Test(expected = KeyErrorException.class)
-    public void testUnhasheableKey() {
+    public void testUnhasheableKey() throws KeyErrorException {
         dictionary.put(new String[3], 1);
     }
 
     @Test(expected = EmptyDictionaryException.class)
-    public void tesEmptyPop() {
+    public void tesEmptyPop() throws EmptyDictionaryException, KeyErrorException {
         dictionary.pop("1");
     }
 
     @Test(expected = EmptyDictionaryException.class)
-    public void testEmptyGet() {
+    public void testEmptyGet() throws EmptyDictionaryException, KeyErrorException {
         dictionary.get("1");
     }
 
     @Test(expected = EmptyDictionaryException.class)
-    public void testEmptyPopItem() {
+    public void testEmptyPopItem() throws EmptyDictionaryException, KeyErrorException {
         dictionary.popitem();
     }
 }

@@ -1,9 +1,15 @@
 package org.ulpgc.edp.model;
 
+import org.ulpgc.edp.exceptions.*;
+
+/**
+ * Class which represents a dictionary data structure.
+ * It stores pairs of keys - values on an efficient way. Accessing an element is almost O(1).
+ */
 public class Dictionary {
-    private LinkedList.Node[] entries;
-    private LinkedList.Node firstItem;
-    private LinkedList.Node lastItem;
+    private LinkedList[] entries;
+    private LinkedList.Node firstIntroducedNode;
+    private LinkedList.Node lastIntroducedNode;
     private int length;
     private int occupiedBoxes;
 
@@ -11,7 +17,7 @@ public class Dictionary {
      * Constructor by default. No length or items needed.
      */
     public Dictionary() {
-        this.entries = new LinkedList.Node[11];
+        this.entries = new LinkedList[11];
     }
 
     /**
@@ -20,7 +26,7 @@ public class Dictionary {
      * @param length of the initial hash table
      */
     public Dictionary(int length) {
-        this.entries = new LinkedList.Node[nextPrimeNumber(length)];
+        this.entries = new LinkedList[nextPrimeNumber(length)];
     }
 
     /**
@@ -28,7 +34,7 @@ public class Dictionary {
      *
      * @param items to put into the new dictionary
      */
-    public Dictionary(Object[][] items) {
+    public Dictionary(Object[][] items) throws KeyErrorException {
         for (int index = 0; index < items.length; index++) {
             Object key = items[index][0];
             Object value = items[index][1];
@@ -64,46 +70,183 @@ public class Dictionary {
         }
     }
 
-    public Object pop(Object key){
-        int index = hash(key);
-        Node nodo = entries[index];
-        if(nodo.key().equals(key)){
-            if(nodo.nextNode() == null) {
-                entries[index] = null;
-            } else {
-                entries[index] = nodo.nextNode();
-            }
-            return nodo.value();
-        }
-
-        while(nodo.nextNode() != null && nodo.key() != key){
-            nodo = nodo.nextNode();
-        }
-
-        if(nodo.nextNode() == null){
-            nodo.prevNode().setnextNode(null);
-        } else {
-            nodo.prevNode().setnextNode(nodo.nextNode());
-            nodo.nextNode().setPrevNode(nodo.prevNode());
-        }
-
-        if(nodo.nextIntroducedNode() == null){
-            nodo.prevIntroducedNode().setNextIntroducedNode(null);
-        } else {
-            nodo.prevIntroducedNode().setNextIntroducedNode(nodo.nextIntroducedNode());
-            nodo.nextIntroducedNode().setPrevIntroducedNode(nodo.prevIntroducedNode());
-        }
-
-        length -= 1;
-        return nodo.value();
+    /**
+     * Given a number, it returns the next power of two.
+     *
+     * @param num
+     * @return the next power of two
+     */
+    private int nextPowerOfTwo(int num) {
+        return num << 1;
     }
 
-    public void put(Object key, Object value) {
-        int index = hash(key);
-        Node nodo = entries[index];
-        while (nodo.nextNode() != null && nodo.key().equals(key)) {
-            entries[index] = nodo.nextNode();
+    private int hash(Object key) {
+        return key.hashCode() % entries.length;
+    }
 
+    public void put(Object key, Object value) throws KeyErrorException {
+        if (key.getClass().isArray()) {
+            throw new KeyErrorException("No immutable types allowed as keys.");
         }
+
+        int index = hash(key);
+        LinkedList list = entries[index];
+
+        if (list == null) {
+            list = new LinkedList();
+            entries[index] = list;
+        }
+
+        LinkedList.Node node = list.append(key, value, lastIntroducedNode);
+
+        if (firstIntroducedNode == null) firstIntroducedNode = node;
+        lastIntroducedNode = node;
+        length++;
+    }
+
+    /**
+     * Removes the pair key - value with the given key.
+     *
+     * @param key to remove
+     * @return the value of the removed pair key - value
+     */
+    public Object pop(Object key) throws EmptyDictionaryException, KeyErrorException {
+        if (length == 0) {
+            throw new EmptyDictionaryException("The dictionary is empty.");
+        }
+
+        int index = hash(key);
+
+        LinkedList.Node node = entries[index].pop(key);
+        if (firstIntroducedNode.equals(node)) {
+            firstIntroducedNode = node.nextIntroducedNode();
+        }
+
+        if (lastIntroducedNode.equals(node)) {
+            lastIntroducedNode = node.prevIntroducedNode();
+        }
+
+        length--;
+        return node.value();
+    }
+
+    public Object popitem() throws EmptyDictionaryException, KeyErrorException {
+        if (length == 0) {
+            throw new EmptyDictionaryException("The dictionary is empty.");
+        }
+        return null;
+    }
+
+    /**
+     * Searches and returns the value in pair with the given key.
+     *
+     * @param key to search the value
+     * @return the value in pair with the given key
+     */
+    public Object get(Object key) throws EmptyDictionaryException, KeyErrorException {
+        if (length == 0) {
+            throw new EmptyDictionaryException("The dictionary is empty.");
+        }
+
+        int index = hash(key);
+        LinkedList list = entries[index];
+
+        if (list == null) {
+            throw new KeyErrorException("The given key is not in the dictionary");
+        }
+
+        LinkedList.Node node = list.get(key);
+
+        if (node == null) {
+            throw new KeyErrorException("The given key is not in the dictionary");
+        }
+
+        return node.value();
+    }
+
+    public boolean containsKey(Object key) {
+        return false;
+    }
+
+    /**
+     * Returns an Array containing all the keys in the dictionary. Order of insertion is preserved.
+     *
+     * @return all the dictionary's keys
+     */
+    public Object[] keys() {
+        Object[] keys = new Object[length];
+
+        LinkedList.Node current = firstIntroducedNode;
+        int index = 0;
+
+        while (current != null) {
+            keys[index] = current.key();
+            current = current.nextIntroducedNode();
+            index++;
+        }
+
+        return keys;
+    }
+
+    /**
+     * Returns an Array containing all the values in the dictionary. Order of insertion is preserved.
+     *
+     * @return all the dictionary's values
+     */
+    public Object[] values() {
+        Object[] values = new Object[length];
+
+        LinkedList.Node current = firstIntroducedNode;
+        int index = 0;
+
+        while (current != null) {
+            values[index] = current.value();
+            current = current.nextIntroducedNode();
+            index++;
+        }
+
+        return values;
+    }
+
+    /**
+     * Returns an Array of arrays containing all the pairs key - value in the dictionary. Order of insertion is preserved.
+     *
+     * @return all the dictionary's pairs key - value
+     */
+    public Object[] items() {
+        Object[][] items = new Object[length][2];
+
+        LinkedList.Node current = firstIntroducedNode;
+        int index = 0;
+
+        while (current != null) {
+            items[index][0] = current.key();
+            items[index][1] = current.value();
+            current = current.nextIntroducedNode();
+            index++;
+        }
+
+        return items;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder str = new StringBuilder();
+
+        str.append("{");
+
+        LinkedList.Node current = firstIntroducedNode;
+
+        while (current != null) {
+            str.append(current);
+            if (current.nextIntroducedNode() != null) {
+                str.append(", ");
+            }
+            current = current.nextIntroducedNode();
+        }
+
+        str.append("}");
+
+        return str.toString();
     }
 }

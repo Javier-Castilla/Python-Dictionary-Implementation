@@ -3,7 +3,9 @@ package org.ulpgc.edp.control;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
+import org.ulpgc.edp.exceptions.KeyErrorException;
 import org.ulpgc.edp.tests.*;
+import org.ulpgc.edp.model.*;
 
 @RunWith(Suite.class)
 @SuiteClasses({
@@ -11,7 +13,7 @@ import org.ulpgc.edp.tests.*;
 })
 
 public class Main {
-    public static void main(String[] args) {
-        org.junit.runner.JUnitCore.main("Main");
+    public static void main(String[] args) throws KeyErrorException {
+        org.junit.runner.JUnitCore.main("org.ulpgc.edp.control.Main");
     }
 }

@@ -7,7 +7,7 @@ import java.util.Iterator;
  */
 public class LinkedList implements Iterable<LinkedList.Node> {
     private LinkedList.Node firstNode, lastNode;
-    private int length;
+    private int length = 0;
 
     /**
      * Internal and private class used to store the given pairs key - value.
@@ -102,6 +102,11 @@ public class LinkedList implements Iterable<LinkedList.Node> {
         if (length == 0) {
             firstNode = newNode;
             lastNode = newNode;
+            if (lastIntroducedNode != null) {
+                lastIntroducedNode.nextIntroducedNode = newNode;
+            }
+            newNode.prevNode = lastNode;
+            newNode.prevIntroducedNode = lastIntroducedNode;
             length++;
             return newNode;
         }
@@ -119,6 +124,7 @@ public class LinkedList implements Iterable<LinkedList.Node> {
             } else {
                 current.nextNode = newNode;
                 if (lastIntroducedNode != null) {
+                    System.out.println(lastIntroducedNode.nextIntroducedNode);
                     lastIntroducedNode.nextIntroducedNode = newNode;
                 }
                 newNode.prevNode = lastNode;
@@ -179,6 +185,16 @@ public class LinkedList implements Iterable<LinkedList.Node> {
 
         length--;
         return current;
+    }
+
+    LinkedList.Node get(Object key) {
+        LinkedList.Node current = firstNode;
+
+        while (current.nextNode != null && !current.key.equals(key)) {
+            current = current.nextNode;
+        }
+
+        return (current.key.equals(key)) ? current : null;
     }
 
     @Override
