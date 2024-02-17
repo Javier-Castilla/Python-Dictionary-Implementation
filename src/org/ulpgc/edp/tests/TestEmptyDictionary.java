@@ -3,6 +3,9 @@ package org.ulpgc.edp.tests;
 import org.junit.*;
 import org.ulpgc.edp.exceptions.*;
 import org.ulpgc.edp.model.Dictionary;
+
+import java.util.Iterator;
+
 import static org.junit.Assert.*;
 
 public class TestEmptyDictionary {
@@ -17,7 +20,7 @@ public class TestEmptyDictionary {
     public void testLen() throws KeyErrorException  {
         int dictionaryLen = dictionary.length();
         assertEquals(
-                "El tamaño debe ser 0 al inicializar el diccionario" +
+                "El tamaño debe ser 0 al inicializar el diccionario " +
                         "sin un tamaño determinado",
                 0, dictionaryLen
         );
@@ -28,14 +31,14 @@ public class TestEmptyDictionary {
         dictionary.put("1", 1);
         int dictionaryLen = dictionary.length();
         assertEquals(
-                "El tamaño debe ser 1 al insertar una nueva pareja" +
+                "El tamaño debe ser 1 al insertar una nueva pareja " +
                         "clave - valor en un diccionario vacío",
                 1, dictionaryLen
         );
         Object value = dictionary.pop("1");
         dictionaryLen = dictionary.length();
         assertEquals(
-                "El tamaño debe ser 0 al eliminar una pareja clave" +
+                "El tamaño debe ser 0 al eliminar una pareja clave " +
                         "- valor en un diccionario de un elemento",
                 0, dictionaryLen
         );
@@ -45,7 +48,7 @@ public class TestEmptyDictionary {
     public void testString()  {
         String str = dictionary.toString();
         assertEquals(
-                "La representación como string del diccionario" +
+                "La representación como string del diccionario " +
                         "vacío no coincide con la esperada",
                 "{}", str
         );
@@ -53,37 +56,38 @@ public class TestEmptyDictionary {
 
     @Test
     public void testKeys() {
-        Object[] keys = dictionary.keys();
+        String keys = dictionary.keys().toString();
         assertEquals(
-                "Las claves devueltas no corresponden" +
+                "Las claves devueltas no corresponden " +
                         "con las esperadas.",
-                new Object[0], keys
+                "()", keys
         );
     }
 
     @Test
     public void testValues() {
-        Object[] values = dictionary.values();
+        String values = dictionary.values().toString();
         assertEquals(
-                "Los valores devueltos no corresponden" +
+                "Los valores devueltos no corresponden " +
                         "con las esperados.",
-                new Object[0], values
+                "()", values
         );
     }
 
     @Test
     public void testItems() {
-        Object[][] items = dictionary.items();
+        String items = dictionary.items().toString();
         assertEquals(
-                "Las parejas devueltas no coinciden con" +
+                "Las parejas devueltas no coinciden con " +
                         "las esperadas",
-                new Object[0][2], items
+                "()", items
         );
     }
 
-    @Test void testContainsKey() {
+    @Test
+    public void testContainsKey() {
         assertFalse(
-                "Se esperaba false para comprobar si se contiene" +
+                "Se esperaba false para comprobar si se contiene " +
                         "una clave en un diccionario vacío.",
                 dictionary.containsKey("key")
         );
@@ -99,7 +103,7 @@ public class TestEmptyDictionary {
         dictionary.put(new String[3], 1);
     }
 
-    @Test(expected = EmptyDictionaryException.class)
+    @Test(expected = KeyErrorException.class)
     public void tesPop() throws KeyErrorException  {
         dictionary.pop("1");
     }
