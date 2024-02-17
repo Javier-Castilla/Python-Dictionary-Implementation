@@ -53,7 +53,6 @@ public class DictionaryKeysIterator implements Iterable<Object> {
         str.append("DictionaryKeys([");
 
         for (Object key : this) {
-            System.out.println(key);
             if (key.getClass() == String.class) {
                 str.append(String.format("\'%s\'", key));
             } else {

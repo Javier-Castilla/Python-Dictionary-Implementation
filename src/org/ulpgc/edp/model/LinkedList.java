@@ -85,13 +85,19 @@ public class LinkedList {
         @Override
         public String toString() {
             StringBuilder str = new StringBuilder();
-            str.append(
-                    (key.getClass() == String.class) ? String.format("\'%s\'", key) : key
-            );
+            if (key.getClass() == String.class) {
+                str.append(String.format("\'%s\'", key));
+            } else {
+                str.append(key);
+            }
+
             str.append(": ");
-            str.append(
-                    (value.getClass() == String.class) ? String.format("\'%s\'", value) : value
-            );
+
+            if (value.getClass() == String.class) {
+                str.append(String.format("\'%s\'", value));
+            } else {
+                str.append(value);
+            }
             return str.toString();
         }
     }
@@ -122,10 +128,11 @@ public class LinkedList {
         if (length == 0) {
             firstNode = newNode;
             lastNode = newNode;
+
             if (lastIntroducedNode != null) {
                 lastIntroducedNode.nextIntroducedNode = newNode;
             }
-            newNode.prevNode = lastNode;
+
             newNode.prevIntroducedNode = lastIntroducedNode;
             length++;
             return newNode;
@@ -138,13 +145,12 @@ public class LinkedList {
         }
 
         if (current.nextNode == null) {
-            if (current.key.equals(key)) {
-                current.value = value;
+            if (lastNode.key.equals(key)) {
+                lastNode.value = value;
                 newNode = null;
             } else {
-                current.nextNode = newNode;
+                lastNode.nextNode = newNode;
                 if (lastIntroducedNode != null) {
-                    System.out.println(lastIntroducedNode.nextIntroducedNode);
                     lastIntroducedNode.nextIntroducedNode = newNode;
                 }
                 newNode.prevNode = lastNode;
@@ -173,9 +179,11 @@ public class LinkedList {
 
         LinkedList.Node current = firstNode;
 
-        while (current.nextNode != null && !current.key.equals(key)) {
+        while (current.nextNode != null && !current.key().equals(key)) {
             current = current.nextNode;
         }
+
+
 
         if (current.prevNode != null) {
             current.prevNode.nextNode = current.nextNode;
@@ -245,7 +253,7 @@ public class LinkedList {
             currentNode = currentNode.nextNode;
             otherNode = otherNode.nextNode;
         }
-
+        
         return true;
     }
 

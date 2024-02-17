@@ -1,8 +1,5 @@
 package org.ulpgc.edp.model;
 
-import org.ulpgc.edp.model.Dictionary;
-import org.ulpgc.edp.model.LinkedList;
-
 import java.util.Iterator;
 
 public class DictionaryItemsIterator implements Iterable<Object[]> {

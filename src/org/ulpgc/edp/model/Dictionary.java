@@ -53,6 +53,14 @@ public class Dictionary implements Iterable<Object> {
         return length;
     }
 
+    public LinkedList.Node lastIntroducedNode() {
+        return lastIntroducedNode;
+    }
+
+    public LinkedList[] entries() {
+        return entries;
+    }
+
     /**
      * Private method which calculates the next prime number of the given one.
      *
@@ -101,12 +109,12 @@ public class Dictionary implements Iterable<Object> {
             occupiedBoxes++;
         }
 
-        LinkedList.Node node = list.append(key.toString(), value, lastIntroducedNode);
+        LinkedList.Node node = list.append(key, value, lastIntroducedNode);
 
         if (node != null) {
             length++;
         }
-
+        
         if (firstIntroducedNode == null) firstIntroducedNode = node;
         lastIntroducedNode = node;
     }
@@ -157,6 +165,8 @@ public class Dictionary implements Iterable<Object> {
 
         int index = hash(lastIntroducedNode.key());
 
+        //System.out.println(lastIntroducedNode.key());
+
         LinkedList list = entries[index];
 
         LinkedList.Node node = list.pop(lastIntroducedNode.key());
@@ -167,7 +177,7 @@ public class Dictionary implements Iterable<Object> {
             prev.nextIntroducedNode(null);
         }
 
-        lastIntroducedNode = node.prevIntroducedNode();
+        lastIntroducedNode = prev;
 
         length--;
         return node.value();

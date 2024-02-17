@@ -5,6 +5,7 @@ import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 import org.ulpgc.edp.exceptions.KeyErrorException;
 import org.ulpgc.edp.model.Dictionary;
+import org.ulpgc.edp.model.LinkedList;
 import org.ulpgc.edp.tests.*;
 
 import java.util.Arrays;
