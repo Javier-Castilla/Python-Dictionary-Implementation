@@ -8,13 +8,12 @@ import java.util.Iterator;
 
 import static org.junit.Assert.*;
 
-public class TestTwoItemsDictionary {
+public class TestOneItemDictionary {
     private Dictionary dictionary;
     @Before
     public void init() throws KeyErrorException {
         this.dictionary = new Dictionary();
         dictionary.put("1", 1);
-        dictionary.put("2", 2);
     }
 
     @Test
@@ -90,7 +89,7 @@ public class TestTwoItemsDictionary {
         assertEquals(
                 "Las claves devueltas no corresponden " +
                         "con las esperadas.",
-                "('1')", keys
+                "DictionaryKeys(['1'])", keys
         );
     }
 
@@ -100,7 +99,7 @@ public class TestTwoItemsDictionary {
         assertEquals(
                 "Los valores devueltos no corresponden " +
                         "con las esperados.",
-                new Object[]{1}, values
+                "DictionaryValues([1])", values
         );
     }
 
@@ -110,7 +109,7 @@ public class TestTwoItemsDictionary {
         assertEquals(
                 "Las parejas devueltas no coinciden con " +
                         "las esperadas",
-                "(('1', 1))", items
+                "DictionaryItems([('1', 1)])", items
         );
     }
 

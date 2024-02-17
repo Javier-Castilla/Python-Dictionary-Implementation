@@ -60,7 +60,7 @@ public class TestEmptyDictionary {
         assertEquals(
                 "Las claves devueltas no corresponden " +
                         "con las esperadas.",
-                "()", keys
+                "DictionaryKeys([])", keys
         );
     }
 
@@ -70,7 +70,7 @@ public class TestEmptyDictionary {
         assertEquals(
                 "Los valores devueltos no corresponden " +
                         "con las esperados.",
-                "()", values
+                "DictionaryValues([])", values
         );
     }
 
@@ -80,7 +80,7 @@ public class TestEmptyDictionary {
         assertEquals(
                 "Las parejas devueltas no coinciden con " +
                         "las esperadas",
-                "()", items
+                "DictionaryItems([])", items
         );
     }
 
