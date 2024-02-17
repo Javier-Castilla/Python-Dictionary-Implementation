@@ -89,7 +89,7 @@ public class TestOneItemDictionary {
         assertEquals(
                 "Las claves devueltas no corresponden " +
                         "con las esperadas.",
-                "('1')", keys
+                "DictionaryKeys(['1'])", keys
         );
     }
 
@@ -99,7 +99,7 @@ public class TestOneItemDictionary {
         assertEquals(
                 "Los valores devueltos no corresponden " +
                         "con las esperados.",
-                "(1)", values
+                "DictionaryValues([1])", values
         );
     }
 
@@ -109,7 +109,7 @@ public class TestOneItemDictionary {
         assertEquals(
                 "Las parejas devueltas no coinciden con " +
                         "las esperadas",
-                "(('1', 1))", items
+                "DictionaryItems([('1', 1)])", items
         );
     }
 
