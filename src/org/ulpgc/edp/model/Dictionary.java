@@ -8,7 +8,7 @@ import java.util.Iterator;
  * It stores pairs of keys - values on an efficient way.
  * Accessing an element is almost O(1).
  */
-public class Dictionary {
+public class Dictionary implements Iterable<Object> {
     private LinkedList[] entries;
     private LinkedList.Node firstIntroducedNode;
     private LinkedList.Node lastIntroducedNode;
@@ -263,5 +263,10 @@ public class Dictionary {
         str.append("}");
 
         return str.toString();
+    }
+
+    @Override
+    public Iterator<Object> iterator() {
+        return new DictionaryKeysIterator(this, firstIntroducedNode).iterator();
     }
 }

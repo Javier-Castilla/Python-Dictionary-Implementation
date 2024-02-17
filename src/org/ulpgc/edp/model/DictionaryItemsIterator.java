@@ -56,7 +56,23 @@ public class DictionaryItemsIterator implements Iterable<Object[]> {
         str.append("DictionaryItems([");
 
         for (Object[] item : this) {
-            str.append("('").append(item[0]).append("', ").append(item[1]).append("), ");
+            str.append("(");
+
+            if (item[0].getClass() == String.class) {
+                str.append(String.format("\'%s\'", item[0]));
+            } else {
+                str.append(item[0]);
+            }
+
+            str.append(", ");
+
+            if (item[1].getClass() == String.class) {
+                str.append(String.format("\'%s\'", item[1]));
+            } else {
+                str.append(item[1]);
+            }
+
+            str.append("), ");
         }
 
         if (dictionary.length() != 0) {

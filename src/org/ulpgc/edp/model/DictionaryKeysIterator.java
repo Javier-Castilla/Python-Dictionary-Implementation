@@ -19,7 +19,7 @@ public class DictionaryKeysIterator implements Iterable<Object> {
         return new DictionaryKeys();
     }
 
-    private class DictionaryKeys implements Iterator<Object> {
+    class DictionaryKeys implements Iterator<Object> {
         /**
          * Overrided method which returns if there is a next element or not.
          *
@@ -50,20 +50,23 @@ public class DictionaryKeysIterator implements Iterable<Object> {
     public String toString() {
         StringBuilder str = new StringBuilder();
 
-        str.append("(");
+        str.append("DictionaryKeys([");
 
         for (Object key : this) {
-            str.append(
-                    (key.getClass() == String.class) ?
-                    String.format("\'%b\'", key) : key
-            );
+            System.out.println(key);
+            if (key.getClass() == String.class) {
+                str.append(String.format("\'%s\'", key));
+            } else {
+                str.append(key);
+            }
+            str.append(", ");
         }
 
         if (dictionary.length() != 0) {
             str.setLength(str.length() - 2);
         }
 
-        str.append(")");
+        str.append("])");
 
         return str.toString();
     }

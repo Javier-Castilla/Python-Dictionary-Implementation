@@ -53,20 +53,23 @@ public class DictionaryValuesIterator implements Iterable<Object> {
     public String toString() {
         StringBuilder str = new StringBuilder();
 
-        str.append("(");
+        str.append("DictionaryValues([");
 
         for (Object value : this) {
-            str.append(
-                    (value.getClass() == String.class) ?
-                            String.format("\'%b\'", value) : value
-            );
+            System.out.println(value);
+            if (value.getClass() == String.class) {
+                str.append(String.format("\'%s\'", value));
+            } else {
+                str.append(value);
+            }
+            str.append(", ");
         }
 
         if (dictionary.length() != 0) {
             str.setLength(str.length() - 2);
         }
 
-        str.append(")");
+        str.append("])");
 
         return str.toString();
     }
