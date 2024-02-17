@@ -5,7 +5,7 @@ import java.util.Iterator;
 /**
  * LinkedList used to manage collisions in the HashTable.
  */
-public class LinkedList implements Iterable<LinkedList.Node> {
+public class LinkedList {
     private LinkedList.Node firstNode, lastNode;
     private int length = 0;
 
@@ -15,7 +15,7 @@ public class LinkedList implements Iterable<LinkedList.Node> {
      *
      */
     class Node {
-        private Object key;
+        private String key;
         private Object value;
         private LinkedList.Node prevNode;
         private LinkedList.Node nextNode;
@@ -28,12 +28,12 @@ public class LinkedList implements Iterable<LinkedList.Node> {
          * @param key
          * @param value
          */
-        private Node(Object key, Object value) {
+        private Node(String key, Object value) {
             this.key = key;
             this.value = value;
         }
 
-        Object key() {
+        String key() {
             return key;
         }
 
@@ -96,6 +96,18 @@ public class LinkedList implements Iterable<LinkedList.Node> {
         }
     }
 
+    public Node firstNode() {
+        return firstNode;
+    }
+
+    public Node lastNode() {
+        return lastNode;
+    }
+
+    public int length() {
+        return length;
+    }
+
     /**
      * Appends a new node containing the given pair key - value.
      *
@@ -104,7 +116,7 @@ public class LinkedList implements Iterable<LinkedList.Node> {
      * @param lastIntroducedNode of the dictionary
      * @return the added node
      */
-    LinkedList.Node append(Object key, Object value, LinkedList.Node lastIntroducedNode) {
+    LinkedList.Node append(String key, Object value, LinkedList.Node lastIntroducedNode) {
         LinkedList.Node newNode = new LinkedList.Node(key, value);
 
         if (length == 0) {
@@ -154,7 +166,7 @@ public class LinkedList implements Iterable<LinkedList.Node> {
      * @param key to remove
      * @return the removed node
      */
-    LinkedList.Node pop(Object key) {
+    LinkedList.Node pop(String key) {
         if (length == 0) {
             return null;
         }
@@ -195,6 +207,12 @@ public class LinkedList implements Iterable<LinkedList.Node> {
         return current;
     }
 
+    /**
+     * Looks for the node with the given key and returns it.
+     *
+     * @param key to look for
+     * @return the node with the given key, null if the node is not present
+     */
     LinkedList.Node get(Object key) {
         LinkedList.Node current = firstNode;
 
@@ -205,6 +223,12 @@ public class LinkedList implements Iterable<LinkedList.Node> {
         return (current.key.equals(key)) ? current : null;
     }
 
+    /**
+     * Compares another object with the current LinkedList
+     *
+     * @param object to compare
+     * @return true if the objects are equal else false
+     */
     @Override
     public boolean equals(Object object) {
         if (this == object) return true;
@@ -225,6 +249,11 @@ public class LinkedList implements Iterable<LinkedList.Node> {
         return true;
     }
 
+    /**
+     * Return the string representation of the object.
+     *
+     * @return string representatuion of the object
+     */
     @Override
     public String toString() {
         StringBuilder str = new StringBuilder();
@@ -241,34 +270,4 @@ public class LinkedList implements Iterable<LinkedList.Node> {
 
         return str.toString();
     }
-
-    // ITERABLE ///////////////////////////////////////////////////////////////
-    @Override
-    public Iterator<LinkedList.Node> iterator() {
-        return new LinkedListIterator();
-    }
-
-    private class LinkedListIterator implements Iterator<LinkedList.Node> {
-        private LinkedList.Node current;
-
-        public LinkedListIterator() {
-            this.current = firstNode;
-        }
-
-        @Override
-        public boolean hasNext() {
-            return current != null;
-        }
-
-        @Override
-        public LinkedList.Node next() {
-            if (hasNext()) {
-                LinkedList.Node node = current;
-                current = current.nextNode;
-                return node;
-            }
-            throw new java.util.NoSuchElementException();
-        }
-    }
-    ///////////////////////////////////////////////////////////////////////////
 }

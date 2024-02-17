@@ -1,6 +1,7 @@
 package org.ulpgc.edp.model;
 
 import org.ulpgc.edp.exceptions.*;
+import java.util.Iterator;
 
 /**
  * Class which represents a dictionary data structure.
@@ -100,11 +101,14 @@ public class Dictionary {
             occupiedBoxes++;
         }
 
-        LinkedList.Node node = list.append(key, value, lastIntroducedNode);
+        LinkedList.Node node = list.append(key.toString(), value, lastIntroducedNode);
+
+        if (node != null) {
+            length++;
+        }
 
         if (firstIntroducedNode == null) firstIntroducedNode = node;
         lastIntroducedNode = node;
-        length++;
     }
 
     /**
@@ -113,14 +117,21 @@ public class Dictionary {
      * @param key to remove
      * @return the value of the removed pair key - value
      */
-    public Object pop(Object key) throws EmptyDictionaryException, KeyErrorException {
-        if (length == 0) {
-            throw new EmptyDictionaryException("The dictionary is empty.");
-        }
-
+    public Object pop(Object key) throws KeyErrorException {
         int index = hash(key);
 
-        LinkedList.Node node = entries[index].pop(key);
+        LinkedList list = entries[index];
+
+        if (list == null) {
+            throw new KeyErrorException("The given key is not in the dictionary");
+        }
+
+        LinkedList.Node node = list.pop(key.toString());
+
+        if (node == null) {
+            throw new KeyErrorException("The given key is not in the dictionary");
+        }
+
         if (firstIntroducedNode.equals(node)) {
             firstIntroducedNode = node.nextIntroducedNode();
         }
@@ -168,11 +179,7 @@ public class Dictionary {
      * @param key to search the value
      * @return the value in pair with the given key
      */
-    public Object get(Object key) throws EmptyDictionaryException, KeyErrorException {
-        if (length == 0) {
-            throw new EmptyDictionaryException("The dictionary is empty.");
-        }
-
+    public Object get(Object key) throws KeyErrorException {
         int index = hash(key);
         LinkedList list = entries[index];
 
@@ -190,7 +197,21 @@ public class Dictionary {
     }
 
     public boolean containsKey(Object key) {
-        return false;
+        int index = hash(key);
+
+        LinkedList list = entries[index];
+
+        if (list == null) {
+            return false;
+        }
+
+        LinkedList.Node node = list.get(key);
+
+        if (node == null) {
+            return false;
+        }
+
+        return true;
     }
 
     /**
@@ -199,19 +220,8 @@ public class Dictionary {
      *
      * @return all the dictionary's keys
      */
-    public Object[] keys() {
-        Object[] keys = new Object[length];
-
-        LinkedList.Node current = firstIntroducedNode;
-        int index = 0;
-
-        while (current != null) {
-            keys[index] = current.key();
-            current = current.nextIntroducedNode();
-            index++;
-        }
-
-        return keys;
+    public Iterable<String> keys() {
+        return new DictionaryKeysIterator(this, firstIntroducedNode);
     }
 
     /**
@@ -220,19 +230,8 @@ public class Dictionary {
      *
      * @return all the dictionary's values
      */
-    public Object[] values() {
-        Object[] values = new Object[length];
-
-        LinkedList.Node current = firstIntroducedNode;
-        int index = 0;
-
-        while (current != null) {
-            values[index] = current.value();
-            current = current.nextIntroducedNode();
-            index++;
-        }
-
-        return values;
+    public Iterable<Object> values() {
+        return new DictionaryValuesIterator(this, firstIntroducedNode);
     }
 
     /**
@@ -241,20 +240,8 @@ public class Dictionary {
      *
      * @return all the dictionary's pairs key - value
      */
-    public Object[] items() {
-        Object[][] items = new Object[length][2];
-
-        LinkedList.Node current = firstIntroducedNode;
-        int index = 0;
-
-        while (current != null) {
-            items[index][0] = current.key();
-            items[index][1] = current.value();
-            current = current.nextIntroducedNode();
-            index++;
-        }
-
-        return items;
+    public Iterable<Object[]> items() {
+        return new DictionaryItemsIterator(this, firstIntroducedNode);
     }
 
     @Override

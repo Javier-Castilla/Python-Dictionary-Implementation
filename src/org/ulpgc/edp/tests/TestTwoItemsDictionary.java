@@ -4,6 +4,8 @@ import org.junit.*;
 import org.ulpgc.edp.exceptions.*;
 import org.ulpgc.edp.model.Dictionary;
 
+import java.util.Iterator;
+
 import static org.junit.Assert.*;
 
 public class TestTwoItemsDictionary {
@@ -17,10 +19,10 @@ public class TestTwoItemsDictionary {
 
     @Test
     public void testPutAndPop() throws EmptyDictionaryException, KeyErrorException {
-        dictionary.put("3", 2);
+        dictionary.put("2", 2);
         int len = dictionary.length();
         assertEquals(
-                "La longitud del diccionario con dos elementos" +
+                "La longitud del diccionario con dos elementos " +
                         "no coincide con la esperada.",
                 2, len
         );
@@ -28,13 +30,13 @@ public class TestTwoItemsDictionary {
         Object value = dictionary.pop("2");
         len = dictionary.length();
         assertEquals(
-                "La longitud del diccionario con dos elementos" +
+                "La longitud del diccionario con dos elementos " +
                         "no coincide con la esperada al eliminar uno.",
                 1, len
         );
 
         assertEquals(
-                "El valor devuelto al eliminar una pareja" +
+                "El valor devuelto al eliminar una pareja " +
                         "clave - valor no coincide con el esperado.",
                 2, value
         );
@@ -42,13 +44,13 @@ public class TestTwoItemsDictionary {
         value = dictionary.pop("1");
         len = dictionary.length();
         assertEquals(
-                "La longitud del diccionario con in elemento" +
+                "La longitud del diccionario con in elemento " +
                         "no coincide con la esperada al eliminarlo.",
                 0, len
         );
 
         assertEquals(
-                "El valor devuelto al eliminar una pareja" +
+                "El valor devuelto al eliminar una pareja " +
                         "clave - valor no coincide con el esperado.",
                 1, value
         );
@@ -59,14 +61,14 @@ public class TestTwoItemsDictionary {
         dictionary.put("1", 100);
         int len = dictionary.length();
         assertEquals(
-                "La longitud del diccionario con un elemento" +
+                "La longitud del diccionario con un elemento " +
                         "no coincide con la esperada al actualizarlo.",
                 1, len
         );
 
         Object value = dictionary.get("1");
         assertEquals(
-                "El valor no coincide con el esperado al actualizar" +
+                "El valor no coincide con el esperado al actualizar " +
                         "una pareja clave - valor.",
                 100, value
         );
@@ -76,9 +78,48 @@ public class TestTwoItemsDictionary {
     public void testString()  {
         String str = dictionary.toString();
         assertEquals(
-                "La representación como string del diccionario" +
+                "La representación como string del diccionario " +
                         "de un elemento no coincide con la esperada.",
                 "{'1': 1}", str
+        );
+    }
+
+    @Test
+    public void testKeys() {
+        String keys = dictionary.keys().toString();
+        assertEquals(
+                "Las claves devueltas no corresponden " +
+                        "con las esperadas.",
+                "('1')", keys
+        );
+    }
+
+    @Test
+    public void testValues() {
+        String values = dictionary.values().toString();
+        assertEquals(
+                "Los valores devueltos no corresponden " +
+                        "con las esperados.",
+                new Object[]{1}, values
+        );
+    }
+
+    @Test
+    public void testItems() {
+        String items = dictionary.items().toString();
+        assertEquals(
+                "Las parejas devueltas no coinciden con " +
+                        "las esperadas",
+                "(('1', 1))", items
+        );
+    }
+
+    @Test
+    public void testContainsKey() {
+        assertTrue(
+                "Se esperaba true para comprobar si se contiene " +
+                        "una clave en un diccionario {'1': 1}.",
+                dictionary.containsKey("1")
         );
     }
 
@@ -86,13 +127,13 @@ public class TestTwoItemsDictionary {
     public void testPopItem() throws EmptyDictionaryException {
         Object value = dictionary.popitem();
         assertEquals(
-                "El valor de la pareja eliminada no coincide" +
+                "El valor de la pareja eliminada no coincide " +
                         "con la esperada.",
                 1, value
         );
         int len = dictionary.length();
         assertEquals(
-                "La longitud del diccionario con un elemento" +
+                "La longitud del diccionario con un elemento " +
                         "no coincide con la esperada al eliminarlo.",
                 0, len
         );
@@ -108,7 +149,7 @@ public class TestTwoItemsDictionary {
         Object value = dictionary.pop("1");
         assertEquals(
                 "El elemento devuelto al eliminar una pareja clave -" +
-                        "valor no es el esperado.",
+                        " valor no es el esperado.",
                 1, value
         );
     }

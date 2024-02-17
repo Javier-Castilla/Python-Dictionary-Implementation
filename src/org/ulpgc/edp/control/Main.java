@@ -5,11 +5,11 @@ import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 import org.ulpgc.edp.exceptions.KeyErrorException;
 import org.ulpgc.edp.tests.*;
-import org.ulpgc.edp.model.*;
 
 @RunWith(Suite.class)
 @SuiteClasses({
-        TestEmptyDictionary.class
+        TestEmptyDictionary.class,
+        TestOneItemDictionary.class
 })
 
 public class Main {
