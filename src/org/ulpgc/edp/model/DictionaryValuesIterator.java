@@ -56,7 +56,10 @@ public class DictionaryValuesIterator implements Iterable<Object> {
         str.append("(");
 
         for (Object value : this) {
-            str.append(value).append(", ");
+            str.append(
+                    (value.getClass() == String.class) ?
+                            String.format("\'%b\'", value) : value
+            );
         }
 
         if (dictionary.length() != 0) {

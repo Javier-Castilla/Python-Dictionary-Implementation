@@ -53,7 +53,7 @@ public class DictionaryItemsIterator implements Iterable<Object[]> {
     public String toString() {
         StringBuilder str = new StringBuilder();
 
-        str.append("(");
+        str.append("DictionaryItems([");
 
         for (Object[] item : this) {
             str.append("('").append(item[0]).append("', ").append(item[1]).append("), ");
@@ -63,7 +63,7 @@ public class DictionaryItemsIterator implements Iterable<Object[]> {
             str.setLength(str.length() - 2);
         }
 
-        str.append(")");
+        str.append("])");
 
         return str.toString();
     }

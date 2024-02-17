@@ -220,7 +220,7 @@ public class Dictionary {
      *
      * @return all the dictionary's keys
      */
-    public Iterable<String> keys() {
+    public Iterable<Object> keys() {
         return new DictionaryKeysIterator(this, firstIntroducedNode);
     }
 

@@ -15,7 +15,7 @@ public class LinkedList {
      *
      */
     class Node {
-        private String key;
+        private Object key;
         private Object value;
         private LinkedList.Node prevNode;
         private LinkedList.Node nextNode;
@@ -28,12 +28,12 @@ public class LinkedList {
          * @param key
          * @param value
          */
-        private Node(String key, Object value) {
+        private Node(Object key, Object value) {
             this.key = key;
             this.value = value;
         }
 
-        String key() {
+        Object key() {
             return key;
         }
 
@@ -116,7 +116,7 @@ public class LinkedList {
      * @param lastIntroducedNode of the dictionary
      * @return the added node
      */
-    LinkedList.Node append(String key, Object value, LinkedList.Node lastIntroducedNode) {
+    LinkedList.Node append(Object key, Object value, LinkedList.Node lastIntroducedNode) {
         LinkedList.Node newNode = new LinkedList.Node(key, value);
 
         if (length == 0) {
@@ -166,7 +166,7 @@ public class LinkedList {
      * @param key to remove
      * @return the removed node
      */
-    LinkedList.Node pop(String key) {
+    LinkedList.Node pop(Object key) {
         if (length == 0) {
             return null;
         }

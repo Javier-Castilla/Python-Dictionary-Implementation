@@ -2,7 +2,7 @@ package org.ulpgc.edp.model;
 
 import java.util.Iterator;
 
-public class DictionaryKeysIterator implements Iterable<String> {
+public class DictionaryKeysIterator implements Iterable<Object> {
     private Dictionary dictionary;
     private LinkedList.Node current;
 
@@ -15,11 +15,11 @@ public class DictionaryKeysIterator implements Iterable<String> {
     }
 
     @Override
-    public Iterator<String> iterator() {
+    public Iterator<Object> iterator() {
         return new DictionaryKeys();
     }
 
-    private class DictionaryKeys implements Iterator<String> {
+    private class DictionaryKeys implements Iterator<Object> {
         /**
          * Overrided method which returns if there is a next element or not.
          *
@@ -36,7 +36,7 @@ public class DictionaryKeysIterator implements Iterable<String> {
          * @return the next node
          */
         @Override
-        public String next() {
+        public Object next() {
             if (hasNext()) {
                 LinkedList.Node node = current;
                 current = current.nextIntroducedNode();
@@ -52,8 +52,11 @@ public class DictionaryKeysIterator implements Iterable<String> {
 
         str.append("(");
 
-        for (String key : this) {
-            str.append("'").append(key).append("'").append(", ");
+        for (Object key : this) {
+            str.append(
+                    (key.getClass() == String.class) ?
+                    String.format("\'%b\'", key) : key
+            );
         }
 
         if (dictionary.length() != 0) {
