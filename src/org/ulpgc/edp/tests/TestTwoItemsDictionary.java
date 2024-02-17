@@ -8,7 +8,7 @@ import java.util.Iterator;
 
 import static org.junit.Assert.*;
 
-public class TestOneItemDictionary {
+public class TestTwoItemsDictionary {
     private Dictionary dictionary;
     @Before
     public void init() throws KeyErrorException {
