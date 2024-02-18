@@ -18,6 +18,19 @@ import java.util.Arrays;
 
 public class Main {
     public static void main(String[] args) throws KeyErrorException {
-        org.junit.runner.JUnitCore.main("org.ulpgc.edp.control.Main");
+        //org.junit.runner.JUnitCore.main("org.ulpgc.edp.control.Main");
+        Dictionary d = new Dictionary();
+
+
+        for (int i = 0; i < 100; i++) {
+            d.put("Hola" + Integer.toString(i), i);
+        }
+
+        System.out.println();
+        for (LinkedList list : d.entries()) {
+            System.out.println(list);
+        }
+
+        System.out.println(d);
     }
 }

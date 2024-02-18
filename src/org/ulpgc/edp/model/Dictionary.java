@@ -1,6 +1,8 @@
 package org.ulpgc.edp.model;
 
 import org.ulpgc.edp.exceptions.*;
+
+import java.util.Arrays;
 import java.util.Iterator;
 
 /**
@@ -10,16 +12,23 @@ import java.util.Iterator;
  */
 public class Dictionary implements Iterable<Object> {
     private LinkedList[] entries;
+    private MatrixUtils universalHash;
     private LinkedList.Node firstIntroducedNode;
     private LinkedList.Node lastIntroducedNode;
     private int length;
     private int occupiedBoxes;
+    private int reHashingCounter;
+    private int pseudokeyLength;
+    private boolean reHashingInProgress;
 
     /**
      * Constructor by default. No length or items needed.
      */
     public Dictionary() {
-        this.entries = new LinkedList[11];
+        this.entries = new LinkedList[8];
+        this.pseudokeyLength = 8;
+        this.universalHash = new MatrixUtils(3, pseudokeyLength);
+        universalHash.matrix();
     }
 
     /**
@@ -28,7 +37,10 @@ public class Dictionary implements Iterable<Object> {
      * @param length of the initial hash table
      */
     public Dictionary(int length) {
-        this.entries = new LinkedList[nextPrimeNumber(length)];
+        int itemsLen = ((int) (Math.log(length) / Math.log(2)) + 1);
+        this.entries = new LinkedList[1 << itemsLen];
+        this.pseudokeyLength = 8;
+        this.universalHash = new MatrixUtils(itemsLen, pseudokeyLength);
     }
 
     /**
@@ -38,11 +50,17 @@ public class Dictionary implements Iterable<Object> {
      * @param items to put into the new dictionary
      */
     public Dictionary(Object[][] items) throws KeyErrorException {
+        int itemsLen = (int) (Math.log(items.length) / Math.log(2)) + 1;
+        this.entries = new LinkedList[1 << itemsLen];
+
         for (int index = 0; index < items.length; index++) {
             Object key = items[index][0];
             Object value = items[index][1];
             put(key, value);
         }
+
+        this.pseudokeyLength = 8;
+        this.universalHash = new MatrixUtils(itemsLen, 8);
     }
 
     /**
@@ -92,7 +110,69 @@ public class Dictionary implements Iterable<Object> {
     }
 
     private int hash(Object key) {
-        return key.hashCode() % entries.length;
+        int code = Math.abs(key.hashCode());
+        code *= code * 17;
+        code = universalHash.hash(
+                code,
+                pseudokeyLength,
+                universalHash.matrix()
+        );
+
+        return code;
+    }
+
+    private LinkedList[] reHashing(boolean expand) throws Exception {
+        if (reHashingCounter == 10) {
+            throw new Exception("Maximum reHashing reached.");
+        }
+
+        System.out.println("ReHashing");
+
+        int itemsLen = ((int) (Math.log(nextPowerOfTwo(entries.length)) / Math.log(2)) + 1);
+
+        universalHash.newMatrix(itemsLen - 1, pseudokeyLength);
+
+        for (LinkedList llll : entries) {
+            System.out.println(llll);
+        }
+
+        reHashingInProgress = true;
+
+        occupiedBoxes = 0;
+
+        LinkedList[] list = Arrays.copyOf(entries, entries.length);
+
+        if (expand) {
+            entries = new LinkedList[nextPowerOfTwo(entries.length)];
+        }
+
+        firstIntroducedNode = null;
+        lastIntroducedNode = null;
+        for (LinkedList l : list) {
+            if (l == null) {continue;}
+            for (LinkedList.Node node : l) {
+                int index = hash(node.key());
+                LinkedList newList = entries[index];
+
+                if (newList == null) {
+                    newList = new LinkedList();
+                    entries[index] = newList;
+                    occupiedBoxes++;
+                }
+
+                LinkedList.Node newNode = newList.append(node.key(), node.value(), lastIntroducedNode);
+
+                if (node != null) {
+                    length++;
+                }
+
+                if (firstIntroducedNode == null) firstIntroducedNode = newNode;
+                lastIntroducedNode = newNode;
+            }
+        }
+
+        reHashingInProgress = false;
+        return entries;
     }
 
     public void put(Object key, Object value) throws KeyErrorException {
@@ -117,6 +197,15 @@ public class Dictionary implements Iterable<Object> {
         
         if (firstIntroducedNode == null) firstIntroducedNode = node;
         lastIntroducedNode = node;
+
+        if (occupiedBoxes >= entries.length * 0.70 || list.length() >= 5) {
+            try {
+                LinkedList[] entriesCopy = Arrays.copyOf(entries, entries.length);
+                reHashing(true);
+            } catch (Exception ex) {
+
+            }
+        }
     }
 
     /**
@@ -277,6 +366,8 @@ public class Dictionary implements Iterable<Object> {
 
     @Override
     public Iterator<Object> iterator() {
-        return new DictionaryKeysIterator(this, firstIntroducedNode).iterator();
+        return new DictionaryKeysIterator(
+                this, firstIntroducedNode
+        ).iterator();
     }
 }
