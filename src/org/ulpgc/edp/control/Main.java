@@ -19,18 +19,22 @@ import java.util.Arrays;
 public class Main {
     public static void main(String[] args) throws KeyErrorException {
         //org.junit.runner.JUnitCore.main("org.ulpgc.edp.control.Main");
+        long startTime = System.nanoTime();
+
+        // Aquí va tu código
         Dictionary d = new Dictionary();
 
 
-        for (int i = 0; i < 1000000; i++) {
+        for (int i = 0; i < 1000; i++) {
             d.put("Hola" + Integer.toString(i), i);
         }
 
-        System.out.println();
-        for (LinkedList list : d.entries()) {
-            System.out.println(list);
-        }
+        //System.out.println(d);
 
-        System.out.println(d);
+        long endTime = System.nanoTime();
+        long executionTime = (endTime - startTime) / 1000000; // Convertir a milisegundos
+        System.out.println("Tiempo de ejecución: " + executionTime + " milisegundos");
+        System.out.println("Elementos introducidos: " + d.length());
+        System.out.println(d.get("Hola998"));
     }
 }

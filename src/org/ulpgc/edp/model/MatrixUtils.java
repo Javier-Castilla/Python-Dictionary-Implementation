@@ -71,8 +71,6 @@ class MatrixUtils {
             result += (int) Math.pow(2, m.length - 1 - i) * resultVector[i];
         }
 
-        System.out.println(result);
-
         return result;
     }
 }

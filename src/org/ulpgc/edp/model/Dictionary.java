@@ -17,18 +17,12 @@ public class Dictionary implements Iterable<Object> {
     private LinkedList.Node lastIntroducedNode;
     private int length;
     private int occupiedBoxes;
-    private int reHashingCounter;
-    private int pseudokeyLength;
-    private boolean reHashingInProgress;
 
     /**
      * Constructor by default. No length or items needed.
      */
     public Dictionary() {
-        this.entries = new LinkedList[256];
-        this.pseudokeyLength = 8;
-        this.universalHash = new MatrixUtils(8, pseudokeyLength);
-        universalHash.matrix();
+        this.entries = new LinkedList[8];
     }
 
     /**
@@ -39,8 +33,6 @@ public class Dictionary implements Iterable<Object> {
     public Dictionary(int length) {
         int itemsLen = ((int) (Math.log(length) / Math.log(2)) + 1);
         this.entries = new LinkedList[1 << itemsLen];
-        this.pseudokeyLength = 8;
-        this.universalHash = new MatrixUtils(itemsLen, pseudokeyLength);
     }
 
     /**
@@ -58,9 +50,6 @@ public class Dictionary implements Iterable<Object> {
             Object value = items[index][1];
             put(key, value);
         }
-
-        this.pseudokeyLength = 8;
-        this.universalHash = new MatrixUtils(itemsLen, 8);
     }
 
     /**
@@ -110,15 +99,22 @@ public class Dictionary implements Iterable<Object> {
     }
 
     private int hash(Object key) {
-        int code = Math.abs(key.hashCode());
-        code *= code * 17;
-        code = universalHash.hash(
-                code,
-                pseudokeyLength,
-                universalHash.matrix()
-        );
+        int code = key.hashCode();
+        code *= code;
 
-        return code;
+        return Math.abs((code * 17) % entries.length);
+    }
+
+    private void rehash() {
+        LinkedList[] newEntries = Arrays.copyOf(entries, entries.length);
+        entries = new LinkedList[nextPowerOfTwo(entries.length)];
+        length = 0;
+
+        for (Object[] item : items()) {
+            try {
+                put(item[0], item[1]);
+            } catch (Exception ex) {}
+        }
     }
 
     private LinkedList.Node openAddressing(Object key, Object value, int index) {
@@ -143,7 +139,10 @@ public class Dictionary implements Iterable<Object> {
             }
 
             if (i == index) {
-                System.out.println("ReHashing");
+                rehash();
+                try {
+                    put(key, value);
+                } catch (Exception ex) {}
                 break;
             }
         }
@@ -173,13 +172,16 @@ public class Dictionary implements Iterable<Object> {
             node = list.append(key, value, lastIntroducedNode);
         }
 
-
         if (node != null) {
             length++;
         }
         
         if (firstIntroducedNode == null) firstIntroducedNode = node;
         lastIntroducedNode = node;
+
+        if (occupiedBoxes >= entries.length * 0.7) {
+            rehash();
+        }
     }
 
     /**
