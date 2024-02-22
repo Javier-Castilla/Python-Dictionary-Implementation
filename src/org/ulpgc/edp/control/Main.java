@@ -32,8 +32,9 @@ public class Main {
         //System.out.println(d);
 
         long endTime = System.nanoTime();
-        long executionTime = (endTime - startTime) / 1000000; // Convertir a milisegundos
-        System.out.println("Tiempo de ejecución: " + executionTime + " milisegundos");
-        System.out.println("Elementos introducidos: " + d.length());
+        // Calcula la duración de la ejecución en segundos
+        double durationInSeconds = (endTime - startTime) / 1e9;
+
+        System.out.println("Tiempo de ejecución: " + durationInSeconds + " segundos");
     }
 }

@@ -10,6 +10,14 @@ class UniversalHash {
         this.prime = prime;
     }
 
+    public void length(int length) {
+        this.length = length;
+    }
+
+    public void prime(int prime) {
+        this.prime = prime;
+    }
+
     int calcHash(int x) {
         return ((a * x + b) % prime) % length;
     }

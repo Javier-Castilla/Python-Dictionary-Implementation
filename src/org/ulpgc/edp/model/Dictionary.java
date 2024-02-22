@@ -105,6 +105,8 @@ public class Dictionary implements Iterable<Object> {
     }
 
     private int hash(Object key) {
+        return key.hashCode() & (entries.length - 1);
+        /*
         int code = 0;
 
         if (key instanceof String) {
@@ -116,18 +118,25 @@ public class Dictionary implements Iterable<Object> {
             return universalHash.calcHash((key.hashCode() & 0x0F00) >> 8);
         }
 
-        return universalHash.calcHash((code & 0x0F00) >> 8);
+        return universalHash.calcHash((code & 0x0F00) >> 8);*/
     }
 
     private void rehash() {
         LinkedList[] newEntries = Arrays.copyOf(entries, entries.length);
         entries = new LinkedList[nextPowerOfTwo(entries.length)];
+        universalHash.length(entries.length);
+        universalHash.updateValues();
+        firstIntroducedNode = null;
+        lastIntroducedNode = null;
         length = 0;
 
-        for (Object[] item : items()) {
-            try {
-                put(item[0], item[1]);
-            } catch (Exception ex) {}
+        for (LinkedList l : newEntries) {
+            if (l == null) continue;
+            for (LinkedList.Node node : l) {
+                try {
+                    put(node.key(), node.value());
+                } catch (Exception ex) {}
+            }
         }
     }
 
@@ -136,7 +145,7 @@ public class Dictionary implements Iterable<Object> {
         int i = index;
 
         while (true) {
-            i = index + k++;
+            i += k;
 
             if (i >= entries.length) {
                 i -= entries.length;
@@ -148,11 +157,13 @@ public class Dictionary implements Iterable<Object> {
                 list = new LinkedList();
                 entries[i] = list;
                 return list.append(key, value, lastIntroducedNode);
-            } else if (list.length() < 4) {
+            } else if (list.length() < 5) {
                 return list.append(key, value, lastIntroducedNode);
             }
 
             if (i == index) {
+                k++;
+            } else if (k == 7) {
                 rehash();
                 try {
                     put(key, value);
@@ -180,7 +191,7 @@ public class Dictionary implements Iterable<Object> {
 
         LinkedList.Node node;
 
-        if (list.length() >= 4) {
+        if (list.length() >= 1) {
             node = openAddressing(key, value, index);
         } else {
             node = list.append(key, value, lastIntroducedNode);
@@ -193,7 +204,7 @@ public class Dictionary implements Iterable<Object> {
         if (firstIntroducedNode == null) firstIntroducedNode = node;
         lastIntroducedNode = node;
 
-        if (occupiedBoxes >= entries.length * 0.7) {
+        if (occupiedBoxes >= entries.length * 0.85) {
             rehash();
         }
     }
