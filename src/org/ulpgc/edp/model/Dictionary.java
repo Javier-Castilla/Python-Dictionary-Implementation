@@ -2,6 +2,7 @@ package org.ulpgc.edp.model;
 
 import org.ulpgc.edp.exceptions.*;
 
+import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.Iterator;
 
@@ -12,17 +13,22 @@ import java.util.Iterator;
  */
 public class Dictionary implements Iterable<Object> {
     private LinkedList[] entries;
-    private MatrixUtils universalHash;
+    private UniversalHash universalHash;
     private LinkedList.Node firstIntroducedNode;
     private LinkedList.Node lastIntroducedNode;
     private int length;
     private int occupiedBoxes;
+    private int codeLength;
+    private int prime;
 
     /**
      * Constructor by default. No length or items needed.
      */
     public Dictionary() {
         this.entries = new LinkedList[8];
+        this.universalHash = new UniversalHash(entries.length, 10007);
+        this.codeLength = 4;
+        this.prime = 10007;
     }
 
     /**
@@ -99,10 +105,18 @@ public class Dictionary implements Iterable<Object> {
     }
 
     private int hash(Object key) {
-        int code = key.hashCode();
-        code *= code;
+        int code = 0;
 
-        return Math.abs((code * 17) % entries.length);
+        if (key instanceof String) {
+            String strKey = (String) key;
+            for (int index = 0; index < strKey.length(); index++) {
+                code += universalHash.calcHash((int) strKey.charAt(index));
+            }
+        } else {
+            return universalHash.calcHash((key.hashCode() & 0x0F00) >> 8);
+        }
+
+        return universalHash.calcHash((code & 0x0F00) >> 8);
     }
 
     private void rehash() {
@@ -287,6 +301,10 @@ public class Dictionary implements Iterable<Object> {
         }
 
         return true;
+    }
+
+    public void clear() {
+        entries = new LinkedList[entries.length];
     }
 
     /**

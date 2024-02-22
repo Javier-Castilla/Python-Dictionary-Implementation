@@ -17,7 +17,6 @@ public class LinkedList implements Iterable<LinkedList.Node> {
     class Node {
         private Object key;
         private Object value;
-        private LinkedList.Node prevNode;
         private LinkedList.Node nextNode;
         private LinkedList.Node nextIntroducedNode;
         private LinkedList.Node prevIntroducedNode;
@@ -39,10 +38,6 @@ public class LinkedList implements Iterable<LinkedList.Node> {
 
         Object value() {
             return value;
-        }
-
-        LinkedList.Node prevNode() {
-            return prevNode;
         }
 
         LinkedList.Node nextNode() {
@@ -153,7 +148,6 @@ public class LinkedList implements Iterable<LinkedList.Node> {
                 if (lastIntroducedNode != null) {
                     lastIntroducedNode.nextIntroducedNode = newNode;
                 }
-                newNode.prevNode = lastNode;
                 newNode.prevIntroducedNode = lastIntroducedNode;
                 lastNode = newNode;
                 length++;
@@ -177,38 +171,34 @@ public class LinkedList implements Iterable<LinkedList.Node> {
             return null;
         }
 
-        LinkedList.Node current = firstNode;
+        LinkedList.Node prevNode = firstNode;
+        LinkedList.Node current = firstNode.nextNode;
 
-        while (current.nextNode != null && !current.key().equals(key)) {
+        while (current != null && !current.key().equals(key)) {
+            prevNode = prevNode.nextNode;
             current = current.nextNode;
         }
 
+        if (current == null) {
+            firstNode = null;
+            lastNode = null;
+        } else {
+            prevNode.nextNode = current.nextNode;
+            if (lastNode.equals(current)) {
+                lastNode = null;
+            }
+        }
 
-
-        if (current.prevNode != null) {
-            current.prevNode.nextNode = current.nextNode;
+        if (current == null) {
+            current = prevNode;
         }
 
         if (current.prevIntroducedNode != null) {
             current.prevIntroducedNode.nextIntroducedNode = current.nextIntroducedNode;
         }
 
-        if (current.nextNode != null) {
-            current.nextNode.prevNode = current.prevNode;
-        }
-
         if (current.nextIntroducedNode != null) {
             current.nextIntroducedNode.prevIntroducedNode = current.prevIntroducedNode;
-        }
-
-        if (length == 1) {
-            firstNode = null;
-            lastNode = null;
-        } else {
-            if (firstNode.key.equals(key)) {
-                firstNode = current.nextNode;
-            }
-            lastNode = current.prevNode;
         }
 
         length--;

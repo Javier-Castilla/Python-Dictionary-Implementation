@@ -35,6 +35,5 @@ public class Main {
         long executionTime = (endTime - startTime) / 1000000; // Convertir a milisegundos
         System.out.println("Tiempo de ejecución: " + executionTime + " milisegundos");
         System.out.println("Elementos introducidos: " + d.length());
-        System.out.println(d.get("Hola998"));
     }
 }
