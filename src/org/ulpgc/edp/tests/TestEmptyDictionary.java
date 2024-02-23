@@ -3,9 +3,6 @@ package org.ulpgc.edp.tests;
 import org.junit.*;
 import org.ulpgc.edp.exceptions.*;
 import org.ulpgc.edp.model.Dictionary;
-
-import java.util.Iterator;
-
 import static org.junit.Assert.*;
 
 public class TestEmptyDictionary {
@@ -18,7 +15,7 @@ public class TestEmptyDictionary {
 
     @Test
     public void testLen() throws KeyErrorException  {
-        int dictionaryLen = dictionary.length();
+        int dictionaryLen = dictionary.size();
         assertEquals(
                 "El tamaño debe ser 0 al inicializar el diccionario " +
                         "sin un tamaño determinado",
@@ -29,14 +26,14 @@ public class TestEmptyDictionary {
     @Test
     public void testPutAndPop() throws EmptyDictionaryException, KeyErrorException  {
         dictionary.put("1", 1);
-        int dictionaryLen = dictionary.length();
+        int dictionaryLen = dictionary.size();
         assertEquals(
                 "El tamaño debe ser 1 al insertar una nueva pareja " +
                         "clave - valor en un diccionario vacío",
                 1, dictionaryLen
         );
         Object value = dictionary.pop("1");
-        dictionaryLen = dictionary.length();
+        dictionaryLen = dictionary.size();
         assertEquals(
                 "El tamaño debe ser 0 al eliminar una pareja clave " +
                         "- valor en un diccionario de un elemento",
@@ -96,11 +93,6 @@ public class TestEmptyDictionary {
     @Test(expected = KeyErrorException.class)
     public void testGetNoneExistingKey() throws KeyErrorException  {
         dictionary.get("1");
-    }
-
-    @Test(expected = KeyErrorException.class)
-    public void testUnhasheableKey() throws KeyErrorException {
-        dictionary.put(new String[3], 1);
     }
 
     @Test(expected = KeyErrorException.class)

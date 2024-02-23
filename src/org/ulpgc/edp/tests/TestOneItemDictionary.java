@@ -3,9 +3,6 @@ package org.ulpgc.edp.tests;
 import org.junit.*;
 import org.ulpgc.edp.exceptions.*;
 import org.ulpgc.edp.model.Dictionary;
-
-import java.util.Iterator;
-
 import static org.junit.Assert.*;
 
 public class TestOneItemDictionary {
@@ -19,7 +16,7 @@ public class TestOneItemDictionary {
     @Test
     public void testPutAndPop() throws EmptyDictionaryException, KeyErrorException {
         dictionary.put("2", 2);
-        int len = dictionary.length();
+        int len = dictionary.size();
         assertEquals(
                 "La longitud del diccionario con dos elementos " +
                         "no coincide con la esperada.",
@@ -27,7 +24,7 @@ public class TestOneItemDictionary {
         );
 
         Object value = dictionary.pop("2");
-        len = dictionary.length();
+        len = dictionary.size();
         assertEquals(
                 "La longitud del diccionario con dos elementos " +
                         "no coincide con la esperada al eliminar uno.",
@@ -41,7 +38,7 @@ public class TestOneItemDictionary {
         );
 
         value = dictionary.pop("1");
-        len = dictionary.length();
+        len = dictionary.size();
         assertEquals(
                 "La longitud del diccionario con in elemento " +
                         "no coincide con la esperada al eliminarlo.",
@@ -56,9 +53,9 @@ public class TestOneItemDictionary {
     }
 
     @Test
-    public void replace() throws EmptyDictionaryException, KeyErrorException {
+    public void replace() throws KeyErrorException {
         dictionary.put("1", 100);
-        int len = dictionary.length();
+        int len = dictionary.size();
         assertEquals(
                 "La longitud del diccionario con un elemento " +
                         "no coincide con la esperada al actualizarlo.",
@@ -124,13 +121,13 @@ public class TestOneItemDictionary {
 
     @Test
     public void testPopItem() throws EmptyDictionaryException {
-        Object value = dictionary.popitem();
+        Object[] values = dictionary.popitem();
         assertEquals(
                 "El valor de la pareja eliminada no coincide " +
                         "con la esperada.",
-                1, value
+                new Object[]{"1", 1}, values
         );
-        int len = dictionary.length();
+        int len = dictionary.size();
         assertEquals(
                 "La longitud del diccionario con un elemento " +
                         "no coincide con la esperada al eliminarlo.",

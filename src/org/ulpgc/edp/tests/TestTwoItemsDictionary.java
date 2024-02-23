@@ -19,7 +19,7 @@ public class TestTwoItemsDictionary {
     @Test
     public void testPutAndPop() throws EmptyDictionaryException, KeyErrorException {
         dictionary.put("2", 2);
-        int len = dictionary.length();
+        int len = dictionary.size();
         assertEquals(
                 "La longitud del diccionario con dos elementos " +
                         "no coincide con la esperada.",
@@ -27,7 +27,7 @@ public class TestTwoItemsDictionary {
         );
 
         Object value = dictionary.pop("2");
-        len = dictionary.length();
+        len = dictionary.size();
         assertEquals(
                 "La longitud del diccionario con dos elementos " +
                         "no coincide con la esperada al eliminar uno.",
@@ -41,7 +41,7 @@ public class TestTwoItemsDictionary {
         );
 
         value = dictionary.pop("1");
-        len = dictionary.length();
+        len = dictionary.size();
         assertEquals(
                 "La longitud del diccionario con in elemento " +
                         "no coincide con la esperada al eliminarlo.",
@@ -58,7 +58,7 @@ public class TestTwoItemsDictionary {
     @Test
     public void replace() throws EmptyDictionaryException, KeyErrorException {
         dictionary.put("1", 100);
-        int len = dictionary.length();
+        int len = dictionary.size();
         assertEquals(
                 "La longitud del diccionario con un elemento " +
                         "no coincide con la esperada al actualizarlo.",
@@ -130,7 +130,7 @@ public class TestTwoItemsDictionary {
                         "con la esperada.",
                 1, value
         );
-        int len = dictionary.length();
+        int len = dictionary.size();
         assertEquals(
                 "La longitud del diccionario con un elemento " +
                         "no coincide con la esperada al eliminarlo.",

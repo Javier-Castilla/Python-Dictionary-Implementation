@@ -3,11 +3,15 @@ package org.ulpgc.edp.control;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
-import org.ulpgc.edp.exceptions.KeyErrorException;
+import org.ulpgc.edp.exceptions.*;
 import org.ulpgc.edp.model.*;
 import org.ulpgc.edp.tests.*;
 
-import java.util.Arrays;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.text.DecimalFormat;
 
 @RunWith(Suite.class)
 @SuiteClasses({
@@ -18,22 +22,41 @@ import java.util.Arrays;
 public class Main {
     public static void main(String[] args) throws KeyErrorException {
         //org.junit.runner.JUnitCore.main("org.ulpgc.edp.control.Main");
-        long startTime = System.nanoTime(); // Obtener el tiempo de inicio en nanosegundos
-        Dictionary d = new Dictionary();
 
-        for (int i = 0; i < 10000000; i++) {
-            d.otherPut("Hola" + Integer.toString(i), i);
+        String rutaArchivo = "times.txt";
+        int size = 1;
+        DecimalFormat df = new DecimalFormat("#.###");
+
+        try {
+            File archivo = new File(rutaArchivo);
+            FileWriter escritor = new FileWriter(archivo);
+            BufferedWriter bufferEscritor = new BufferedWriter(escritor);
+            bufferEscritor.write("size;miliseconds;seconds");
+            bufferEscritor.newLine();
+
+            while (size < 32000000) {
+                long startTime = System.nanoTime();
+                Dictionary d = new Dictionary();
+
+                for (int i = 0; i < size; i++) {
+                    d.put("Testing" + i, i);
+                }
+
+                long endTime = System.nanoTime();
+                long duration = (endTime - startTime);
+                double ms = duration / 1e6;
+                double sc = ms / 1000;
+
+                bufferEscritor.write(String.format("%d;%.3f;%.3f", size, ms, sc));
+                bufferEscritor.newLine();
+                size <<= 1;
+            }
+
+            bufferEscritor.close();
+            System.out.println("Se ha creado el archivo correctamente.");
+
+        } catch (IOException e) {
+            System.out.println("Error al crear el archivo: " + e.getMessage());
         }
-        long endTime = System.nanoTime(); // Obtener el tiempo de finalización en nanosegundos
-
-        // Calcular la diferencia de tiempo
-        long duration = (endTime - startTime);
-
-        // Convertir la duración de nanosegundos a segundos (opcional)
-        double seconds = duration / 1e9;
-
-        // Imprimir el tiempo de ejecución
-        System.out.println("Tiempo de ejecución: " + duration + " nanosegundos");
-        System.out.println("Tiempo de ejecución: " + seconds + " segundos");
     }
 }

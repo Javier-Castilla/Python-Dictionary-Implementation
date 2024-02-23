@@ -2,7 +2,6 @@ package org.ulpgc.edp.model;
 
 import org.ulpgc.edp.exceptions.*;
 
-import java.util.Arrays;
 import java.util.Iterator;
 
 /**
@@ -11,26 +10,21 @@ import java.util.Iterator;
  * Accessing an element is almost O(1).
  */
 public class Dictionary implements Iterable<Object> {
-    private Integer[] indexes = new Integer[8];
-    private MyNode[] items = new MyNode[8];
+    private Integer[] indexes;
+    private Node[] items;
     private int lastIndex = -1;
-    private LinkedList[] entries;
-    private LinkedList.Node firstIntroducedNode;
-    private LinkedList.Node lastIntroducedNode;
-    private int length;
+    private int size;
     private int occupiedBoxes;
     private int mask;
+    private static final double OV_FACTOR = 0.66;
 
     /**
      * Constructor by default. No length or items needed.
      */
     public Dictionary() {
-        this.entries = new LinkedList[8];
+        this.indexes = new Integer[8];
+        this.items = new Node[8];
         this.mask = indexes.length - 1;
-    }
-
-    public MyNode[] getItems() {
-        return items;
     }
 
     /**
@@ -40,7 +34,8 @@ public class Dictionary implements Iterable<Object> {
      */
     public Dictionary(int length) {
         int itemsLen = ((int) (Math.log(length) / Math.log(2)) + 1);
-        this.entries = new LinkedList[1 << itemsLen];
+        this.indexes = new Integer[1 << itemsLen];
+        this.items = new Node[1 << itemsLen];
     }
 
     /**
@@ -51,7 +46,8 @@ public class Dictionary implements Iterable<Object> {
      */
     public Dictionary(Object[][] items) throws KeyErrorException {
         int itemsLen = (int) (Math.log(items.length) / Math.log(2)) + 1;
-        this.entries = new LinkedList[1 << itemsLen];
+        this.indexes = new Integer[1 << itemsLen];
+        this.items = new Node[1 << itemsLen];
 
         for (int index = 0; index < items.length; index++) {
             Object key = items[index][0];
@@ -64,16 +60,8 @@ public class Dictionary implements Iterable<Object> {
      *
      * @return the number of elements in the dictionary
      */
-    public int length() {
-        return length;
-    }
-
-    public LinkedList.Node lastIntroducedNode() {
-        return lastIntroducedNode;
-    }
-
-    public LinkedList[] entries() {
-        return entries;
+    public int size() {
+        return size;
     }
 
     /**
@@ -106,183 +94,19 @@ public class Dictionary implements Iterable<Object> {
         return num << 1;
     }
 
-    private boolean isNotAvailableSlot(int index) {
-        return indexes[index] != null;
-    }
-
-    private int findAvailableSlot(int hash) {
-        int i = hash & mask;
-        for (int perturb = hash; isNotAvailableSlot(i);) {
-            perturb >>= 5;
-            i = (i*5 + perturb + 1) & mask;
-        }
-        return i;
-    }
-
-    private int hash(Object key) {
-        return findAvailableSlot(key.hashCode());
-    }
-
-    public void otherPut(Object key, Object value) {
-        int index = hash(key);
-
-        indexes[index] = lastIndex + 1;
-
-        items[lastIndex + 1] = new MyNode(key, value);
-
-        lastIndex++;
-
-        occupiedBoxes++;
-
-        length++;
-
-        if (occupiedBoxes > indexes.length * 0.66) {
-            reHash();
-        }
-    }
-
-    private void reHash() {
-        System.out.println("R");
-        MyNode[] oldItems = Arrays.copyOf(items, lastIndex + 1);
-
-        length = 0;
-        occupiedBoxes = 0;
-        int newLength = nextPowerOfTwo(items.length);
-        lastIndex = -1;
-
-        mask = newLength - 1;
-        indexes = new Integer[newLength];
-        items = new MyNode[newLength];
-
-        for (MyNode node : oldItems) {
-            if (node == null) continue;
-            otherPut(node.key(), node.value());
-        }
-    }
-
-    public void put(Object key, Object value) throws KeyErrorException {
-        if (key.getClass().isArray()) {
-            throw new KeyErrorException("No immutable types allowed as keys.");
-        }
-
-        int index = hash(key);
-        LinkedList list = entries[index];
-
-        if (list == null) {
-            list = new LinkedList();
-            entries[index] = list;
-            occupiedBoxes++;
-        }
-
-        LinkedList.Node node = list.append(key, value, lastIntroducedNode);
-
-        if (node != null) {
-            length++;
-        }
-        
-        if (firstIntroducedNode == null) firstIntroducedNode = node;
-        lastIntroducedNode = node;
-    }
-
     /**
-     * Removes the pair key - value with the given key.
+     * Private method used to know if a taken slot is available or not.
      *
-     * @param key to remove
-     * @return the value of the removed pair key - value
+     * @param key to compare
+     * @param index to search into indexes array
+     * @param indexes to take the pair key - value index
+     * @return true if not available else false
      */
-    public Object pop(Object key) throws KeyErrorException {
-        int index = hash(key);
-
-        LinkedList list = entries[index];
-
-        if (list == null) {
-            throw new KeyErrorException("The given key is not in the dictionary");
-        }
-
-        LinkedList.Node node = list.pop(key.toString());
-
-        if (node == null) {
-            throw new KeyErrorException("The given key is not in the dictionary");
-        }
-
-        if (firstIntroducedNode.equals(node)) {
-            firstIntroducedNode = node.nextIntroducedNode();
-        }
-
-        if (lastIntroducedNode.equals(node)) {
-            lastIntroducedNode = node.prevIntroducedNode();
-        }
-
-        length--;
-        return node.value();
-    }
-
-    /**
-     * Removes the last introduced pair key - value.
-     *
-     * @return the removed pair key - value
-     * @throws EmptyDictionaryException
-     */
-    public Object popitem() throws EmptyDictionaryException {
-        if (length == 0) {
-            throw new EmptyDictionaryException("The dictionary is empty.");
-        }
-
-        int index = hash(lastIntroducedNode.key());
-
-        //System.out.println(lastIntroducedNode.key());
-
-        LinkedList list = entries[index];
-
-        LinkedList.Node node = list.pop(lastIntroducedNode.key());
-
-        LinkedList.Node prev = node.prevIntroducedNode();
-
-        if (prev != null) {
-            prev.nextIntroducedNode(null);
-        }
-
-        lastIntroducedNode = prev;
-
-        length--;
-        return node.value();
-    }
-
-    /**
-     * Searches and returns the value in pair with the given key.
-     *
-     * @param key to search the value
-     * @return the value in pair with the given key
-     */
-    public Object get(Object key) throws KeyErrorException {
-        int index = hash(key);
-        LinkedList list = entries[index];
-
-        if (list == null) {
-            throw new KeyErrorException("The given key is not in the dictionary");
-        }
-
-        LinkedList.Node node = list.get(key);
-
-        if (node == null) {
-            throw new KeyErrorException("The given key is not in the dictionary");
-        }
-
-        return node.value();
-    }
-
-    public boolean containsKey(Object key) {
-        int index = hash(key);
-
-        LinkedList list = entries[index];
-
-        if (list == null) {
-            return false;
-        }
-
-        LinkedList.Node node = list.get(key);
-
-        if (node == null) {
+    private boolean isNotAvailableSlot(Object key, int index, Integer[] indexes) {
+        if (indexes[index] != null && items[indexes[index]].key().equals(key) ||
+                indexes[index] == null ||
+                indexes[index] == -1
+        ) {
             return false;
         }
 
@@ -290,49 +114,248 @@ public class Dictionary implements Iterable<Object> {
     }
 
     /**
-     * Returns an Array containing all the keys in the dictionary.
+     * Private method used to find an empty slot or one that contains the
+     * given key.
+     *
+     * @param key to compare
+     * @param hash used to calculate the index
+     * @param indexes to search in
+     * @return an index where an available slot or existing key could be found
+     */
+    private int findSlot(Object key, int hash, Integer[] indexes) {
+        int i = hash & mask;
+        for (int perturb = hash; isNotAvailableSlot(key, i, indexes);) {
+            perturb >>= 5;
+            i = (i*5 + perturb + 1) & mask;
+        }
+        return i;
+    }
+
+    /**
+     * Private method used to get and available slot.
+     *
+     * @param key to apply the hash
+     * @param indexes search for and available slot
+     * @return an index where and available slot is found
+     */
+    private int hash(Object key, Integer[] indexes) {
+        return findSlot(key, key.hashCode(), indexes);
+    }
+
+    /**
+     * Private method used to know if a taken slot has the searched
+     * key or not.
+     *
+     * @param key to compare
+     * @param index to search into indexes array
+     * @return true if not searched key else false
+     */
+    private boolean isNotSearchedKey(Object key, int index) {
+        return indexes[index] != null && !items[indexes[index]].key().equals(key);
+    }
+
+    /**
+     * Private method used to find a slot which contains the given key.
+     *
+     * @param key to compare
+     * @param hash used to calculate the index
+     * @return an index where the key is located or -1 if there is no such slot
+     */
+    private int findSlot(Object key, int hash) {
+        int i = hash & mask;
+
+        for (int perturb = hash; isNotSearchedKey(key, i);) {
+            perturb >>= 5;
+            i = (i*5 + perturb + 1) & mask;
+        }
+        return (indexes[i] != null) ? i : -1;
+    }
+
+    /**
+     * Private method used to find a slot where the given key is located.
+     *
+     * @param key to compare
+     * @return an index where and slot with the given key is located or -1 if
+     * the is no such slot
+     */
+    private int hash(Object key) {
+        return findSlot(key, key.hashCode());
+    }
+
+    /**
+     * Private method used to resize the dictionary when an overload factor
+     * (OV_FACTOR) is reached.
+     */
+    private void resize() {
+        int newLength = nextPowerOfTwo(items.length);
+        int len = lastIndex;
+
+        mask = newLength - 1;
+        lastIndex = -1;
+        size = 0;
+        occupiedBoxes = 0;
+
+        Integer[] newIndexes = new Integer[newLength];
+        Node[] newItems = new Node[newLength];
+
+        for (int i = 0; i <= len; i++) {
+            Node node = items[i];
+            addEntries(node.key(), node.value(), newIndexes, newItems);
+        }
+
+        this.indexes = newIndexes;
+        this.items = newItems;
+    }
+
+    /**
+     * Private method used to store the given pair key - value
+     *
+     * @param key to store or update
+     * @param value associated to the key
+     * @param indexes to search for an available slot or update
+     * @param items to store or update the given pair key - value
+     */
+    private void addEntries(Object key, Object value, Integer[] indexes, Node[] items) {
+        int index = hash(key, indexes);
+
+        if (indexes[index] != null) {
+            items[indexes[index]].value(value);
+            return;
+        }
+
+        indexes[index] = lastIndex + 1;
+        items[lastIndex + 1] = new Node(key, value, index);
+        lastIndex++;
+        occupiedBoxes++;
+        size++;
+
+        if (occupiedBoxes > indexes.length * OV_FACTOR) {
+            resize();
+        }
+    }
+
+    /**
+     * Method used to put a pair key - value into the dictionary.
+     *
+     * @param key to store or update
+     * @param value associated to the key
+     */
+    public void put(Object key, Object value) {
+        addEntries(key, value, this.indexes, this.items);
+    }
+
+    /**
+     * Removes the pair key - value with the given key.
+     *
+     * @param key to remove
+     * @return the value of the removed pair key - value
+     * @throws KeyErrorException if the given key is not in the dictionary
+     */
+    public Object pop(Object key) throws KeyErrorException {
+        int index = hash(key);
+
+        if (index < 0) {
+            throw new KeyErrorException("The given key is not in the dictionary: " + key);
+        }
+
+        Node node = items[indexes[index]];
+        indexes[index] = -1;
+        size--;
+
+        return node.value();
+    }
+
+    /**
+     * Removes the last introduced pair key - value.
+     *
+     * @return the removed pair key - value
+     * @throws EmptyDictionaryException if the dictionary is empty
+     */
+    public Object[] popitem() throws EmptyDictionaryException {
+        if (size == 0) {
+            throw new EmptyDictionaryException("The dictionary is empty");
+        }
+
+        Node node = items[lastIndex];
+
+        if (node != null) {
+            indexes[node.index()] = -1;
+            size--;
+            return new Object[]{node.key(), node.value()};
+        }
+
+        return null;
+    }
+
+    /**
+     * Searches and returns the value in pair with the given key.
+     *
+     * @param key to search the value
+     * @return the value in pair with the given key
+     * @throws KeyErrorException if the given key is not in the dictionary
+     */
+    public Object get(Object key) throws KeyErrorException {
+        int index = hash(key);
+
+        if (index < 0) {
+            throw new KeyErrorException(
+                    "The key is not contained into the dictionary"
+            );
+        }
+
+        return items[indexes[index]].value();
+    }
+
+    public boolean containsKey(Object key) {
+        int index = hash(key);
+
+        return index >= 0;
+    }
+
+    /**
+     * Returns an iterable containing all the keys in the dictionary.
      * Order of insertion is preserved.
      *
-     * @return all the dictionary's keys
+     * @return all the dictionary's keys iterable
      */
     public Iterable<Object> keys() {
-        return new DictionaryKeysIterator(this, firstIntroducedNode);
+        return new DictionaryKeysIterator(indexes, items, this);
     }
 
     /**
-     * Returns an Array containing all the values in the dictionary. Order of
+     * Returns an iterable containing all the values in the dictionary. Order of
      * insertion is preserved.
      *
-     * @return all the dictionary's values
+     * @return all the dictionary's values iterable
      */
     public Iterable<Object> values() {
-        return new DictionaryValuesIterator(this, firstIntroducedNode);
+        return new DictionaryValuesIterator(indexes, items, this);
     }
 
     /**
-     * Returns an Array of arrays containing all the pairs key - value in the
+     * Returns an iterable of arrays containing all the pairs key - value in the
      * dictionary. Order of insertion is preserved.
      *
-     * @return all the dictionary's pairs key - value
+     * @return all the dictionary's pairs key - value iterable
      */
     public Iterable<Object[]> items() {
-        return new DictionaryItemsIterator(this, firstIntroducedNode);
+        return new DictionaryItemsIterator(indexes, items, this);
     }
 
+    /**
+     * String representation of the Dictionary object.
+     *
+     * @return string representation
+     */
     @Override
     public String toString() {
         StringBuilder str = new StringBuilder();
 
         str.append("{");
 
-        LinkedList.Node current = firstIntroducedNode;
-
-        while (current != null) {
-            str.append(current);
-            if (current.nextIntroducedNode() != null) {
-                str.append(", ");
-            }
-            current = current.nextIntroducedNode();
+        for (Node node : items) {
+            if (node == null || node.index() == -1) continue;
+            str.append(node);
         }
 
         str.append("}");
@@ -340,10 +363,15 @@ public class Dictionary implements Iterable<Object> {
         return str.toString();
     }
 
+    /**
+     * Iterator of the Dictionary object.
+     *
+     * @return an iterator
+     */
     @Override
     public Iterator<Object> iterator() {
         return new DictionaryKeysIterator(
-                this, firstIntroducedNode
+                indexes, items, this
         ).iterator();
     }
 }

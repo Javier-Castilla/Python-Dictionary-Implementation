@@ -2,24 +2,45 @@ package org.ulpgc.edp.model;
 
 import java.util.Iterator;
 
-public class DictionaryItemsIterator implements Iterable<Object[]> {
-    private Dictionary dictionary;
-    private LinkedList.Node current;
+/**
+ * Iterable class used to iterate over the Dictionary Items.
+ */
+class DictionaryItemsIterator implements Iterable<Object[]> {
+    private Integer[] indexes;
+    private Node[] items;
+    private Dictionary dict;
 
     /**
-     * Constructor of the iterator class.
+     * Constructor of the iterable class.
      */
-    public DictionaryItemsIterator(Dictionary dictionary, LinkedList.Node firstNode) {
-        this.dictionary = dictionary;
-        this.current = firstNode;
+    DictionaryItemsIterator(Integer[] indexes, Node[] items, Dictionary dict) {
+        this.indexes = indexes;
+        this.items = items;
+        this.dict = dict;
     }
 
+    /**
+     * Iterator method.
+     * @return an iterator
+     */
     @Override
     public Iterator<Object[]> iterator() {
-        return new DictionaryItemsIterator.DictionaryItems();
+        return new DictionaryItems();
     }
 
+    /**
+     * Private inner class used to iterate over the Dictionary items.
+     */
     private class DictionaryItems implements Iterator<Object[]> {
+        private int index, length;
+        private Node node;
+
+        private DictionaryItems() {
+            this.index = 0;
+            this.length = items.length;
+            this.node = items[index];
+        }
+
         /**
          * Overrided method which returns if there is a next element or not.
          *
@@ -27,7 +48,7 @@ public class DictionaryItemsIterator implements Iterable<Object[]> {
          */
         @Override
         public boolean hasNext() {
-            return current != null;
+            return index < length && node != null && indexes[node.index()] != -1;
         }
 
         /**
@@ -38,14 +59,19 @@ public class DictionaryItemsIterator implements Iterable<Object[]> {
         @Override
         public Object[] next() {
             if (hasNext()) {
-                LinkedList.Node node = current;
-                current = current.nextIntroducedNode();
-                return new Object[]{node.key(), node.value()};
+                Object[] returnedItems = new Object[]{node.key(), node.value()};
+                node = items[++index];
+
+                return returnedItems;
             }
             throw new java.util.NoSuchElementException();
         }
     }
 
+    /**
+     * String representation of the Iterable class
+     * @return a string representation
+     */
     @Override
     public String toString() {
         StringBuilder str = new StringBuilder();
@@ -72,7 +98,7 @@ public class DictionaryItemsIterator implements Iterable<Object[]> {
             str.append("), ");
         }
 
-        if (dictionary.length() != 0) {
+        if (dict.size() != 0) {
             str.setLength(str.length() - 2);
         }
 

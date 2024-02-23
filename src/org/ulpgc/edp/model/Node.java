@@ -1,8 +1,13 @@
 package org.ulpgc.edp.model;
 
-public class MyNode {
+/**
+ * Node class used to storage a pair key - value and its index of and indexes
+ * hash table.
+ */
+class Node {
     private Object key;
     private Object value;
+    private int index;
 
     /**
      * Constructor of the Node Class.
@@ -10,30 +15,44 @@ public class MyNode {
      * @param key
      * @param value
      */
-    MyNode(Object key, Object value) {
+    Node(Object key, Object value, int index) {
         this.key = key;
         this.value = value;
+        this.index = index;
     }
 
-    public Object key() {
+    Object key() {
         return key;
     }
 
-    public void key(Object key) {
+    void key(Object key) {
         this.key = key;
     }
 
-    public Object value() {
+    Object value() {
         return value;
     }
 
-    public void value(Object value) {
+    void value(Object value) {
         this.value = value;
     }
 
+    int index() {
+        return index;
+    }
+
+    void index(int index) {
+        this.index = index;
+    }
+
+    /**
+     * String representation of the Node class.
+     * @return a string representation
+     */
     @Override
     public String toString() {
         StringBuilder str = new StringBuilder();
+
         if (key.getClass() == String.class) {
             str.append(String.format("\'%s\'", key));
         } else {
@@ -47,6 +66,7 @@ public class MyNode {
         } else {
             str.append(value);
         }
+
         return str.toString();
     }
 }
