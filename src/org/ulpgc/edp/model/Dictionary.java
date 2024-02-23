@@ -11,24 +11,26 @@ import java.util.Iterator;
  * Accessing an element is almost O(1).
  */
 public class Dictionary implements Iterable<Object> {
+    private Integer[] indexes = new Integer[8];
+    private MyNode[] items = new MyNode[8];
+    private int lastIndex = -1;
     private LinkedList[] entries;
-    private MatrixUtils universalHash;
     private LinkedList.Node firstIntroducedNode;
     private LinkedList.Node lastIntroducedNode;
     private int length;
     private int occupiedBoxes;
-    private int reHashingCounter;
-    private int pseudokeyLength;
-    private boolean reHashingInProgress;
+    private int mask;
 
     /**
      * Constructor by default. No length or items needed.
      */
     public Dictionary() {
         this.entries = new LinkedList[8];
-        this.pseudokeyLength = 8;
-        this.universalHash = new MatrixUtils(3, pseudokeyLength);
-        universalHash.matrix();
+        this.mask = indexes.length - 1;
+    }
+
+    public MyNode[] getItems() {
+        return items;
     }
 
     /**
@@ -39,8 +41,6 @@ public class Dictionary implements Iterable<Object> {
     public Dictionary(int length) {
         int itemsLen = ((int) (Math.log(length) / Math.log(2)) + 1);
         this.entries = new LinkedList[1 << itemsLen];
-        this.pseudokeyLength = 8;
-        this.universalHash = new MatrixUtils(itemsLen, pseudokeyLength);
     }
 
     /**
@@ -58,9 +58,6 @@ public class Dictionary implements Iterable<Object> {
             Object value = items[index][1];
             put(key, value);
         }
-
-        this.pseudokeyLength = 8;
-        this.universalHash = new MatrixUtils(itemsLen, 8);
     }
 
     /**
@@ -109,70 +106,58 @@ public class Dictionary implements Iterable<Object> {
         return num << 1;
     }
 
-    private int hash(Object key) {
-        int code = Math.abs(key.hashCode());
-        code *= code * 17;
-        code = universalHash.hash(
-                code,
-                pseudokeyLength,
-                universalHash.matrix()
-        );
-
-        return code;
+    private boolean isNotAvailableSlot(int index) {
+        return indexes[index] != null;
     }
 
-    private LinkedList[] reHashing(boolean expand) throws Exception {
-        if (reHashingCounter == 10) {
-            throw new Exception("Maximum reHashing reached.");
+    private int findAvailableSlot(int hash) {
+        int i = hash & mask;
+        for (int perturb = hash; isNotAvailableSlot(i);) {
+            perturb >>= 5;
+            i = (i*5 + perturb + 1) & mask;
         }
+        return i;
+    }
 
-        System.out.println("ReHashing");
+    private int hash(Object key) {
+        return findAvailableSlot(key.hashCode());
+    }
 
-        int itemsLen = ((int) (Math.log(nextPowerOfTwo(entries.length)) / Math.log(2)) + 1);
+    public void otherPut(Object key, Object value) {
+        int index = hash(key);
 
-        universalHash.newMatrix(itemsLen - 1, pseudokeyLength);
+        indexes[index] = lastIndex + 1;
 
-        for (LinkedList llll : entries) {
-            System.out.println(llll);
+        items[lastIndex + 1] = new MyNode(key, value);
+
+        lastIndex++;
+
+        occupiedBoxes++;
+
+        length++;
+
+        if (occupiedBoxes > indexes.length * 0.66) {
+            reHash();
         }
+    }
 
-        reHashingInProgress = true;
+    private void reHash() {
+        System.out.println("R");
+        MyNode[] oldItems = Arrays.copyOf(items, lastIndex + 1);
 
+        length = 0;
         occupiedBoxes = 0;
+        int newLength = nextPowerOfTwo(items.length);
+        lastIndex = -1;
 
-        LinkedList[] list = Arrays.copyOf(entries, entries.length);
+        mask = newLength - 1;
+        indexes = new Integer[newLength];
+        items = new MyNode[newLength];
 
-        if (expand) {
-            entries = new LinkedList[nextPowerOfTwo(entries.length)];
+        for (MyNode node : oldItems) {
+            if (node == null) continue;
+            otherPut(node.key(), node.value());
         }
-
-        firstIntroducedNode = null;
-        lastIntroducedNode = null;
-        for (LinkedList l : list) {
-            if (l == null) {continue;}
-            for (LinkedList.Node node : l) {
-                int index = hash(node.key());
-                LinkedList newList = entries[index];
-
-                if (newList == null) {
-                    newList = new LinkedList();
-                    entries[index] = newList;
-                    occupiedBoxes++;
-                }
-
-                LinkedList.Node newNode = newList.append(node.key(), node.value(), lastIntroducedNode);
-
-                if (node != null) {
-                    length++;
-                }
-
-                if (firstIntroducedNode == null) firstIntroducedNode = newNode;
-                lastIntroducedNode = newNode;
-            }
-        }
-
-        reHashingInProgress = false;
-        return entries;
     }
 
     public void put(Object key, Object value) throws KeyErrorException {
@@ -197,15 +182,6 @@ public class Dictionary implements Iterable<Object> {
         
         if (firstIntroducedNode == null) firstIntroducedNode = node;
         lastIntroducedNode = node;
-
-        if (occupiedBoxes >= entries.length * 0.70 || list.length() >= 5) {
-            try {
-                LinkedList[] entriesCopy = Arrays.copyOf(entries, entries.length);
-                reHashing(true);
-            } catch (Exception ex) {
-
-            }
-        }
     }
 
     /**
