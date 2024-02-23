@@ -25,11 +25,9 @@ public class Main {
         Dictionary d = new Dictionary();
 
 
-        for (int i = 0; i < 1000; i++) {
+        for (int i = 0; i < 8; i++) {
             d.put("Hola" + Integer.toString(i), i);
         }
-
-        //System.out.println(d);
 
         long endTime = System.nanoTime();
         // Calcula la duración de la ejecución en segundos

@@ -20,15 +20,14 @@ public class Dictionary implements Iterable<Object> {
     private int occupiedBoxes;
     private int codeLength;
     private int prime;
+    private int mask;
 
     /**
      * Constructor by default. No length or items needed.
      */
     public Dictionary() {
         this.entries = new LinkedList[8];
-        this.universalHash = new UniversalHash(entries.length, 10007);
-        this.codeLength = 4;
-        this.prime = 10007;
+        this.mask = entries().length - 1;
     }
 
     /**
@@ -75,26 +74,6 @@ public class Dictionary implements Iterable<Object> {
     }
 
     /**
-     * Private method which calculates the next prime number of the given one.
-     *
-     * @param num to calculate the next prime number
-     * @return the next prime number
-     */
-    private int nextPrimeNumber(int num) {
-        while (true) {
-            int counter = 0;
-            for (int i = 2; i < num; i++) {
-                if (num % i == 0) {
-                    num++;
-                    counter++;
-                    break;
-                }
-            }
-            if (counter == 0) return num;
-        }
-    }
-
-    /**
      * Given a number, it returns the next power of two.
      *
      * @param num
@@ -104,80 +83,28 @@ public class Dictionary implements Iterable<Object> {
         return num << 1;
     }
 
+    private boolean isNotAvailableSlot(int index) {
+        LinkedList item = entries[index];
+        return item != null && item.length() >= 5;
+    }
+
+    private int findEmptySlot(int hash) {
+        int i = hash & mask;
+        for (int perturb = hash; isNotAvailableSlot(i);) {
+            perturb >>= 5;
+            i = (i*5 + perturb + 1) & mask;
+        }
+        System.out.println(i);
+        return i;
+    }
+
     private int hash(Object key) {
-        return key.hashCode() & (entries.length - 1);
-        /*
-        int code = 0;
-
-        if (key instanceof String) {
-            String strKey = (String) key;
-            for (int index = 0; index < strKey.length(); index++) {
-                code += universalHash.calcHash((int) strKey.charAt(index));
-            }
-        } else {
-            return universalHash.calcHash((key.hashCode() & 0x0F00) >> 8);
-        }
-
-        return universalHash.calcHash((code & 0x0F00) >> 8);*/
-    }
-
-    private void rehash() {
-        LinkedList[] newEntries = Arrays.copyOf(entries, entries.length);
-        entries = new LinkedList[nextPowerOfTwo(entries.length)];
-        universalHash.length(entries.length);
-        universalHash.updateValues();
-        firstIntroducedNode = null;
-        lastIntroducedNode = null;
-        length = 0;
-
-        for (LinkedList l : newEntries) {
-            if (l == null) continue;
-            for (LinkedList.Node node : l) {
-                try {
-                    put(node.key(), node.value());
-                } catch (Exception ex) {}
-            }
-        }
-    }
-
-    private LinkedList.Node openAddressing(Object key, Object value, int index) {
-        int k = 1;
-        int i = index;
-
-        while (true) {
-            i += k;
-
-            if (i >= entries.length) {
-                i -= entries.length;
-            }
-
-            LinkedList list = entries[i];
-
-            if (list == null) {
-                list = new LinkedList();
-                entries[i] = list;
-                return list.append(key, value, lastIntroducedNode);
-            } else if (list.length() < 5) {
-                return list.append(key, value, lastIntroducedNode);
-            }
-
-            if (i == index) {
-                k++;
-            } else if (k == 7) {
-                rehash();
-                try {
-                    put(key, value);
-                } catch (Exception ex) {}
-                break;
-            }
-        }
-
-        return null;
+        return findEmptySlot(key.hashCode());
     }
 
     public void put(Object key, Object value) throws KeyErrorException {
         if (key.getClass().isArray()) {
-            throw new KeyErrorException("No immutable types allowed as keys.");
+            throw new KeyErrorException("No mutable types allowed as keys.");
         }
 
         int index = hash(key);
@@ -190,12 +117,7 @@ public class Dictionary implements Iterable<Object> {
         }
 
         LinkedList.Node node;
-
-        if (list.length() >= 1) {
-            node = openAddressing(key, value, index);
-        } else {
-            node = list.append(key, value, lastIntroducedNode);
-        }
+        node = list.append(key, value, lastIntroducedNode);
 
         if (node != null) {
             length++;
@@ -203,10 +125,6 @@ public class Dictionary implements Iterable<Object> {
         
         if (firstIntroducedNode == null) firstIntroducedNode = node;
         lastIntroducedNode = node;
-
-        if (occupiedBoxes >= entries.length * 0.85) {
-            rehash();
-        }
     }
 
     /**
@@ -315,7 +233,7 @@ public class Dictionary implements Iterable<Object> {
     }
 
     public void clear() {
-        entries = new LinkedList[entries.length];
+        entries = new LinkedList[8];
     }
 
     /**
