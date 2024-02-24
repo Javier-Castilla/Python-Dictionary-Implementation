@@ -12,6 +12,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.text.DecimalFormat;
+import java.util.Arrays;
 
 @RunWith(Suite.class)
 @SuiteClasses({
@@ -23,9 +24,22 @@ public class Main {
     public static void main(String[] args) throws KeyErrorException {
         //org.junit.runner.JUnitCore.main("org.ulpgc.edp.control.Main");
 
+        Dictionary d = new Dictionary();
+
+        for (int i = 0; i < 30; i++) {
+            d.put("Hola", i);
+        }
+
+        System.out.println(d);
+
+        d.clear();
+
+        System.out.println(d);
+    }
+
+    public static void timesFile() {
         String rutaArchivo = "times.txt";
         int size = 1;
-        DecimalFormat df = new DecimalFormat("#.###");
 
         try {
             File archivo = new File(rutaArchivo);

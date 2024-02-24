@@ -306,10 +306,27 @@ public class Dictionary implements Iterable<Object> {
         return items[indexes[index]].value();
     }
 
+    /**
+     * Method to test is a key is contained into the Dictionary.
+     *
+     * @param key to test
+     * @return true if Dictionary contains key else false
+     */
     public boolean containsKey(Object key) {
         int index = hash(key);
 
         return index >= 0;
+    }
+
+    /**
+     * Clears all the Dictionary, like if a new Dictionary has been created.
+     */
+    public void clear() {
+        indexes = new Integer[indexes.length];
+        items = new Node[items.length];
+        lastIndex = -1;
+        size = 0;
+        occupiedBoxes = 0;
     }
 
     /**
@@ -356,6 +373,11 @@ public class Dictionary implements Iterable<Object> {
         for (Node node : items) {
             if (node == null || node.index() == -1) continue;
             str.append(node);
+            str.append(", ");
+        }
+
+        if (size != 0) {
+            str.setLength(str.length() - 2);
         }
 
         str.append("}");
