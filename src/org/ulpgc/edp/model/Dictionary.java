@@ -378,14 +378,35 @@ public class Dictionary implements Iterable<Object> {
         return new DictionaryItemsIterator(indexes, items, this);
     }
 
+    /**
+     * Overrided method to know if other objects is equals to current object.
+     *
+     * @param object to compare
+     * @return true if equals else false
+     */
     @Override
     public boolean equals(Object object) {
         if (this == object) return true;
         if (object == null || getClass() != object.getClass()) return false;
         Dictionary other = (Dictionary) object;
-        return size == other.size();
+        if (size != other.size()) return false;
+
+        Iterator<Object[]> it1 = items().iterator();
+        Iterator<Object[]> it2 = other.items().iterator();
+
+
+        while (it1.hasNext() && it2.hasNext()) {
+            if (it1.next() != it2.next()) return false;
+        }
+
+        return true;
     }
 
+    /**
+     * Calculates an returns the hashCode value
+     *
+     * @return hashCode value
+     */
     @Override
     public int hashCode() {
         int result = Objects.hash(size);
