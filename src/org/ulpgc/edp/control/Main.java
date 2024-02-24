@@ -15,19 +15,22 @@ import java.io.IOException;
 @RunWith(Suite.class)
 @SuiteClasses({
         TestEmptyDictionary.class,
-        TestOneItemDictionary.class
+        TestOneItemDictionary.class,
+        TestManyItemsDictionary.class
 })
 
 public class Main {
-    public static final int LIMIT = 1000000;
+    public static final int LIMIT = 1048576;
     public static void main(String[] args) throws KeyErrorException {
         //org.junit.runner.JUnitCore.main("org.ulpgc.edp.control.Main");
 
         long startTime = System.nanoTime();
         Dictionary d = new Dictionary();
 
+        System.out.println(d);
+
         for (int i = 0; i < LIMIT; i++) {
-            d.put("TestingThis" + i, i);
+            d.put("Mamawebo" + i, i);
         }
 
         System.out.println(d.size());

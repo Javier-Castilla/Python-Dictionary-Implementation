@@ -3,6 +3,8 @@ package org.ulpgc.edp.model;
 /**
  * Node class used to storage a pair key - value and its index of and indexes
  * hash table.
+ *
+ * @author Javier
  */
 class Node {
     private Object key;
@@ -14,6 +16,7 @@ class Node {
      *
      * @param key
      * @param value
+     * @param index
      */
     Node(Object key, Object value, int index) {
         this.key = key;
@@ -21,26 +24,56 @@ class Node {
         this.index = index;
     }
 
+    /**
+     * Getter for key attribute
+     *
+     * @return key
+     */
     Object key() {
         return key;
     }
 
+    /**
+     * Setter for key attribute
+     *
+     * @param key
+     */
     void key(Object key) {
         this.key = key;
     }
 
+    /**
+     * Getter for value attribute
+     *
+     * @return value
+     */
     Object value() {
         return value;
     }
 
+    /**
+     * Setter for value attribute
+     *
+     * @param value
+     */
     void value(Object value) {
         this.value = value;
     }
 
+    /**
+     * Getter for index attribute
+     *
+     * @return index
+     */
     int index() {
         return index;
     }
 
+    /**
+     * Setter for index value
+     *
+     * @param index
+     */
     void index(int index) {
         this.index = index;
     }

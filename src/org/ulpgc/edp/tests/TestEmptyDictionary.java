@@ -24,7 +24,7 @@ public class TestEmptyDictionary {
     }
 
     @Test
-    public void testPutAndPop() throws EmptyDictionaryException, KeyErrorException  {
+    public void testPutAndPop1() throws KeyErrorException  {
         dictionary.put("1", 1);
         int dictionaryLen = dictionary.size();
         assertEquals(
@@ -32,12 +32,69 @@ public class TestEmptyDictionary {
                         "clave - valor en un diccionario vacío",
                 1, dictionaryLen
         );
-        Object value = dictionary.pop("1");
-        dictionaryLen = dictionary.size();
+    }
+
+    @Test
+    public void testPutAndPop2() throws KeyErrorException  {
+        dictionary.put("1", 1);
+        dictionary.pop("1");
+        int dictionaryLength = dictionary.size();
         assertEquals(
                 "El tamaño debe ser 0 al eliminar una pareja clave " +
                         "- valor en un diccionario de un elemento",
-                0, dictionaryLen
+                0, dictionaryLength
+        );
+    }
+
+    @Test
+    public void testPutAndPop3() throws KeyErrorException  {
+        dictionary.put("1", 1);
+        Object value = dictionary.pop("1");
+        assertEquals(
+                "El elemento quitado es incorrecto",
+                1, value
+        );
+    }
+
+    @Test
+    public void testUpdate1() {
+        Dictionary otherDictionary = new Dictionary();
+        for (int i = 0; i < 4; i++) {
+            otherDictionary.put(i, i);
+        }
+        dictionary.update(otherDictionary);
+        int dictionaryLength = dictionary.size();
+        assertEquals(
+                "Tamaño incorrecto",
+                4, dictionaryLength
+        );
+    }
+
+    @Test
+    public void testUpdate2() {
+        Dictionary otherDictionary = new Dictionary();
+        for (int i = 0; i < 4; i++) {
+            otherDictionary.put(i, i);
+        }
+        dictionary.update(otherDictionary);
+        String str = dictionary.toString();
+        assertEquals(
+                "Los elementos son incorrectos",
+                "{0: 0, 1: 1, 2: 2, 3: 3}", str
+        );
+    }
+
+    @Test
+    public void testUpdate3() throws EmptyDictionaryException {
+        Dictionary otherDictionary = new Dictionary();
+        for (int i = 0; i < 4; i++) {
+            otherDictionary.put(i, i);
+        }
+        dictionary.update(otherDictionary);
+        Object[] value = dictionary.popitem();
+        assertEquals(
+                "El último elemento no es correcto",
+                new Object[]{3, 3}, value
         );
     }
 
@@ -45,8 +102,7 @@ public class TestEmptyDictionary {
     public void testString()  {
         String str = dictionary.toString();
         assertEquals(
-                "La representación como string del diccionario " +
-                        "vacío no coincide con la esperada",
+                "Representación incorrecta",
                 "{}", str
         );
     }
@@ -84,9 +140,17 @@ public class TestEmptyDictionary {
     @Test
     public void testContainsKey() {
         assertFalse(
-                "Se esperaba false para comprobar si se contiene " +
-                        "una clave en un diccionario vacío.",
+                "Valor incorrecto",
                 dictionary.containsKey("key")
+        );
+    }
+
+    @Test
+    public void testEquals() {
+        Dictionary otherDictionary = new Dictionary();
+        assertTrue(
+                "Valor incorrecto",
+                dictionary.equals(otherDictionary)
         );
     }
 

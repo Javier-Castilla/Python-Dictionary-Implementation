@@ -8,65 +8,107 @@ import static org.junit.Assert.*;
 public class TestOneItemDictionary {
     private Dictionary dictionary;
     @Before
-    public void init() throws KeyErrorException {
+    public void init() {
         this.dictionary = new Dictionary();
         dictionary.put("1", 1);
     }
 
     @Test
-    public void testPutAndPop() throws EmptyDictionaryException, KeyErrorException {
+    public void testPutAndPop1() {
         dictionary.put("2", 2);
         int len = dictionary.size();
         assertEquals(
-                "La longitud del diccionario con dos elementos " +
-                        "no coincide con la esperada.",
+                "Tamaño incorrecto",
                 2, len
-        );
-
-        Object value = dictionary.pop("2");
-        len = dictionary.size();
-        assertEquals(
-                "La longitud del diccionario con dos elementos " +
-                        "no coincide con la esperada al eliminar uno.",
-                1, len
-        );
-
-        assertEquals(
-                "El valor devuelto al eliminar una pareja " +
-                        "clave - valor no coincide con el esperado.",
-                2, value
-        );
-
-        value = dictionary.pop("1");
-        len = dictionary.size();
-        assertEquals(
-                "La longitud del diccionario con in elemento " +
-                        "no coincide con la esperada al eliminarlo.",
-                0, len
-        );
-
-        assertEquals(
-                "El valor devuelto al eliminar una pareja " +
-                        "clave - valor no coincide con el esperado.",
-                1, value
         );
     }
 
     @Test
-    public void replace() throws KeyErrorException {
-        dictionary.put("1", 100);
+    public void testPutAndPop2() throws KeyErrorException {
+        dictionary.put("2", 2);
+        dictionary.pop("2");
         int len = dictionary.size();
         assertEquals(
-                "La longitud del diccionario con un elemento " +
-                        "no coincide con la esperada al actualizarlo.",
+                "Tamaño incorrecto",
                 1, len
         );
+    }
 
+    @Test
+    public void testPutAndPop3() throws EmptyDictionaryException {
+        dictionary.put("2", 2);
+        Object[] item = dictionary.popitem();
+        assertEquals(
+                "Valor incorrecto",
+                new Object[]{"2", 2}, item
+        );
+    }
+
+    @Test
+    public void testPutAndPop4() throws KeyErrorException {
+        dictionary.put("2", 2);
+        Object value = dictionary.pop("2");
+        assertEquals(
+                "Valor incorrecto",
+                2, value
+        );
+    }
+
+    @Test
+    public void testPutAndPop5() throws KeyErrorException {
+        dictionary.put("2", 2);
+        Object value = dictionary.pop("2");
+        assertEquals(
+                "Valor incorrecto",
+                2, value
+        );
+    }
+
+    @Test
+    public void testReplace1() throws KeyErrorException {
+        dictionary.put("1", 100);
+        int dictionaryLength = dictionary.size();
+        assertEquals(
+                "Tamaño incorrecto",
+                1, dictionaryLength
+        );
+    }
+
+    @Test
+    public void testReplace2() throws KeyErrorException {
+        dictionary.put("1", 100);
         Object value = dictionary.get("1");
         assertEquals(
-                "El valor no coincide con el esperado al actualizar " +
-                        "una pareja clave - valor.",
+                "Valor incorrecto",
                 100, value
+        );
+    }
+
+    @Test
+    public void testUpdate1() {
+        Dictionary otherDictionary = new Dictionary();
+        for (int i = 0; i < 4; i++) {
+            otherDictionary.put(i, i);
+        }
+        dictionary.update(otherDictionary);
+        int dictionaryLength = dictionary.size();
+        assertEquals(
+                "Tamaño incorrecto",
+                5, dictionaryLength
+        );
+    }
+
+    @Test
+    public void testUpdate2() {
+        Dictionary otherDictionary = new Dictionary();
+        for (int i = 0; i < 4; i++) {
+            otherDictionary.put(i, i);
+        }
+        dictionary.update(otherDictionary);
+        String str = dictionary.toString();
+        assertEquals(
+                "Los elementos son incorrectos",
+                "{'1': 1, 0: 0, 1: 1, 2: 2, 3: 3}", str
         );
     }
 
@@ -74,10 +116,25 @@ public class TestOneItemDictionary {
     public void testString()  {
         String str = dictionary.toString();
         assertEquals(
-                "La representación como string del diccionario " +
-                        "de un elemento no coincide con la esperada.",
+                "Representación incorrecta",
                 "{'1': 1}", str
         );
+    }
+
+    @Test
+    public void testClear1() {
+        dictionary.clear();
+        int dictionaryLength = dictionary.size();
+        assertEquals(
+                "Tamaño incorrecto",
+                0, dictionaryLength
+        );
+    }
+
+    @Test(expected = EmptyDictionaryException.class)
+    public void testClear2() throws EmptyDictionaryException {
+        dictionary.clear();
+        dictionary.popitem();
     }
 
     @Test
@@ -113,25 +170,27 @@ public class TestOneItemDictionary {
     @Test
     public void testContainsKey() {
         assertTrue(
-                "Se esperaba true para comprobar si se contiene " +
-                        "una clave en un diccionario {'1': 1}.",
+                "Valor incorrecto",
                 dictionary.containsKey("1")
         );
     }
 
     @Test
-    public void testPopItem() throws EmptyDictionaryException {
+    public void testPopItem1() throws EmptyDictionaryException {
         Object[] values = dictionary.popitem();
         assertEquals(
-                "El valor de la pareja eliminada no coincide " +
-                        "con la esperada.",
+                "Valor incorrecto",
                 new Object[]{"1", 1}, values
         );
-        int len = dictionary.size();
+    }
+
+    @Test
+    public void testPopItem2() throws EmptyDictionaryException {
+        dictionary.popitem();
+        int dictionaryLength = dictionary.size();
         assertEquals(
-                "La longitud del diccionario con un elemento " +
-                        "no coincide con la esperada al eliminarlo.",
-                0, len
+                "Tamaño incorrecto",
+                0, dictionaryLength
         );
     }
 

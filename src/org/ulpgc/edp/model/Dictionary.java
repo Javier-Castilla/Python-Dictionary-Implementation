@@ -2,12 +2,16 @@ package org.ulpgc.edp.model;
 
 import org.ulpgc.edp.exceptions.*;
 
+import java.util.Arrays;
 import java.util.Iterator;
+import java.util.Objects;
 
 /**
  * Class which represents a dictionary data structure.
  * It stores pairs of keys - values on an efficient way.
  * Accessing an element is almost O(1).
+ *
+ * @author Javier
  */
 public class Dictionary implements Iterable<Object> {
     private Integer[] indexes;
@@ -16,7 +20,7 @@ public class Dictionary implements Iterable<Object> {
     private int size;
     private int occupiedBoxes;
     private int mask;
-    private static final double OV_FACTOR = 0.66;
+    private static final double OV_FACTOR = 0.6;
     private static final int PERTURB_SHIFT = 3;
 
     /**
@@ -45,7 +49,7 @@ public class Dictionary implements Iterable<Object> {
      *
      * @param items to put into the new dictionary
      */
-    public Dictionary(Object[][] items) throws KeyErrorException {
+    public Dictionary(Object[][] items) {
         int itemsLen = (int) (Math.log(items.length) / Math.log(2)) + 1;
         this.indexes = new Integer[1 << itemsLen];
         this.items = new Node[1 << itemsLen];
@@ -55,14 +59,6 @@ public class Dictionary implements Iterable<Object> {
             Object value = items[index][1];
             put(key, value);
         }
-    }
-
-    /**
-     *
-     * @return the number of elements in the dictionary
-     */
-    public int size() {
-        return size;
     }
 
     /**
@@ -110,7 +106,6 @@ public class Dictionary implements Iterable<Object> {
         ) {
             return false;
         }
-
         return true;
     }
 
@@ -125,6 +120,7 @@ public class Dictionary implements Iterable<Object> {
      */
     private int findSlot(Object key, int hash, Integer[] indexes) {
         int i = hash & mask;
+
         for (int perturb = hash; isNotAvailableSlot(key, i, indexes);) {
             perturb >>= PERTURB_SHIFT;
             i = (i*PERTURB_SHIFT + perturb + 1) & mask;
@@ -236,6 +232,14 @@ public class Dictionary implements Iterable<Object> {
     }
 
     /**
+     *
+     * @return the number of elements in the dictionary
+     */
+    public int size() {
+        return size;
+    }
+
+    /**
      * Method used to put a pair key - value into the dictionary.
      *
      * @param key to store or update
@@ -268,7 +272,9 @@ public class Dictionary implements Iterable<Object> {
         int index = hash(key);
 
         if (index < 0) {
-            throw new KeyErrorException("The given key is not in the dictionary: " + key);
+            throw new KeyErrorException(
+                    "The given key is not in the dictionary: " + key
+            );
         }
 
         Node node = items[indexes[index]];
@@ -298,6 +304,17 @@ public class Dictionary implements Iterable<Object> {
         }
 
         return null;
+    }
+
+    /**
+     * Clears all the Dictionary, like if a new Dictionary has been created.
+     */
+    public void clear() {
+        indexes = new Integer[indexes.length];
+        items = new Node[items.length];
+        lastIndex = -1;
+        size = 0;
+        occupiedBoxes = 0;
     }
 
     /**
@@ -332,17 +349,6 @@ public class Dictionary implements Iterable<Object> {
     }
 
     /**
-     * Clears all the Dictionary, like if a new Dictionary has been created.
-     */
-    public void clear() {
-        indexes = new Integer[indexes.length];
-        items = new Node[items.length];
-        lastIndex = -1;
-        size = 0;
-        occupiedBoxes = 0;
-    }
-
-    /**
      * Returns an iterable containing all the keys in the dictionary.
      * Order of insertion is preserved.
      *
@@ -370,6 +376,22 @@ public class Dictionary implements Iterable<Object> {
      */
     public Iterable<Object[]> items() {
         return new DictionaryItemsIterator(indexes, items, this);
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        if (this == object) return true;
+        if (object == null || getClass() != object.getClass()) return false;
+        Dictionary other = (Dictionary) object;
+        return size == other.size();
+    }
+
+    @Override
+    public int hashCode() {
+        int result = Objects.hash(size);
+        result = 31 * result + Arrays.hashCode(indexes);
+        result = 31 * result + Arrays.hashCode(items);
+        return result;
     }
 
     /**
