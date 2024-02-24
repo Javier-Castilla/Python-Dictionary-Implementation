@@ -11,8 +11,6 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.text.DecimalFormat;
-import java.util.Arrays;
 
 @RunWith(Suite.class)
 @SuiteClasses({
@@ -21,20 +19,25 @@ import java.util.Arrays;
 })
 
 public class Main {
+    public static final int LIMIT = 1000000;
     public static void main(String[] args) throws KeyErrorException {
         //org.junit.runner.JUnitCore.main("org.ulpgc.edp.control.Main");
 
+        long startTime = System.nanoTime();
         Dictionary d = new Dictionary();
 
-        for (int i = 0; i < 30; i++) {
-            d.put("Hola", i);
+        for (int i = 0; i < LIMIT; i++) {
+            d.put("TestingThis" + i, i);
         }
 
-        System.out.println(d);
+        System.out.println(d.size());
 
-        d.clear();
+        long endTime = System.nanoTime();
+        long duration = (endTime - startTime);
+        double ms = duration / 1e6;
+        double sc = ms / 1000;
 
-        System.out.println(d);
+        System.out.println("Tiempo de ejecución para " + LIMIT + " elementos: " + ms + "ms (" + sc + " segs)");
     }
 
     public static void timesFile() {

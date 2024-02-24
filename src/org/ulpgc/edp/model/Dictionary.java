@@ -17,6 +17,7 @@ public class Dictionary implements Iterable<Object> {
     private int occupiedBoxes;
     private int mask;
     private static final double OV_FACTOR = 0.66;
+    private static final int PERTURB_SHIFT = 3;
 
     /**
      * Constructor by default. No length or items needed.
@@ -125,8 +126,8 @@ public class Dictionary implements Iterable<Object> {
     private int findSlot(Object key, int hash, Integer[] indexes) {
         int i = hash & mask;
         for (int perturb = hash; isNotAvailableSlot(key, i, indexes);) {
-            perturb >>= 5;
-            i = (i*5 + perturb + 1) & mask;
+            perturb >>= PERTURB_SHIFT;
+            i = (i*PERTURB_SHIFT + perturb + 1) & mask;
         }
         return i;
     }
@@ -165,8 +166,8 @@ public class Dictionary implements Iterable<Object> {
         int i = hash & mask;
 
         for (int perturb = hash; isNotSearchedKey(key, i);) {
-            perturb >>= 5;
-            i = (i*5 + perturb + 1) & mask;
+            perturb >>= PERTURB_SHIFT;
+            i = (i*PERTURB_SHIFT + perturb + 1) & mask;
         }
         return (indexes[i] != null) ? i : -1;
     }
@@ -242,6 +243,18 @@ public class Dictionary implements Iterable<Object> {
      */
     public void put(Object key, Object value) {
         addEntries(key, value, this.indexes, this.items);
+    }
+
+    /**
+     * Method that updates the current dictionary with all the elements that
+     * the dictionary given as a parameter has.
+     *
+     * @param dictionary
+     */
+    public void update(Dictionary dictionary) {
+        for (Object[] item : dictionary.items()) {
+            put(item[0], item[1]);
+        }
     }
 
     /**
