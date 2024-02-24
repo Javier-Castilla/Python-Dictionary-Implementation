@@ -1,10 +1,8 @@
 package org.ulpgc.edp.tests;
 
 import org.junit.*;
-import org.junit.runner.JUnitCore;
 import org.ulpgc.edp.exceptions.*;
 import org.ulpgc.edp.model.Dictionary;
-
 import static org.junit.Assert.*;
 
 public class TestEmptyDictionary {
@@ -16,221 +14,158 @@ public class TestEmptyDictionary {
     }
 
     @Test
-    public void testLen1() {
-        int dictionaryLen = dictionary.length();
+    public void testLen() throws KeyErrorException  {
+        int dictionaryLen = dictionary.size();
         assertEquals(
-                "El tamaño debe ser 0 al inicializar el diccionario sin un tamaño determinado",
+                "El tamaño debe ser 0 al inicializar el diccionario " +
+                        "sin un tamaño determinado",
                 0, dictionaryLen
         );
     }
 
     @Test
-    public void testLen2() {
+    public void testPutAndPop1() throws KeyErrorException  {
         dictionary.put("1", 1);
-        dictionary.put("2", 2);
-        int dictionaryLen = dictionary.length();
+        int dictionaryLen = dictionary.size();
         assertEquals(
-                "El tamaño debe ser 2 al insertar dos nuevas parejas clave - valor en un diccionario vacío",
-                2, dictionaryLen
-        );
-    }
-
-    @Test
-    public void testLen3() {
-        dictionary.put("1", 1);
-        dictionary.put("2", 2);
-        dictionary.put("3", 3);
-        int dictionaryLen = dictionary.length();
-        assertEquals(
-                "El tamaño debe ser 3 al insertar tres nuevas parejas clave - valor en un diccionario vacío",
-                3, dictionaryLen
-        );
-    }
-
-    @Test
-    public void testPutAndPop1() {
-        dictionary.put("1", 1);
-        int dictionaryLen = dictionary.length();
-        assertEquals(
-                "El tamaño debe ser 1 al insertar una nueva pareja clave - valor en un diccionario vacío",
+                "El tamaño debe ser 1 al insertar una nueva pareja " +
+                        "clave - valor en un diccionario vacío",
                 1, dictionaryLen
         );
+    }
+
+    @Test
+    public void testPutAndPop2() throws KeyErrorException  {
+        dictionary.put("1", 1);
+        dictionary.pop("1");
+        int dictionaryLength = dictionary.size();
+        assertEquals(
+                "El tamaño debe ser 0 al eliminar una pareja clave " +
+                        "- valor en un diccionario de un elemento",
+                0, dictionaryLength
+        );
+    }
+
+    @Test
+    public void testPutAndPop3() throws KeyErrorException  {
+        dictionary.put("1", 1);
         Object value = dictionary.pop("1");
-        dictionaryLen = dictionary.length();
         assertEquals(
-                "El tamaño debe ser 0 al eliminar una pareja clave - valor en un diccionario de un elemento",
-                1, dictionaryLen
-        );
-        assertEquals(
-                "El elemento eliminado debería ser 1 para un diccionario con pareja clave - valor {'1': 1}",
-                1, value);
-    }
-
-    @Test
-    public void testPutAndPop2() {
-        dictionary.put("1", 1);
-        int dictionaryLen = dictionary.length();
-        assertEquals(
-                "El tamaño debe ser 1 al insertar una nueva pareja clave - valor en un diccionario vacío",
-                1, dictionaryLen
-        );
-        dictionary.put("2", 2);
-        dictionaryLen = dictionary.length();
-        assertEquals(
-                "El tamaño debe ser 2 al insertar una nueva pareja clave - valor en un diccionario de un elemento",
-                2, dictionaryLen
-        );
-        Object value1 = dictionary.pop("1");
-        Object value2 = dictionary.pop("2");
-        dictionaryLen = dictionary.length();
-        assertEquals(
-                "El tamaño debe ser 0 al eliminar una pareja clave - valor en un diccionario de un elemento",
-                1, dictionaryLen
-        );
-        assertEquals(
-                "El elemento eliminado debería ser 1 para un diccionario con parejas clave - valor {'1': 1, '2': 2}",
-                1, value1
-        );
-        assertEquals(
-                "El elemento eliminado debería ser 2 para un diccionario con parejas clave - valor {'2': 2}",
-                2, value2
+                "El elemento quitado es incorrecto",
+                1, value
         );
     }
 
     @Test
-    public void replace1() {
-        dictionary.put("1", 1);
-        dictionary.put("1", 100);
-        Object item = dictionary.get("1");
+    public void testUpdate1() {
+        Dictionary otherDictionary = new Dictionary();
+        for (int i = 0; i < 4; i++) {
+            otherDictionary.put(i, i);
+        }
+        dictionary.update(otherDictionary);
+        int dictionaryLength = dictionary.size();
         assertEquals(
-                "El elemento devuelto al actualizar ('1': 1) no coincide con el esperado",
-                100, item
+                "Tamaño incorrecto",
+                4, dictionaryLength
         );
     }
 
     @Test
-    public void replace2() {
-        dictionary.put("1", 1);
-        dictionary.put("2", 2);
-        dictionary.put("3", 3);
-        dictionary.put("1", 100);
-        Object item = dictionary.get("1");
-        assertEquals(
-                "El elemento devuelto al actualizar ('1': 1) no coincide con el esperado",
-                100, item
-        );
-        item = dictionary.get("2");
-        assertEquals(
-                "El elemento devuelto al obtener ('2': 2) después de actualizar ('1': 1) no coincide con el esperado",
-                2, item
-        );
-        dictionary.put("2", 200);
-        item = dictionary.get("2");
-        assertEquals(
-                "El elemento devuelto al actualizar ('2': 2) no coincide con el esperado",
-                200, item
-        );
-        item = dictionary.get("3");
-        assertEquals(
-                "El elemento devuelto al obtener ('3': 3) después de actualizar ('1': 1) y ('2': 2) no coincide con el esperado",
-                3, item
-        );
-        dictionary.put("3", 300);
-        item = dictionary.get("3");
-        assertEquals(
-                "El elemento devuelto al actualizar ('3': 3) no coincide con el esperado",
-                300, item
-        );
-    }
-
-    @Test
-    public void testString1() {
-        dictionary.put("1", 1);
+    public void testUpdate2() {
+        Dictionary otherDictionary = new Dictionary();
+        for (int i = 0; i < 4; i++) {
+            otherDictionary.put(i, i);
+        }
+        dictionary.update(otherDictionary);
         String str = dictionary.toString();
         assertEquals(
-                "La representación como string del diccionario no coincide con la esperada al insertar un elemento",
-                "{'1': 1}", str
+                "Los elementos son incorrectos",
+                "{0: 0, 1: 1, 2: 2, 3: 3}", str
         );
     }
 
     @Test
-    public void testString2() {
-        dictionary.put("1", 1);
-        dictionary.put("2", 2);
-        String str = dictionary.toString();
+    public void testUpdate3() throws EmptyDictionaryException {
+        Dictionary otherDictionary = new Dictionary();
+        for (int i = 0; i < 4; i++) {
+            otherDictionary.put(i, i);
+        }
+        dictionary.update(otherDictionary);
+        Object[] value = dictionary.popitem();
         assertEquals(
-                "La representación como string del diccionario no coincide con la esperada al isnertar dos elementos",
-                "{'1': 1, '2': 2}", str
+                "El último elemento no es correcto",
+                new Object[]{3, 3}, value
         );
     }
 
     @Test
-    public void testString3() {
-        dictionary.put(1, 1);
+    public void testString()  {
         String str = dictionary.toString();
         assertEquals(
-                "La representación como string del diccionario no coincide con la esperada al insertar un elemento",
-                "{1: 1}", str
+                "Representación incorrecta",
+                "{}", str
         );
     }
 
     @Test
-    public void testString4() {
-        dictionary.put(1, 1);
-        dictionary.put(2, 2);
-        String str = dictionary.toString();
+    public void testKeys() {
+        String keys = dictionary.keys().toString();
         assertEquals(
-                "La representación como string del diccionario no coincide con la esperada al isnertar dos elementos",
-                "{1: 1, 2: 2}", str
+                "Las claves devueltas no corresponden " +
+                        "con las esperadas.",
+                "DictionaryKeys([])", keys
         );
     }
 
     @Test
-    public void testString5() {
-        dictionary.put("1", 1);
-        dictionary.put("1", 100);
-        String str = dictionary.toString();
+    public void testValues() {
+        String values = dictionary.values().toString();
         assertEquals(
-                "La representación como string del diccionario no coincide con la esperada al isnertar dos elementos",
-                "{'1': 100}", str
+                "Los valores devueltos no corresponden " +
+                        "con las esperados.",
+                "DictionaryValues([])", values
         );
     }
 
     @Test
-    public void testString6() {
-        dictionary.put("1", 1);
-        dictionary.put("2", 2);
-        dictionary.put("1", 100);
-        String str = dictionary.toString();
+    public void testItems() {
+        String items = dictionary.items().toString();
         assertEquals(
-                "La representación como string del diccionario no coincide con la esperada al isnertar dos elementos",
-                "{'1': 100, '2': 2}", str
+                "Las parejas devueltas no coinciden con " +
+                        "las esperadas",
+                "DictionaryItems([])", items
+        );
+    }
+
+    @Test
+    public void testContainsKey() {
+        assertFalse(
+                "Valor incorrecto",
+                dictionary.containsKey("key")
+        );
+    }
+
+    @Test
+    public void testEquals() {
+        Dictionary otherDictionary = new Dictionary();
+        assertTrue(
+                "Valor incorrecto",
+                dictionary.equals(otherDictionary)
         );
     }
 
     @Test(expected = KeyErrorException.class)
-    public void testGetNoneExistingKey() {
-        dictionary.put("1", 1);
+    public void testGetNoneExistingKey() throws KeyErrorException  {
         dictionary.get("1");
     }
 
     @Test(expected = KeyErrorException.class)
-    public void testUnhasheableKey() {
-        dictionary.put(new String[3], 1);
-    }
-
-    @Test(expected = EmptyDictionaryException.class)
-    public void tesEmptyPop() {
+    public void tesPop() throws KeyErrorException  {
         dictionary.pop("1");
     }
 
     @Test(expected = EmptyDictionaryException.class)
-    public void testEmptyGet() {
-        dictionary.get("1");
-    }
-
-    @Test(expected = EmptyDictionaryException.class)
-    public void testEmptyPopItem() {
+    public void testPopItem() throws EmptyDictionaryException {
         dictionary.popitem();
     }
 }

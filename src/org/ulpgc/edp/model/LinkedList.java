@@ -7,7 +7,7 @@ import java.util.Iterator;
  */
 public class LinkedList implements Iterable<LinkedList.Node> {
     private LinkedList.Node firstNode, lastNode;
-    private int length;
+    private int length = 0;
 
     /**
      * Internal and private class used to store the given pairs key - value.
@@ -17,7 +17,6 @@ public class LinkedList implements Iterable<LinkedList.Node> {
     class Node {
         private Object key;
         private Object value;
-        private LinkedList.Node prevNode;
         private LinkedList.Node nextNode;
         private LinkedList.Node nextIntroducedNode;
         private LinkedList.Node prevIntroducedNode;
@@ -41,10 +40,6 @@ public class LinkedList implements Iterable<LinkedList.Node> {
             return value;
         }
 
-        LinkedList.Node prevNode() {
-            return prevNode;
-        }
-
         LinkedList.Node nextNode() {
             return nextNode;
         }
@@ -53,8 +48,16 @@ public class LinkedList implements Iterable<LinkedList.Node> {
             return nextIntroducedNode;
         }
 
+        void nextIntroducedNode(LinkedList.Node nextIntroducedNode) {
+            this.nextIntroducedNode = nextIntroducedNode;
+        }
+
         LinkedList.Node prevIntroducedNode() {
             return prevIntroducedNode;
+        }
+
+        void prevIntroducedNode(LinkedList.Node prevIntroducedNode) {
+            this.prevIntroducedNode = prevIntroducedNode;
         }
 
         /**
@@ -77,15 +80,33 @@ public class LinkedList implements Iterable<LinkedList.Node> {
         @Override
         public String toString() {
             StringBuilder str = new StringBuilder();
-            str.append(
-                    (key.getClass() == String.class) ? String.format("\'%s\'", key) : key
-            );
+            if (key.getClass() == String.class) {
+                str.append(String.format("\'%s\'", key));
+            } else {
+                str.append(key);
+            }
+
             str.append(": ");
-            str.append(
-                    (value.getClass() == String.class) ? String.format("\'%s\'", value) : value
-            );
+
+            if (value.getClass() == String.class) {
+                str.append(String.format("\'%s\'", value));
+            } else {
+                str.append(value);
+            }
             return str.toString();
         }
+    }
+
+    public Node firstNode() {
+        return firstNode;
+    }
+
+    public Node lastNode() {
+        return lastNode;
+    }
+
+    public int length() {
+        return length;
     }
 
     /**
@@ -102,26 +123,31 @@ public class LinkedList implements Iterable<LinkedList.Node> {
         if (length == 0) {
             firstNode = newNode;
             lastNode = newNode;
+
+            if (lastIntroducedNode != null) {
+                lastIntroducedNode.nextIntroducedNode = newNode;
+            }
+
+            newNode.prevIntroducedNode = lastIntroducedNode;
             length++;
             return newNode;
         }
 
         LinkedList.Node current = firstNode;
-
-        while (current.nextNode != null && !current.key.equals(key)) {
+        while (
+                current.nextNode != null && !current.key.equals(key)) {
             current = current.nextNode;
         }
 
         if (current.nextNode == null) {
-            if (current.key.equals(key)) {
-                current.value = value;
+            if (lastNode.key.equals(key)) {
+                lastNode.value = value;
                 newNode = null;
             } else {
-                current.nextNode = newNode;
+                lastNode.nextNode = newNode;
                 if (lastIntroducedNode != null) {
                     lastIntroducedNode.nextIntroducedNode = newNode;
                 }
-                newNode.prevNode = lastNode;
                 newNode.prevIntroducedNode = lastIntroducedNode;
                 lastNode = newNode;
                 length++;
@@ -145,42 +171,62 @@ public class LinkedList implements Iterable<LinkedList.Node> {
             return null;
         }
 
-        LinkedList.Node current = firstNode;
+        LinkedList.Node prevNode = firstNode;
+        LinkedList.Node current = firstNode.nextNode;
 
-        while (current.nextNode != null && !current.key.equals(key)) {
+        while (current != null && !current.key().equals(key)) {
+            prevNode = prevNode.nextNode;
             current = current.nextNode;
         }
 
-        if (current.prevNode != null) {
-            current.prevNode.nextNode = current.nextNode;
+        if (current == null) {
+            firstNode = null;
+            lastNode = null;
+        } else {
+            prevNode.nextNode = current.nextNode;
+            if (lastNode.equals(current)) {
+                lastNode = null;
+            }
+        }
+
+        if (current == null) {
+            current = prevNode;
         }
 
         if (current.prevIntroducedNode != null) {
             current.prevIntroducedNode.nextIntroducedNode = current.nextIntroducedNode;
         }
 
-        if (current.nextNode != null) {
-            current.nextNode.prevNode = current.prevNode;
-        }
-
         if (current.nextIntroducedNode != null) {
             current.nextIntroducedNode.prevIntroducedNode = current.prevIntroducedNode;
-        }
-
-        if (length == 1) {
-            firstNode = null;
-            lastNode = null;
-        } else {
-            if (firstNode.key.equals(key)) {
-                firstNode = current.nextNode;
-            }
-            lastNode = current.prevNode;
         }
 
         length--;
         return current;
     }
 
+    /**
+     * Looks for the node with the given key and returns it.
+     *
+     * @param key to look for
+     * @return the node with the given key, null if the node is not present
+     */
+    LinkedList.Node get(Object key) {
+        LinkedList.Node current = firstNode;
+
+        while (current.nextNode != null && !current.key.equals(key)) {
+            current = current.nextNode;
+        }
+
+        return (current.key.equals(key)) ? current : null;
+    }
+
+    /**
+     * Compares another object with the current LinkedList
+     *
+     * @param object to compare
+     * @return true if the objects are equal else false
+     */
     @Override
     public boolean equals(Object object) {
         if (this == object) return true;
@@ -197,10 +243,15 @@ public class LinkedList implements Iterable<LinkedList.Node> {
             currentNode = currentNode.nextNode;
             otherNode = otherNode.nextNode;
         }
-
+        
         return true;
     }
 
+    /**
+     * Return the string representation of the object.
+     *
+     * @return string representatuion of the object
+     */
     @Override
     public String toString() {
         StringBuilder str = new StringBuilder();
@@ -218,33 +269,8 @@ public class LinkedList implements Iterable<LinkedList.Node> {
         return str.toString();
     }
 
-    // ITERABLE ///////////////////////////////////////////////////////////////
     @Override
     public Iterator<LinkedList.Node> iterator() {
-        return new LinkedListIterator();
+        return new LinkedListIterator(this).iterator();
     }
-
-    private class LinkedListIterator implements Iterator<LinkedList.Node> {
-        private LinkedList.Node current;
-
-        public LinkedListIterator() {
-            this.current = firstNode;
-        }
-
-        @Override
-        public boolean hasNext() {
-            return current != null;
-        }
-
-        @Override
-        public LinkedList.Node next() {
-            if (hasNext()) {
-                LinkedList.Node node = current;
-                current = current.nextNode;
-                return node;
-            }
-            throw new java.util.NoSuchElementException();
-        }
-    }
-    ///////////////////////////////////////////////////////////////////////////
 }
