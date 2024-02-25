@@ -2,7 +2,7 @@ package org.ulpgc.edp.model;
 
 import java.util.Iterator;
 
-public class LinkedListIterator implements Iterable<LinkedList.Node> {
+class LinkedListIterator implements Iterable<LinkedList.Node> {
     private LinkedList list;
     private LinkedList.Node current;
 

@@ -110,4 +110,34 @@ public class TestManyItemsDictionary {
         dictionary.clear();
         dictionary.popitem();
     }
+
+    @Test
+    public void testEquals1() {
+        Dictionary otherDictionary = new Dictionary();
+        for (int i = 0; i < 32; i++) {
+            otherDictionary.put(i, i);
+        }
+        assertTrue(
+                "Valor incorrecto",
+                dictionary.equals(otherDictionary)
+        );
+    }
+
+    @Test
+    public void testEquals2() {
+        assertTrue(
+                "Valor incorrecto",
+                dictionary.equals(dictionary)
+        );
+    }
+
+    @Test
+    public void testEquals3() {
+        Dictionary otherDictionary = new Dictionary();
+        otherDictionary.put(1, 1);
+        assertFalse(
+                "Valor incorrecto",
+                dictionary.equals(otherDictionary)
+        );
+    }
 }

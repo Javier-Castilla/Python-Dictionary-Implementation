@@ -62,6 +62,50 @@ public class Dictionary implements Iterable<Object> {
     }
 
     /**
+     * Constructor used to create a copy of a dictionary.
+     *
+     * @param dictionary to take items of
+     */
+    public Dictionary(Dictionary dictionary) {
+        for (Object[] item : dictionary.items()) {
+            put(item[0], item[1]);
+        }
+    }
+
+    /**
+     * Static method that creates a new Dictionary given some keys and values
+     * as iterable objects.
+     *
+     * @param keys an iterable containing desire keys to add
+     * @param values and iterable containing desire values to add
+     * @return a new dictionary containing given keys and values
+     * @throws UnsupportedOperationException
+     */
+    public static Dictionary fromKeys(
+            Iterable<Object> keys, Iterable<Object> values
+    ) throws UnsupportedOperationException {
+        Dictionary newDictionary = new Dictionary();
+        Iterator<Object> keySet = keys.iterator();
+        Iterator<Object> valueSet = values.iterator();
+
+        int keysCounter = 0;
+        int valuesCounter = 0;
+
+        while (keySet.hasNext() && valueSet.hasNext()) {
+            newDictionary.put(keySet.next(), valueSet.next());
+            keysCounter++;
+            valuesCounter++;
+        }
+
+        if (keysCounter != valuesCounter) {
+            throw new UnsupportedOperationException("The sizes of keys and " +
+                    "values differs");
+        }
+
+        return newDictionary;
+    }
+
+    /**
      * Private method which calculates the next prime number of the given one.
      *
      * @param num to calculate the next prime number
@@ -212,7 +256,9 @@ public class Dictionary implements Iterable<Object> {
      * @param indexes to search for an available slot or update
      * @param items to store or update the given pair key - value
      */
-    private void addEntries(Object key, Object value, Integer[] indexes, Node[] items) {
+    private void addEntries(
+            Object key, Object value, Integer[] indexes, Node[] items
+    ) {
         int index = hash(key, indexes);
 
         if (indexes[index] != null) {
@@ -247,6 +293,44 @@ public class Dictionary implements Iterable<Object> {
      */
     public void put(Object key, Object value) {
         addEntries(key, value, this.indexes, this.items);
+    }
+
+    /**
+     * Return the value associated with the key if exists, else adds the
+     * given pair key - value to the dictionary and return that value. Value
+     * will be default as null.
+     *
+     * @param key to search or add
+     * @return the value found or added
+     */
+    public Object setDefault(Object key) {
+        Object result;
+        try {
+            result = get(key);
+        } catch (KeyErrorException ex) {
+            put(key, null);
+            return null;
+        }
+        return result;
+    }
+
+    /**
+     * Return the value associated with the key if exists, else adds the
+     * given pair key - value to the dictionary and return that value.
+     *
+     * @param key to search or add
+     * @param value to add if key not exists
+     * @return the value found or added
+     */
+    public Object setDefault(Object key, Object value) {
+        Object result;
+        try {
+            result = get(key);
+        } catch (KeyErrorException ex) {
+            put(key, value);
+            return value;
+        }
+        return result;
     }
 
     /**
@@ -348,6 +432,11 @@ public class Dictionary implements Iterable<Object> {
         return index >= 0;
     }
 
+
+    public Dictionary copy() {
+        return new Dictionary(this);
+    }
+
     /**
      * Returns an iterable containing all the keys in the dictionary.
      * Order of insertion is preserved.
@@ -396,7 +485,9 @@ public class Dictionary implements Iterable<Object> {
 
 
         while (it1.hasNext() && it2.hasNext()) {
-            if (it1.next() != it2.next()) return false;
+            Object[] x = it1.next();
+            Object[] y = it2.next();
+            if (x[0] != y[0] || x[1] != y[1]) return false;
         }
 
         return true;
@@ -444,7 +535,7 @@ public class Dictionary implements Iterable<Object> {
     /**
      * Iterator of the Dictionary object.
      *
-     * @return an iterator
+     * @return a Dictionary keys iterator
      */
     @Override
     public Iterator<Object> iterator() {
