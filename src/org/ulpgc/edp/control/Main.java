@@ -3,6 +3,7 @@ package org.ulpgc.edp.control;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
+import org.ulpgc.edp.doc.Documentation;
 import org.ulpgc.edp.exceptions.*;
 import org.ulpgc.edp.model.*;
 import org.ulpgc.edp.tests.*;
@@ -11,6 +12,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Arrays;
 
 @RunWith(Suite.class)
 @SuiteClasses({
@@ -20,20 +22,30 @@ import java.io.IOException;
 })
 
 public class Main {
-    public static final int LIMIT = 1048576;
-    public static void main(String[] args) throws KeyErrorException {
-        //org.junit.runner.JUnitCore.main("org.ulpgc.edp.control.Main");
+    static final int LIMIT = 1048576;
+    static final String URL = "To access this Dictionary documentation you can" +
+            " acces to the Documentation Web with the URL given in" +
+            " doc/DocumentationWeb";
+    public static void main(String[] args) {
+        System.out.println(String.format("\033[1;33m%s\033[m\n", URL));
+
+        // Comment the line below to make your own tests.
+        org.junit.runner.JUnitCore.main("org.ulpgc.edp.control.Main");
+
+        Documentation.open(true);
 
         long startTime = System.nanoTime();
         Dictionary d = new Dictionary();
 
-        System.out.println(d);
-
         for (int i = 0; i < LIMIT; i++) {
-            d.put("Mamawebo" + i, i);
+            d.put("TestingKEY" + i, i);
         }
 
         System.out.println(d.size());
+
+        Object[] a1 = new Object[]{1, 2};
+        Object[] a2 = new Object[]{2, 3};
+        System.out.println(Dictionary.fromKeys(Arrays.asList(a1), Arrays.asList(a2)));
 
         long endTime = System.nanoTime();
         long duration = (endTime - startTime);

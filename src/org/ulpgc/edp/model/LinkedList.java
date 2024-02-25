@@ -5,7 +5,7 @@ import java.util.Iterator;
 /**
  * LinkedList used to manage collisions in the HashTable.
  */
-public class LinkedList implements Iterable<LinkedList.Node> {
+class LinkedList implements Iterable<LinkedList.Node> {
     private LinkedList.Node firstNode, lastNode;
     private int length = 0;
 
