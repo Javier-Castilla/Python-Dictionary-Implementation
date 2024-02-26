@@ -65,7 +65,7 @@ public class TestOneItemDictionary {
     }
 
     @Test
-    public void testReplace1() throws KeyErrorException {
+    public void testReplace1() {
         dictionary.put("1", 100);
         int dictionaryLength = dictionary.size();
         assertEquals(
