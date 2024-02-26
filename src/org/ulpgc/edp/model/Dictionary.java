@@ -41,23 +41,23 @@ public class Dictionary implements Iterable<Object> {
         int itemsLen = ((int) (Math.log(length) / Math.log(2)) + 1);
         this.indexes = new Integer[1 << itemsLen];
         this.items = new Node[1 << itemsLen];
+        this.mask = indexes.length - 1;
     }
 
     /**
-     * Constructor given a data structure of pairs or tuples key - value
+     * Constructor given an Iterable<Object[]> of pairs key - value
      * to put into the new dictionary.
      *
      * @param items to put into the new dictionary
      */
-    public Dictionary(Object[][] items) {
-        int itemsLen = (int) (Math.log(items.length) / Math.log(2)) + 1;
-        this.indexes = new Integer[1 << itemsLen];
-        this.items = new Node[1 << itemsLen];
-
-        for (int index = 0; index < items.length; index++) {
-            Object key = items[index][0];
-            Object value = items[index][1];
-            put(key, value);
+    public Dictionary(Iterable<Object[]> items) {
+        this.indexes = new Integer[8];
+        this.items = new Node[8];
+        this.mask = indexes.length - 1;
+        Iterator<Object[]> itemsIterator = items.iterator();
+        while (itemsIterator.hasNext()) {
+            Object[] item = itemsIterator.next();
+            put(item[0], item[1]);
         }
     }
 
@@ -67,9 +67,31 @@ public class Dictionary implements Iterable<Object> {
      * @param dictionary to take items of
      */
     public Dictionary(Dictionary dictionary) {
+        this.indexes = new Integer[8];
+        this.items = new Node[8];
+        this.mask = indexes.length - 1;
         for (Object[] item : dictionary.items()) {
             put(item[0], item[1]);
         }
+    }
+
+    /**
+     * Static method that creates a new Dictionary given some keys as iterable
+     * object.
+     *
+     * @param keys an iterable containing desire keys to add
+     * @return a new dictionary containing given keys and values
+     * @throws UnsupportedOperationException
+     */
+    public static Dictionary fromKeys(Iterable<Object> keys) {
+        Dictionary newDictionary = new Dictionary();
+        Iterator<Object> keySet = keys.iterator();
+
+        while (keySet.hasNext()) {
+            newDictionary.put(keySet.next(), null);
+        }
+
+        return newDictionary;
     }
 
     /**
@@ -278,6 +300,7 @@ public class Dictionary implements Iterable<Object> {
     }
 
     /**
+     * Size of the Dictionary object.
      *
      * @return the number of elements in the dictionary
      */
@@ -372,7 +395,7 @@ public class Dictionary implements Iterable<Object> {
      * Removes the last introduced pair key - value.
      *
      * @return the removed pair key - value
-     * @throws EmptyDictionaryException if the dictionary is empty
+     * @throws EmptyDictionaryException
      */
     public Object[] popitem() throws EmptyDictionaryException {
         if (size == 0) {
@@ -406,7 +429,7 @@ public class Dictionary implements Iterable<Object> {
      *
      * @param key to search the value
      * @return the value in pair with the given key
-     * @throws KeyErrorException if the given key is not in the dictionary
+     * @throws KeyErrorException
      */
     public Object get(Object key) throws KeyErrorException {
         int index = hash(key);
@@ -433,6 +456,12 @@ public class Dictionary implements Iterable<Object> {
     }
 
 
+    /**
+     * Methdos that creates a copy of a given Dictionary. Equivalent to instance
+     * a Dictionary with new Dictionary(Dictionary dictionary) constructor.
+     *
+     * @return a copy of a dictionary
+     */
     public Dictionary copy() {
         return new Dictionary(this);
     }
