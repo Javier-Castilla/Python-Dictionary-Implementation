@@ -1,9 +1,13 @@
 package org.ulpgc.edp.model;
 
+import java.util.Arrays;
 import java.util.Iterator;
+import java.util.Objects;
 
 /**
  * Iterable class used to iterate over the Dictionary Items.
+ *
+ * @author Javier
  */
 class DictionaryItemsIterator implements Iterable<Object[]> {
     private Integer[] indexes;
@@ -66,6 +70,35 @@ class DictionaryItemsIterator implements Iterable<Object[]> {
             }
             throw new java.util.NoSuchElementException();
         }
+    }
+
+    /**
+     * Overrided equals method that compares a given object with the current
+     * one.
+     *
+     * @param object to compare
+     * @return true if equals else false
+     */
+    @Override
+    public boolean equals(Object object) {
+        if (this == object) return true;
+        if (object == null || getClass() != object.getClass()) return false;
+        DictionaryItemsIterator other = (DictionaryItemsIterator) object;
+        return toString().equals(other.toString());
+    }
+
+    /**
+     * Overrided hashCode method that returns an integer representation
+     * of the object.
+     *
+     * @return an integer representation
+     */
+    @Override
+    public int hashCode() {
+        int result = Objects.hash(dict);
+        result = 31 * result + Arrays.hashCode(indexes);
+        result = 31 * result + Arrays.hashCode(items);
+        return result;
     }
 
     /**

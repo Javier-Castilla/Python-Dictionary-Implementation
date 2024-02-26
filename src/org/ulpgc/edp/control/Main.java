@@ -4,7 +4,6 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 import org.ulpgc.edp.doc.Documentation;
-import org.ulpgc.edp.exceptions.*;
 import org.ulpgc.edp.model.*;
 import org.ulpgc.edp.tests.*;
 
@@ -12,7 +11,6 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.Arrays;
 
 @RunWith(Suite.class)
 @SuiteClasses({
@@ -43,16 +41,15 @@ public class Main {
 
         System.out.println(d.size());
 
-        Object[] a1 = new Object[]{1, 2};
-        Object[] a2 = new Object[]{2, 3};
-        System.out.println(Dictionary.fromKeys(Arrays.asList(a1), Arrays.asList(a2)));
-
         long endTime = System.nanoTime();
         long duration = (endTime - startTime);
         double ms = duration / 1e6;
         double sc = ms / 1000;
 
-        System.out.println("Tiempo de ejecución para " + LIMIT + " elementos: " + ms + "ms (" + sc + " segs)");
+        System.out.println(
+                "Tiempo de ejecución para " + LIMIT + " elementos: "+
+                        ms + "ms (" + sc + " segs)"
+        );
     }
 
     public static void timesFile() {

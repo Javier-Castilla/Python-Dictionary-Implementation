@@ -3,14 +3,20 @@ package org.ulpgc.edp.tests;
 import org.junit.*;
 import org.ulpgc.edp.exceptions.*;
 import org.ulpgc.edp.model.Dictionary;
+
+import java.util.Arrays;
+
 import static org.junit.Assert.*;
 
 public class TestManyItemsDictionary {
     private Dictionary dictionary;
+    private Object[] keys;
     @Before
     public void init() {
         this.dictionary = new Dictionary();
+        this.keys = new Object[32];
         for (int i = 0; i < 32; i++) {
+            keys[i] = i;
             dictionary.put(i, i);
         }
     }
@@ -25,7 +31,7 @@ public class TestManyItemsDictionary {
     }
 
     @Test
-    public void testPutAndPopitem1() throws EmptyDictionaryException {
+    public void testPutAndPopitem1() {
         dictionary.put("Testing", 10);
         int dictionaryLength = dictionary.size();
         assertEquals(
@@ -138,6 +144,26 @@ public class TestManyItemsDictionary {
         assertFalse(
                 "Valor incorrecto",
                 dictionary.equals(otherDictionary)
+        );
+    }
+
+    @Test
+    public void testFromKeys1() {
+        Dictionary newDictionary = Dictionary.fromKeys(Arrays.asList(keys));
+        assertTrue(
+                "Valores incorrectos",
+                dictionary.keys().equals(newDictionary.keys())
+        );
+    }
+
+    @Test
+    public void testFromKeys2() {
+        Dictionary newDictionary = Dictionary.fromKeys(
+                Arrays.asList(keys), Arrays.asList(keys)
+        );
+        assertTrue(
+                "Valores incorrectos",
+                dictionary.equals(newDictionary)
         );
     }
 }

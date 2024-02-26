@@ -14,7 +14,7 @@ public class TestEmptyDictionary {
     }
 
     @Test
-    public void testLen() throws KeyErrorException  {
+    public void testLen()  {
         int dictionaryLen = dictionary.size();
         assertEquals(
                 "El tamaño debe ser 0 al inicializar el diccionario " +
@@ -24,7 +24,7 @@ public class TestEmptyDictionary {
     }
 
     @Test
-    public void testPutAndPop1() throws KeyErrorException  {
+    public void testPutAndPop1() {
         dictionary.put("1", 1);
         int dictionaryLen = dictionary.size();
         assertEquals(
@@ -95,6 +95,64 @@ public class TestEmptyDictionary {
         assertEquals(
                 "El último elemento no es correcto",
                 new Object[]{3, 3}, value
+        );
+    }
+
+    @Test
+    public void testCopy1() {
+        Dictionary dictionaryCopy = dictionary.copy();
+        assertTrue(
+                "Valor incorrecto",
+                dictionary.equals(dictionaryCopy)
+        );
+    }
+
+    @Test
+    public void testCopy2() {
+        Dictionary dictionaryCopy = dictionary.copy();
+        int dictionaryCopyLength = dictionaryCopy.size();
+        assertEquals(
+                "Tamaño incorrecto",
+                0, dictionaryCopyLength
+
+        );
+    }
+
+    @Test
+    public void testSetDefault1() {
+        Object value = dictionary.setDefault("Test");
+        assertEquals(
+                "Valor incorrecto",
+                null, value
+        );
+    }
+
+    @Test
+    public void testSetDefault2() {
+        Object value = dictionary.setDefault("Test", 10);
+        assertEquals(
+                "Valor incorrecto",
+                10, value
+        );
+    }
+
+    @Test
+    public void testSetDefault3() throws KeyErrorException {
+        dictionary.setDefault("Test");
+        Object value = dictionary.get("Test");
+        assertEquals(
+                "Valor incorrecto",
+                null, value
+        );
+    }
+
+    @Test
+    public void testSetDefault4() throws KeyErrorException {
+        dictionary.setDefault("Test", 10);
+        Object value = dictionary.get("Test");
+        assertEquals(
+                "Valor incorrecto",
+                10, value
         );
     }
 
