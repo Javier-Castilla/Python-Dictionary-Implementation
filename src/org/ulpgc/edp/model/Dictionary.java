@@ -459,7 +459,7 @@ public class Dictionary implements Iterable<Object> {
 
 
     /**
-     * Method that creates a copy of a given Dictionary. Equivalent to instance
+     * Method that creates a copy of the current Dictionary. Equivalent to instance
      * a Dictionary with new Dictionary(Dictionary dictionary) constructor.
      *
      * @return a copy of a Dictionary

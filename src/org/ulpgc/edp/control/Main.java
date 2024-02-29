@@ -22,13 +22,13 @@ import java.io.IOException;
 public class Main {
     static final int LIMIT = 1048576;
     static final String URL = "To access this Dictionary documentation you can" +
-            " acces to the Documentation Web with the URL given in" +
+            " access to the Documentation Web with the URL given in" +
             " doc/DocumentationWeb";
     public static void main(String[] args) {
         System.out.println(String.format("\033[1;33m%s\033[m\n", URL));
 
         // Comment the line below to make your own tests.
-        org.junit.runner.JUnitCore.main("org.ulpgc.edp.control.Main");
+        //org.junit.runner.JUnitCore.main("org.ulpgc.edp.control.Main");
 
         Documentation.open(true);
 
