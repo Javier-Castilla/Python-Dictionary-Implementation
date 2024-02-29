@@ -1,7 +1,6 @@
 package org.ulpgc.edp.model;
 
 import org.ulpgc.edp.exceptions.*;
-
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Objects;
@@ -11,7 +10,10 @@ import java.util.Objects;
  * It stores pairs of keys - values on an efficient way.
  * Accessing an element is almost O(1).
  *
- * @author Javier
+ * @author Javier Castilla
+ * @author David Miranda
+ * @author Esteban Trujillo
+ * @author Elena Artiles
  */
 public class Dictionary implements Iterable<Object> {
     private Integer[] indexes;
@@ -62,9 +64,9 @@ public class Dictionary implements Iterable<Object> {
     }
 
     /**
-     * Constructor used to create a copy of a dictionary.
+     * Constructor used to create a copy of a Dictionary.
      *
-     * @param dictionary to take items of
+     * @param dictionary to take items from
      */
     public Dictionary(Dictionary dictionary) {
         this.indexes = new Integer[8];
@@ -162,7 +164,7 @@ public class Dictionary implements Iterable<Object> {
      *
      * @param key to compare
      * @param index to search into indexes array
-     * @param indexes to take the pair key - value index
+     * @param indexes to take the pair key - value index from
      * @return true if not available else false
      */
     private boolean isNotAvailableSlot(Object key, int index, Integer[] indexes) {
@@ -239,7 +241,7 @@ public class Dictionary implements Iterable<Object> {
      *
      * @param key to compare
      * @return an index where and slot with the given key is located or -1 if
-     * the is no such slot
+     * there is no such slot
      */
     private int hash(Object key) {
         return findSlot(key, key.hashCode());
@@ -320,7 +322,7 @@ public class Dictionary implements Iterable<Object> {
 
     /**
      * Return the value associated with the key if exists, else adds the
-     * given pair key - value to the dictionary and return that value. Value
+     * given pair key - value to the Dictionary and returns that value. Value
      * will be default as null.
      *
      * @param key to search or add
@@ -339,7 +341,7 @@ public class Dictionary implements Iterable<Object> {
 
     /**
      * Return the value associated with the key if exists, else adds the
-     * given pair key - value to the dictionary and return that value.
+     * given pair key - value to the Dictionary and return that value.
      *
      * @param key to search or add
      * @param value to add if key not exists
@@ -358,7 +360,7 @@ public class Dictionary implements Iterable<Object> {
 
     /**
      * Method that updates the current dictionary with all the elements that
-     * the dictionary given as a parameter has.
+     * the Dictionary given as a parameter has.
      *
      * @param dictionary
      */
@@ -373,7 +375,7 @@ public class Dictionary implements Iterable<Object> {
      *
      * @param key to remove
      * @return the value of the removed pair key - value
-     * @throws KeyErrorException if the given key is not in the dictionary
+     * @throws KeyErrorException
      */
     public Object pop(Object key) throws KeyErrorException {
         int index = hash(key);
@@ -444,7 +446,7 @@ public class Dictionary implements Iterable<Object> {
     }
 
     /**
-     * Method to test is a key is contained into the Dictionary.
+     * Method to test if a key is contained into the Dictionary.
      *
      * @param key to test
      * @return true if Dictionary contains key else false
@@ -457,47 +459,47 @@ public class Dictionary implements Iterable<Object> {
 
 
     /**
-     * Methdos that creates a copy of a given Dictionary. Equivalent to instance
+     * Method that creates a copy of a given Dictionary. Equivalent to instance
      * a Dictionary with new Dictionary(Dictionary dictionary) constructor.
      *
-     * @return a copy of a dictionary
+     * @return a copy of a Dictionary
      */
     public Dictionary copy() {
         return new Dictionary(this);
     }
 
     /**
-     * Returns an iterable containing all the keys in the dictionary.
+     * Returns an iterable containing all the keys in the Dictionary.
      * Order of insertion is preserved.
      *
      * @return all the dictionary's keys iterable
      */
     public Iterable<Object> keys() {
-        return new DictionaryKeysIterator(indexes, items, this);
+        return new DictionaryKeysIterable(indexes, items, this);
     }
 
     /**
-     * Returns an iterable containing all the values in the dictionary. Order of
+     * Returns an iterable containing all the values in the Dictionary. Order of
      * insertion is preserved.
      *
      * @return all the dictionary's values iterable
      */
     public Iterable<Object> values() {
-        return new DictionaryValuesIterator(indexes, items, this);
+        return new DictionaryValuesIterable(indexes, items, this);
     }
 
     /**
      * Returns an iterable of arrays containing all the pairs key - value in the
-     * dictionary. Order of insertion is preserved.
+     * Dictionary. Order of insertion is preserved.
      *
      * @return all the dictionary's pairs key - value iterable
      */
     public Iterable<Object[]> items() {
-        return new DictionaryItemsIterator(indexes, items, this);
+        return new DictionaryItemsIterable(indexes, items, this);
     }
 
     /**
-     * Overrided method to know if other objects is equals to current object.
+     * Overrided method to know if other object is equals to current object.
      *
      * @param object to compare
      * @return true if equals else false
@@ -523,7 +525,7 @@ public class Dictionary implements Iterable<Object> {
     }
 
     /**
-     * Calculates an returns the hashCode value
+     * Calculates and returns the hashCode value.
      *
      * @return hashCode value
      */
@@ -568,7 +570,7 @@ public class Dictionary implements Iterable<Object> {
      */
     @Override
     public Iterator<Object> iterator() {
-        return new DictionaryKeysIterator(
+        return new DictionaryKeysIterable(
                 indexes, items, this
         ).iterator();
     }

@@ -4,7 +4,10 @@ package org.ulpgc.edp.model;
  * Node class used to storage a pair key - value and its index of and indexes
  * hash table.
  *
- * @author Javier
+ * @author Javier Castilla
+ * @author David Miranda
+ * @author Esteban Trujillo
+ * @author Elena Artiles
  */
 class Node {
     private Object key;

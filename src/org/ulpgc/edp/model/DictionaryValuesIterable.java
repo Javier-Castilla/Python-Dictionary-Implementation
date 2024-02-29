@@ -5,11 +5,14 @@ import java.util.Iterator;
 import java.util.Objects;
 
 /**
- * Iterable class used to iterate over the Dictionary Items.
+ * Iterable class used to iterate over the Dictionary values.
  *
- * @author Javier
+ * @author Javier Castilla
+ * @author David Miranda
+ * @author Esteban Trujillo
+ * @author Elena Artiles
  */
-class DictionaryItemsIterator implements Iterable<Object[]> {
+class DictionaryValuesIterable implements Iterable<Object> {
     private Integer[] indexes;
     private Node[] items;
     private Dictionary dict;
@@ -17,7 +20,7 @@ class DictionaryItemsIterator implements Iterable<Object[]> {
     /**
      * Constructor of the iterable class.
      */
-    DictionaryItemsIterator(Integer[] indexes, Node[] items, Dictionary dict) {
+    DictionaryValuesIterable(Integer[] indexes, Node[] items, Dictionary dict) {
         this.indexes = indexes;
         this.items = items;
         this.dict = dict;
@@ -28,18 +31,18 @@ class DictionaryItemsIterator implements Iterable<Object[]> {
      * @return an iterator
      */
     @Override
-    public Iterator<Object[]> iterator() {
-        return new DictionaryItems();
+    public Iterator<Object> iterator() {
+        return new DictionaryValues();
     }
 
     /**
-     * Private inner class used to iterate over the Dictionary items.
+     * Private inner class used to iterate over the Dictionary values.
      */
-    private class DictionaryItems implements Iterator<Object[]> {
+    private class DictionaryValues implements Iterator<Object> {
         private int index, length;
         private Node node;
 
-        private DictionaryItems() {
+        private DictionaryValues() {
             this.index = 0;
             this.length = items.length;
             this.node = items[index];
@@ -61,12 +64,12 @@ class DictionaryItemsIterator implements Iterable<Object[]> {
          * @return the next node
          */
         @Override
-        public Object[] next() {
+        public Object next() {
             if (hasNext()) {
-                Object[] returnedItems = new Object[]{node.key(), node.value()};
+                Object value = node.value();
                 node = items[++index];
 
-                return returnedItems;
+                return value;
             }
             throw new java.util.NoSuchElementException();
         }
@@ -83,7 +86,7 @@ class DictionaryItemsIterator implements Iterable<Object[]> {
     public boolean equals(Object object) {
         if (this == object) return true;
         if (object == null || getClass() != object.getClass()) return false;
-        DictionaryItemsIterator other = (DictionaryItemsIterator) object;
+        DictionaryValuesIterable other = (DictionaryValuesIterable) object;
         return toString().equals(other.toString());
     }
 
@@ -109,26 +112,16 @@ class DictionaryItemsIterator implements Iterable<Object[]> {
     public String toString() {
         StringBuilder str = new StringBuilder();
 
-        str.append("DictionaryItems([");
+        str.append("DictionaryValues([");
 
-        for (Object[] item : this) {
-            str.append("(");
-
-            if (item[0].getClass() == String.class) {
-                str.append(String.format("\'%s\'", item[0]));
+        for (Object value : this) {
+            System.out.println(value);
+            if (value.getClass() == String.class) {
+                str.append(String.format("\'%s\'", value));
             } else {
-                str.append(item[0]);
+                str.append(value);
             }
-
             str.append(", ");
-
-            if (item[1].getClass() == String.class) {
-                str.append(String.format("\'%s\'", item[1]));
-            } else {
-                str.append(item[1]);
-            }
-
-            str.append("), ");
         }
 
         if (dict.size() != 0) {

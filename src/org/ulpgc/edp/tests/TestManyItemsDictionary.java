@@ -3,11 +3,17 @@ package org.ulpgc.edp.tests;
 import org.junit.*;
 import org.ulpgc.edp.exceptions.*;
 import org.ulpgc.edp.model.Dictionary;
-
 import java.util.Arrays;
-
 import static org.junit.Assert.*;
 
+/**
+ * Testing class for test a Dictionary with many items.
+ *
+ * @author Javier Castilla
+ * @author David Miranda
+ * @author Esteban Trujillo
+ * @author Elena Artiles
+ */
 public class TestManyItemsDictionary {
     private Dictionary dictionary;
     private Object[] keys;

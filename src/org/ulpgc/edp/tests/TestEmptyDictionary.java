@@ -5,6 +5,14 @@ import org.ulpgc.edp.exceptions.*;
 import org.ulpgc.edp.model.Dictionary;
 import static org.junit.Assert.*;
 
+/**
+ * Testing class for test an empty Dictionary.
+ *
+ * @author Javier Castilla
+ * @author David Miranda
+ * @author Esteban Trujillo
+ * @author Elena Artiles
+ */
 public class TestEmptyDictionary {
     private Dictionary dictionary;
 
