@@ -47,7 +47,7 @@ public class Dictionary implements Iterable<Object> {
     }
 
     /**
-     * Constructor given an Iterable<Object[]> of pairs key - value
+     * Constructor given an iterable of pairs key - value
      * to put into the new dictionary.
      *
      * @param items to put into the new dictionary
