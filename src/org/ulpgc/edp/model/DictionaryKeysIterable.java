@@ -13,16 +13,12 @@ import java.util.Objects;
  * @author Elena Artiles
  */
 class DictionaryKeysIterable implements Iterable<Object> {
-    private Integer[] indexes;
-    private Node[] items;
     private Dictionary dict;
 
     /**
      * Constructor of the iterable class.
      */
-    DictionaryKeysIterable(Integer[] indexes, Node[] items, Dictionary dict) {
-        this.indexes = indexes;
-        this.items = items;
+    DictionaryKeysIterable(Dictionary dict) {
         this.dict = dict;
     }
 
@@ -44,8 +40,8 @@ class DictionaryKeysIterable implements Iterable<Object> {
 
         private DictionaryKeys() {
             this.index = 0;
-            this.length = items.length;
-            this.node = items[index];
+            this.length = dict.entries().length;
+            this.node = dict.entries()[index];
         }
         /**
          * Overrided method which returns if there is a next element or not.
@@ -54,7 +50,7 @@ class DictionaryKeysIterable implements Iterable<Object> {
          */
         @Override
         public boolean hasNext() {
-            return index < length && node != null && indexes[node.index()] != -1;
+            return index < length && node != null && dict.indexes()[node.index()] != -1;
         }
 
         /**
@@ -66,7 +62,7 @@ class DictionaryKeysIterable implements Iterable<Object> {
         public Object next() {
             if (hasNext()) {
                 Object key = node.key();
-                node = items[++index];
+                node = dict.entries()[++index];
                 return key;
             }
             throw new java.util.NoSuchElementException();
@@ -97,8 +93,8 @@ class DictionaryKeysIterable implements Iterable<Object> {
     @Override
     public int hashCode() {
         int result = Objects.hash(dict);
-        result = 31 * result + Arrays.hashCode(indexes);
-        result = 31 * result + Arrays.hashCode(items);
+        result = 31 * result + Arrays.hashCode(dict.indexes());
+        result = 31 * result + Arrays.hashCode(dict.entries());
         return result;
     }
 

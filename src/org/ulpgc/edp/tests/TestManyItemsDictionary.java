@@ -2,6 +2,7 @@ package org.ulpgc.edp.tests;
 
 import org.junit.*;
 import org.ulpgc.edp.exceptions.*;
+import java.security.KeyException;
 import org.ulpgc.edp.model.Dictionary;
 import java.util.Arrays;
 import static org.junit.Assert.*;
@@ -78,7 +79,7 @@ public class TestManyItemsDictionary {
     }
 
     @Test
-    public void testReplace2() throws KeyErrorException {
+    public void testReplace2() throws KeyException {
         dictionary.put(17, 100);
         Object value = dictionary.get(17);
         assertEquals(
@@ -98,7 +99,7 @@ public class TestManyItemsDictionary {
     }
 
     @Test
-    public void testReplace4() throws KeyErrorException {
+    public void testReplace4() throws KeyException {
         dictionary.put(17, 100);
         Object value = dictionary.pop(17);
         assertEquals(

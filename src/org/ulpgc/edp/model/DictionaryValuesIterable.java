@@ -13,16 +13,12 @@ import java.util.Objects;
  * @author Elena Artiles
  */
 class DictionaryValuesIterable implements Iterable<Object> {
-    private Integer[] indexes;
-    private Node[] items;
     private Dictionary dict;
 
     /**
      * Constructor of the iterable class.
      */
-    DictionaryValuesIterable(Integer[] indexes, Node[] items, Dictionary dict) {
-        this.indexes = indexes;
-        this.items = items;
+    DictionaryValuesIterable(Dictionary dict) {
         this.dict = dict;
     }
 
@@ -44,8 +40,8 @@ class DictionaryValuesIterable implements Iterable<Object> {
 
         private DictionaryValues() {
             this.index = 0;
-            this.length = items.length;
-            this.node = items[index];
+            this.length = dict.entries().length;
+            this.node = dict.entries()[index];
         }
 
         /**
@@ -55,7 +51,7 @@ class DictionaryValuesIterable implements Iterable<Object> {
          */
         @Override
         public boolean hasNext() {
-            return index < length && node != null && indexes[node.index()] != -1;
+            return index < length && node != null && dict.indexes()[node.index()] != -1;
         }
 
         /**
@@ -67,7 +63,7 @@ class DictionaryValuesIterable implements Iterable<Object> {
         public Object next() {
             if (hasNext()) {
                 Object value = node.value();
-                node = items[++index];
+                node = dict.entries()[++index];
 
                 return value;
             }
@@ -99,8 +95,8 @@ class DictionaryValuesIterable implements Iterable<Object> {
     @Override
     public int hashCode() {
         int result = Objects.hash(dict);
-        result = 31 * result + Arrays.hashCode(indexes);
-        result = 31 * result + Arrays.hashCode(items);
+        result = 31 * result + Arrays.hashCode(dict.indexes());
+        result = 31 * result + Arrays.hashCode(dict.entries());
         return result;
     }
 

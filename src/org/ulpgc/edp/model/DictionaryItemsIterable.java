@@ -12,17 +12,13 @@ import java.util.Objects;
  * @author Esteban Trujillo
  * @author Elena Artiles
  */
-class DictionaryItemsIterable implements Iterable<Object[]> {
-    private Integer[] indexes;
-    private Node[] items;
+class DictionaryItemsIterable implements Iterable<Tuple> {
     private Dictionary dict;
 
     /**
      * Constructor of the iterable class.
      */
-    DictionaryItemsIterable(Integer[] indexes, Node[] items, Dictionary dict) {
-        this.indexes = indexes;
-        this.items = items;
+    DictionaryItemsIterable(Dictionary dict) {
         this.dict = dict;
     }
 
@@ -31,21 +27,21 @@ class DictionaryItemsIterable implements Iterable<Object[]> {
      * @return an iterator
      */
     @Override
-    public Iterator<Object[]> iterator() {
+    public Iterator<Tuple> iterator() {
         return new DictionaryItems();
     }
 
     /**
      * Private inner class used to iterate over the Dictionary items.
      */
-    private class DictionaryItems implements Iterator<Object[]> {
+    private class DictionaryItems implements Iterator<Tuple> {
         private int index, length;
         private Node node;
 
         private DictionaryItems() {
             this.index = 0;
-            this.length = items.length;
-            this.node = items[index];
+            this.length = dict.entries().length;
+            this.node = dict.entries()[index];
         }
 
         /**
@@ -55,7 +51,7 @@ class DictionaryItemsIterable implements Iterable<Object[]> {
          */
         @Override
         public boolean hasNext() {
-            return index < length && node != null && indexes[node.index()] != -1;
+            return index < length && node != null && dict.indexes()[node.index()] != -1;
         }
 
         /**
@@ -64,10 +60,10 @@ class DictionaryItemsIterable implements Iterable<Object[]> {
          * @return the next node
          */
         @Override
-        public Object[] next() {
+        public Tuple next() {
             if (hasNext()) {
-                Object[] returnedItems = new Object[]{node.key(), node.value()};
-                node = items[++index];
+                Tuple returnedItems = new Tuple(node.key(), node.value());
+                node = dict.entries()[++index];
 
                 return returnedItems;
             }
@@ -99,8 +95,8 @@ class DictionaryItemsIterable implements Iterable<Object[]> {
     @Override
     public int hashCode() {
         int result = Objects.hash(dict);
-        result = 31 * result + Arrays.hashCode(indexes);
-        result = 31 * result + Arrays.hashCode(items);
+        result = 31 * result + Arrays.hashCode(dict.indexes());
+        result = 31 * result + Arrays.hashCode(dict.entries());
         return result;
     }
 
@@ -109,26 +105,26 @@ class DictionaryItemsIterable implements Iterable<Object[]> {
      * @return a string representation
      */
     @Override
-    public String toString() {
+    public String toString() throws IndexOutOfBoundsException {
         StringBuilder str = new StringBuilder();
 
         str.append("DictionaryItems([");
 
-        for (Object[] item : this) {
+        for (Tuple item : this) {
             str.append("(");
 
-            if (item[0].getClass() == String.class) {
-                str.append(String.format("\'%s\'", item[0]));
+            if (item.get(0).getClass() == String.class) {
+                str.append(String.format("\'%s\'", item.get(0)));
             } else {
-                str.append(item[0]);
+                str.append(item.get(0));
             }
 
             str.append(", ");
 
-            if (item[1].getClass() == String.class) {
-                str.append(String.format("\'%s\'", item[1]));
+            if (item.get(1).getClass() == String.class) {
+                str.append(String.format("\'%s\'", item.get(1)));
             } else {
-                str.append(item[1]);
+                str.append(item.get(1));
             }
 
             str.append("), ");

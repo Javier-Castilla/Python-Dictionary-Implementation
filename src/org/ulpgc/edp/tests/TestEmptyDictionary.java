@@ -2,6 +2,7 @@ package org.ulpgc.edp.tests;
 
 import org.junit.*;
 import org.ulpgc.edp.exceptions.*;
+import java.security.KeyException;
 import org.ulpgc.edp.model.Dictionary;
 import static org.junit.Assert.*;
 
@@ -43,7 +44,7 @@ public class TestEmptyDictionary {
     }
 
     @Test
-    public void testPutAndPop2() throws KeyErrorException  {
+    public void testPutAndPop2() throws KeyException {
         dictionary.put("1", 1);
         dictionary.pop("1");
         int dictionaryLength = dictionary.size();
@@ -55,7 +56,7 @@ public class TestEmptyDictionary {
     }
 
     @Test
-    public void testPutAndPop3() throws KeyErrorException  {
+    public void testPutAndPop3() throws KeyException {
         dictionary.put("1", 1);
         Object value = dictionary.pop("1");
         assertEquals(
@@ -145,7 +146,7 @@ public class TestEmptyDictionary {
     }
 
     @Test
-    public void testSetDefault3() throws KeyErrorException {
+    public void testSetDefault3() throws KeyException {
         dictionary.setDefault("Test");
         Object value = dictionary.get("Test");
         assertEquals(
@@ -155,7 +156,7 @@ public class TestEmptyDictionary {
     }
 
     @Test
-    public void testSetDefault4() throws KeyErrorException {
+    public void testSetDefault4() throws KeyException {
         dictionary.setDefault("Test", 10);
         Object value = dictionary.get("Test");
         assertEquals(
@@ -238,13 +239,13 @@ public class TestEmptyDictionary {
         );
     }
 
-    @Test(expected = KeyErrorException.class)
-    public void testGetNoneExistingKey() throws KeyErrorException  {
+    @Test(expected = KeyException.class)
+    public void testGetNoneExistingKey() throws KeyException {
         dictionary.get("1");
     }
 
-    @Test(expected = KeyErrorException.class)
-    public void tesPop() throws KeyErrorException  {
+    @Test(expected = KeyException.class)
+    public void tesPop() throws KeyException {
         dictionary.pop("1");
     }
 

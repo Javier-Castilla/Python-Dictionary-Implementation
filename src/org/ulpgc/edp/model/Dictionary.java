@@ -1,6 +1,8 @@
 package org.ulpgc.edp.model;
 
 import org.ulpgc.edp.exceptions.*;
+
+import java.security.KeyException;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Objects;
@@ -23,7 +25,7 @@ public class Dictionary implements Iterable<Object> {
     private int occupiedBoxes;
     private int mask;
     private static final double OV_FACTOR = 0.6;
-    private static final int PERTURB_SHIFT = 3;
+    private static final int PERTURB_SHIFT = 5;
 
     /**
      * Constructor by default. No length or items needed.
@@ -72,8 +74,8 @@ public class Dictionary implements Iterable<Object> {
         this.indexes = new Integer[8];
         this.items = new Node[8];
         this.mask = indexes.length - 1;
-        for (Object[] item : dictionary.items()) {
-            put(item[0], item[1]);
+        for (Tuple item : dictionary.items()) {
+            put(item.get(0), item.get(1));
         }
     }
 
@@ -310,6 +312,14 @@ public class Dictionary implements Iterable<Object> {
         return size;
     }
 
+    Node[] entries() {
+        return items;
+    }
+
+    Integer[] indexes() {
+        return indexes;
+    }
+
     /**
      * Method used to put a pair key - value into the dictionary.
      *
@@ -332,7 +342,7 @@ public class Dictionary implements Iterable<Object> {
         Object result;
         try {
             result = get(key);
-        } catch (KeyErrorException ex) {
+        } catch (KeyException ex) {
             put(key, null);
             return null;
         }
@@ -351,7 +361,7 @@ public class Dictionary implements Iterable<Object> {
         Object result;
         try {
             result = get(key);
-        } catch (KeyErrorException ex) {
+        } catch (KeyException ex) {
             put(key, value);
             return value;
         }
@@ -365,8 +375,8 @@ public class Dictionary implements Iterable<Object> {
      * @param dictionary
      */
     public void update(Dictionary dictionary) {
-        for (Object[] item : dictionary.items()) {
-            put(item[0], item[1]);
+        for (Tuple item : dictionary.items()) {
+            put(item.get(0), item.get(1));
         }
     }
 
@@ -375,13 +385,13 @@ public class Dictionary implements Iterable<Object> {
      *
      * @param key to remove
      * @return the value of the removed pair key - value
-     * @throws KeyErrorException
+     * @throws KeyException
      */
-    public Object pop(Object key) throws KeyErrorException {
+    public Object pop(Object key) throws KeyException {
         int index = hash(key);
 
         if (index < 0) {
-            throw new KeyErrorException(
+            throw new KeyException(
                     "The given key is not in the dictionary: " + key
             );
         }
@@ -431,13 +441,13 @@ public class Dictionary implements Iterable<Object> {
      *
      * @param key to search the value
      * @return the value in pair with the given key
-     * @throws KeyErrorException
+     * @throws KeyException
      */
-    public Object get(Object key) throws KeyErrorException {
+    public Object get(Object key) throws KeyException {
         int index = hash(key);
 
         if (index < 0) {
-            throw new KeyErrorException(
+            throw new KeyException(
                     "The key is not contained into the dictionary"
             );
         }
@@ -475,7 +485,7 @@ public class Dictionary implements Iterable<Object> {
      * @return all the dictionary's keys iterable
      */
     public Iterable<Object> keys() {
-        return new DictionaryKeysIterable(indexes, items, this);
+        return new DictionaryKeysIterable(this);
     }
 
     /**
@@ -485,7 +495,7 @@ public class Dictionary implements Iterable<Object> {
      * @return all the dictionary's values iterable
      */
     public Iterable<Object> values() {
-        return new DictionaryValuesIterable(indexes, items, this);
+        return new DictionaryValuesIterable(this);
     }
 
     /**
@@ -494,8 +504,8 @@ public class Dictionary implements Iterable<Object> {
      *
      * @return all the dictionary's pairs key - value iterable
      */
-    public Iterable<Object[]> items() {
-        return new DictionaryItemsIterable(indexes, items, this);
+    public Iterable<Tuple> items() {
+        return new DictionaryItemsIterable(this);
     }
 
     /**
@@ -511,14 +521,13 @@ public class Dictionary implements Iterable<Object> {
         Dictionary other = (Dictionary) object;
         if (size != other.size()) return false;
 
-        Iterator<Object[]> it1 = items().iterator();
-        Iterator<Object[]> it2 = other.items().iterator();
-
+        Iterator<Tuple> it1 = items().iterator();
+        Iterator<Tuple> it2 = other.items().iterator();
 
         while (it1.hasNext() && it2.hasNext()) {
-            Object[] x = it1.next();
-            Object[] y = it2.next();
-            if (x[0] != y[0] || x[1] != y[1]) return false;
+            Tuple x = it1.next();
+            Tuple y = it2.next();
+            if (!x.get(0).equals(y.get(0)) || !x.get(1).equals(y.get(1))) return false;
         }
 
         return true;
@@ -570,8 +579,6 @@ public class Dictionary implements Iterable<Object> {
      */
     @Override
     public Iterator<Object> iterator() {
-        return new DictionaryKeysIterable(
-                indexes, items, this
-        ).iterator();
+        return new DictionaryKeysIterable(this).iterator();
     }
 }
