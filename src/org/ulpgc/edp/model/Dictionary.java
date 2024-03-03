@@ -24,7 +24,7 @@ public class Dictionary implements Iterable<Object> {
     private int size;
     private int occupiedBoxes;
     private int mask;
-    private static final double OV_FACTOR = 0.6;
+    private static final double OV_FACTOR = 0.66;
     private static final int PERTURB_SHIFT = 5;
 
     /**
@@ -192,7 +192,7 @@ public class Dictionary implements Iterable<Object> {
         int i = hash & mask;
 
         for (int perturb = hash; isNotAvailableSlot(key, i, indexes);) {
-            perturb >>= PERTURB_SHIFT;
+            perturb >>>= PERTURB_SHIFT;
             i = (i*PERTURB_SHIFT + perturb + 1) & mask;
         }
         return i;
@@ -232,7 +232,7 @@ public class Dictionary implements Iterable<Object> {
         int i = hash & mask;
 
         for (int perturb = hash; isNotSearchedKey(key, i);) {
-            perturb >>= PERTURB_SHIFT;
+            perturb >>>= PERTURB_SHIFT;
             i = (i*PERTURB_SHIFT + perturb + 1) & mask;
         }
         return (indexes[i] != null) ? i : -1;

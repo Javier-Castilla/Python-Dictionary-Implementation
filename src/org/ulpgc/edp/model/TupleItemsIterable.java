@@ -3,6 +3,14 @@ package org.ulpgc.edp.model;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
+/**
+ * Iterable class used to iterate over the Tuple Items.
+ *
+ * @author Javier Castilla
+ * @author David Miranda
+ * @author Esteban Trujillo
+ * @author Elena Artiles
+ */
 public class TupleItemsIterable implements Iterable<Object> {
     private Tuple tuple;
     public TupleItemsIterable(Tuple tuple) {
