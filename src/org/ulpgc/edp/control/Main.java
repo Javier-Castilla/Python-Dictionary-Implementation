@@ -20,34 +20,26 @@ import java.io.IOException;
 })
 
 public class Main {
-    static final int LIMIT = 1000000;
+    static final int LIMIT = 1048576;
+    static final Object[] objects = new Object[LIMIT];
     static final String URL = "To access this Dictionary documentation you can" +
             " access to the Documentation Web with the URL given in" +
             " doc/DocumentationWeb";
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
         System.out.println(String.format("\033[1;33m%s\033[m\n", URL));
 
         // Comment the line below to make your own tests.
-        //org.junit.runner.JUnitCore.main("org.ulpgc.edp.control.Main");
+        org.junit.runner.JUnitCore.main("org.ulpgc.edp.control.Main");
 
         Documentation.open(false);
 
         long startTime = System.nanoTime();
         Dictionary d = new Dictionary();
-        Tuple t = new Tuple(1, "2", 3, 4, 5);
-        for (Object item : t) {
-            System.out.println(item);
-        }
-        Iterable<Object> keys = d.keys();
 
-        for (int i = 0; i < LIMIT; i++) {
-            d.put("TestingKEY" + i, i);
-        }
-
-        for (Tuple item : d.items()) {
-            item.get(0);
-        }
-
+        d.put(17, 17);
+        d.put(17, 100);
+        System.out.println(d.get(17));
+        
         long endTime = System.nanoTime();
         long duration = (endTime - startTime);
         double ms = duration / 1e6;

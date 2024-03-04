@@ -170,13 +170,13 @@ public class Dictionary implements Iterable<Object> {
      * @return true if not available else false
      */
     private boolean isNotAvailableSlot(Object key, int index, Integer[] indexes) {
-        if (indexes[index] != null && items[indexes[index]].key().equals(key) ||
-                indexes[index] == null ||
-                indexes[index] == -1
-        ) {
+        if (indexes[index] == null) {
             return false;
         }
-        return true;
+        if (!items[indexes[index]].key().equals(key) || indexes[index] == -1 ) {
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -218,7 +218,11 @@ public class Dictionary implements Iterable<Object> {
      * @return true if not searched key else false
      */
     private boolean isNotSearchedKey(Object key, int index) {
-        return indexes[index] != null && !items[indexes[index]].key().equals(key);
+        if (indexes[index] == null) return false;
+        if (indexes[index] == -1 || !items[indexes[index]].key().equals(key)) {
+            return true;
+        }
+        return false;
     }
 
     /**
