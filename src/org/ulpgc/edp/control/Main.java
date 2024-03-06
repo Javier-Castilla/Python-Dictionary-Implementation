@@ -29,16 +29,24 @@ public class Main {
         System.out.println(String.format("\033[1;33m%s\033[m\n", URL));
 
         // Comment the line below to make your own tests.
-        org.junit.runner.JUnitCore.main("org.ulpgc.edp.control.Main");
+        timesFile();
+        //org.junit.runner.JUnitCore.main("org.ulpgc.edp.control.Main");
 
-        Documentation.open(false);
+        //Documentation.open(false);
+
+        //long startTime = System.nanoTime();
+        //Dictionary d = new Dictionary();
+
+        for (int i = 0; i < objects.length; i++) {
+            objects[i] = "Testing" + i;
+        }
 
         long startTime = System.nanoTime();
         Dictionary d = new Dictionary();
 
-        d.put(17, 17);
-        d.put(17, 100);
-        System.out.println(d.get(17));
+        for (int i = 0; i < objects.length; i++) {
+            d.put("Testing" + i, i);
+        }
         
         long endTime = System.nanoTime();
         long duration = (endTime - startTime);
@@ -54,6 +62,7 @@ public class Main {
     public static void timesFile() {
         String rutaArchivo = "times.txt";
         int size = 1;
+        double times = 20*1e6;
 
         try {
             File archivo = new File(rutaArchivo);
@@ -62,12 +71,12 @@ public class Main {
             bufferEscritor.write("size;miliseconds;seconds");
             bufferEscritor.newLine();
 
-            while (size < 32000000) {
+            while (size < times) {
                 long startTime = System.nanoTime();
                 Dictionary d = new Dictionary();
 
                 for (int i = 0; i < size; i++) {
-                    d.put("Testing" + i, i);
+                    d.put("TestingKEY" + i, i);
                 }
 
                 long endTime = System.nanoTime();
