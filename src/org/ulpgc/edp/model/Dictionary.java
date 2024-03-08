@@ -24,7 +24,7 @@ public class Dictionary implements Iterable<Object> {
     private int size;
     private int occupiedBoxes;
     private int mask;
-    private static final double OV_FACTOR = 0.66;
+    private static final double OV_FACTOR = 0.6;
     private static final int PERTURB_SHIFT = 5;
 
     /**
@@ -132,26 +132,6 @@ public class Dictionary implements Iterable<Object> {
     }
 
     /**
-     * Private method which calculates the next prime number of the given one.
-     *
-     * @param num to calculate the next prime number
-     * @return the next prime number
-     */
-    private int nextPrimeNumber(int num) {
-        while (true) {
-            int counter = 0;
-            for (int i = 2; i < num; i++) {
-                if (num % i == 0) {
-                    num++;
-                    counter++;
-                    break;
-                }
-            }
-            if (counter == 0) return num;
-        }
-    }
-
-    /**
      * Given a number, it returns the next power of two.
      *
      * @param num
@@ -159,21 +139,6 @@ public class Dictionary implements Iterable<Object> {
      */
     private int nextPowerOfTwo(int num) {
         return num << 1;
-    }
-
-    /**
-     * Private method used to know if a taken slot is available or not.
-     *
-     * @param key to compare
-     * @param index to search into indexes array
-     * @param indexes to take the pair key - value index from
-     * @return true if not available else false
-     */
-    private boolean isNotAvailableSlot(Object key, int index, Integer[] indexes) {
-        Integer i = indexes[index];
-        if (i == null) return false;
-        if (i == -1 || !items[i].key().equals(key)) return true;
-        return false;
     }
 
     /**
@@ -187,10 +152,14 @@ public class Dictionary implements Iterable<Object> {
      */
     private int findSlot(Object key, int hash, Integer[] indexes) {
         int i = hash & mask;
-
-        for (int perturb = hash; isNotAvailableSlot(key, i, indexes);) {
+        int perturb = hash;
+        Integer index = indexes[i];
+        while (true) {
+            if (index == null) break;
+            if (index != -1  && items[index].key().equals(key)) break;
             perturb >>>= PERTURB_SHIFT;
             i = (i*PERTURB_SHIFT + perturb + 1) & mask;
+            index = indexes[i];
         }
         return i;
     }
@@ -207,21 +176,6 @@ public class Dictionary implements Iterable<Object> {
     }
 
     /**
-     * Private method used to know if a taken slot has the searched
-     * key or not.
-     *
-     * @param key to compare
-     * @param index to search into indexes array
-     * @return true if not searched key else false
-     */
-    private boolean isNotSearchedKey(Object key, int index) {
-        Integer i = indexes[index];
-        if (i == null) return false;
-        if (i == -1 || !items[i].key().equals(key)) return true;
-        return false;
-    }
-
-    /**
      * Private method used to find a slot which contains the given key.
      *
      * @param key to compare
@@ -230,12 +184,16 @@ public class Dictionary implements Iterable<Object> {
      */
     private int findSlot(Object key, int hash) {
         int i = hash & mask;
-
-        for (int perturb = hash; isNotSearchedKey(key, i);) {
+        int perturb = hash;
+        Integer index = indexes[i];
+        while (true) {
+            if (index == null) break;
+            if (index != -1  && items[index].key().equals(key)) break;
             perturb >>>= PERTURB_SHIFT;
             i = (i*PERTURB_SHIFT + perturb + 1) & mask;
+            index = indexes[i];
         }
-        return (indexes[i] != null) ? i : -1;
+        return (index != null) ? i : -1;
     }
 
     /**
@@ -286,15 +244,15 @@ public class Dictionary implements Iterable<Object> {
             Object key, Object value, Integer[] indexes, Node[] items
     ) {
         int index = hash(key, indexes);
+        Integer i = indexes[index];
 
-        if (indexes[index] != null) {
-            items[indexes[index]].value(value);
+        if (i != null) {
+            items[i].value(value);
             return;
         }
 
-        indexes[index] = lastIndex + 1;
-        items[lastIndex + 1] = new Node(key, value, index);
-        lastIndex++;
+        indexes[index] = ++lastIndex;
+        items[lastIndex] = new Node(key, value, index);
         occupiedBoxes++;
         size++;
 
@@ -331,7 +289,7 @@ public class Dictionary implements Iterable<Object> {
     }
 
     /**
-     * Return the value associated with the key if exists, else adds the
+     * Returns the value associated with the key if exists, else adds the
      * given pair key - value to the Dictionary and returns that value. Value
      * will be default as null.
      *
@@ -340,9 +298,8 @@ public class Dictionary implements Iterable<Object> {
      */
     public Object setDefault(Object key) {
         Object result;
-        try {
-            result = get(key);
-        } catch (KeyException ex) {
+        result = get(key);
+        if (result == null) {
             put(key, null);
             return null;
         }
@@ -350,7 +307,7 @@ public class Dictionary implements Iterable<Object> {
     }
 
     /**
-     * Return the value associated with the key if exists, else adds the
+     * Returns the value associated with the key if exists, else adds the
      * given pair key - value to the Dictionary and return that value.
      *
      * @param key to search or add
@@ -359,9 +316,8 @@ public class Dictionary implements Iterable<Object> {
      */
     public Object setDefault(Object key, Object value) {
         Object result;
-        try {
-            result = get(key);
-        } catch (KeyException ex) {
+        result = get(key);
+        if (result == null) {
             put(key, value);
             return value;
         }
@@ -409,7 +365,7 @@ public class Dictionary implements Iterable<Object> {
      * @return the removed pair key - value
      * @throws EmptyDictionaryException
      */
-    public Object[] popitem() throws EmptyDictionaryException {
+    public Tuple popitem() throws EmptyDictionaryException {
         if (size == 0) {
             throw new EmptyDictionaryException("The dictionary is empty");
         }
@@ -419,7 +375,7 @@ public class Dictionary implements Iterable<Object> {
         if (node != null) {
             indexes[node.index()] = -1;
             size--;
-            return new Object[]{node.key(), node.value()};
+            return new Tuple(node.key(), node.value());
         }
 
         return null;
@@ -443,13 +399,47 @@ public class Dictionary implements Iterable<Object> {
      * @return the value in pair with the given key
      * @throws KeyException
      */
-    public Object get(Object key) throws KeyException {
+    public Object getItem(Object key) throws KeyException {
         int index = hash(key);
 
         if (index < 0) {
             throw new KeyException(
                     "The key is not contained into the dictionary"
             );
+        }
+
+        return items[indexes[index]].value();
+    }
+
+    /**
+     * Searches and returns the value in pair with the given key.
+     *
+     * @param key to search the value
+     * @return the value in pair with the given key
+     * @throws KeyException
+     */
+    public Object get(Object key) {
+        int index = hash(key);
+
+        if (index < 0) {
+            return null;
+        }
+
+        return items[indexes[index]].value();
+    }
+
+    /**
+     * Searches and returns the value in pair with the given key.
+     *
+     * @param key to search the value
+     * @return the value in pair with the given key
+     * @throws KeyException
+     */
+    public Object get(Object key, Object value) {
+        int index = hash(key);
+
+        if (index < 0) {
+            return value;
         }
 
         return items[indexes[index]].value();
@@ -466,7 +456,6 @@ public class Dictionary implements Iterable<Object> {
 
         return index >= 0;
     }
-
 
     /**
      * Method that creates a copy of the current Dictionary. Equivalent to instance

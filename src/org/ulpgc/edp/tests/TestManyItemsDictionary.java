@@ -4,6 +4,8 @@ import org.junit.*;
 import org.ulpgc.edp.exceptions.*;
 import java.security.KeyException;
 import org.ulpgc.edp.model.Dictionary;
+import org.ulpgc.edp.model.Tuple;
+
 import java.util.Arrays;
 import static org.junit.Assert.*;
 
@@ -61,10 +63,10 @@ public class TestManyItemsDictionary {
     @Test
     public void testPutAndPopitem3() throws EmptyDictionaryException {
         dictionary.put("Testing", 10);
-        Object[] item = dictionary.popitem();
+        Tuple item = dictionary.popitem();
         assertEquals(
                 "El elemento devuelto no es correcto",
-                new Object[]{"Testing", 10}, item
+                new Tuple("Testing", 10), item
         );
     }
 

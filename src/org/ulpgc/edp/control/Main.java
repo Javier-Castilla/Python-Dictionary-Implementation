@@ -20,7 +20,7 @@ import java.io.IOException;
 })
 
 public class Main {
-    static final int LIMIT = 1048576;
+    static final int LIMIT = 16777216;
     static final Object[] objects = new Object[LIMIT];
     static final String URL = "To access this Dictionary documentation you can" +
             " access to the Documentation Web with the URL given in" +
@@ -29,23 +29,24 @@ public class Main {
         System.out.println(String.format("\033[1;33m%s\033[m\n", URL));
 
         // Comment the line below to make your own tests.
-        timesFile();
+        //timesFile();
         //org.junit.runner.JUnitCore.main("org.ulpgc.edp.control.Main");
 
         //Documentation.open(false);
 
         //long startTime = System.nanoTime();
+        new TimesTesting(16);
         //Dictionary d = new Dictionary();
 
         for (int i = 0; i < objects.length; i++) {
-            objects[i] = "Testing" + i;
+            objects[i] = "TestingKey" + i;
         }
 
         long startTime = System.nanoTime();
         Dictionary d = new Dictionary();
 
         for (int i = 0; i < objects.length; i++) {
-            d.put("Testing" + i, i);
+            d.put("TestingKey" + i, i);
         }
         
         long endTime = System.nanoTime();
@@ -57,43 +58,5 @@ public class Main {
                 "Tiempo de ejecución para " + LIMIT + " elementos: "+
                         ms + "ms (" + sc + " segs)"
         );
-    }
-
-    public static void timesFile() {
-        String rutaArchivo = "times.txt";
-        int size = 1;
-        double times = 20*1e6;
-
-        try {
-            File archivo = new File(rutaArchivo);
-            FileWriter escritor = new FileWriter(archivo);
-            BufferedWriter bufferEscritor = new BufferedWriter(escritor);
-            bufferEscritor.write("size;miliseconds;seconds");
-            bufferEscritor.newLine();
-
-            while (size < times) {
-                long startTime = System.nanoTime();
-                Dictionary d = new Dictionary();
-
-                for (int i = 0; i < size; i++) {
-                    d.put("TestingKEY" + i, i);
-                }
-
-                long endTime = System.nanoTime();
-                long duration = (endTime - startTime);
-                double ms = duration / 1e6;
-                double sc = ms / 1000;
-
-                bufferEscritor.write(String.format("%d;%.3f;%.3f", size, ms, sc));
-                bufferEscritor.newLine();
-                size <<= 1;
-            }
-
-            bufferEscritor.close();
-            System.out.println("Se ha creado el archivo correctamente.");
-
-        } catch (IOException e) {
-            System.out.println("Error al crear el archivo: " + e.getMessage());
-        }
     }
 }
