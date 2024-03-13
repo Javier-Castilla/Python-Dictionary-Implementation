@@ -81,7 +81,7 @@ public class TestManyItemsDictionary {
     }
 
     @Test
-    public void testReplace2() throws KeyException {
+    public void testReplace2() {
         dictionary.put(17, 100);
         Object value = dictionary.get(17);
         assertEquals(

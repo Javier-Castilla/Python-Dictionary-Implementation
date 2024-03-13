@@ -3,14 +3,8 @@ package org.ulpgc.edp.control;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
-import org.ulpgc.edp.doc.Documentation;
 import org.ulpgc.edp.model.*;
 import org.ulpgc.edp.tests.*;
-
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
 
 @RunWith(Suite.class)
 @SuiteClasses({
@@ -29,13 +23,12 @@ public class Main {
         System.out.println(String.format("\033[1;33m%s\033[m\n", URL));
 
         // Comment the line below to make your own tests.
-        //timesFile();
         //org.junit.runner.JUnitCore.main("org.ulpgc.edp.control.Main");
 
         //Documentation.open(false);
 
         //long startTime = System.nanoTime();
-        new TimesTesting(16);
+        //new TimesTesting(2);
         //Dictionary d = new Dictionary();
 
         for (int i = 0; i < objects.length; i++) {
@@ -48,7 +41,7 @@ public class Main {
         for (int i = 0; i < objects.length; i++) {
             d.put("TestingKey" + i, i);
         }
-        
+
         long endTime = System.nanoTime();
         long duration = (endTime - startTime);
         double ms = duration / 1e6;

@@ -244,7 +244,7 @@ public class TestEmptyDictionary {
 
     @Test(expected = KeyException.class)
     public void testGetNoneExistingKey() throws KeyException {
-        dictionary.get("1");
+        dictionary.getItem("1");
     }
 
     @Test(expected = KeyException.class)

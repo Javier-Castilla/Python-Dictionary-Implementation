@@ -25,7 +25,7 @@ public class Dictionary implements Iterable<Object> {
     private int occupiedBoxes;
     private int mask;
     private static final double OV_FACTOR = 0.6;
-    private static final int PERTURB_SHIFT = 5;
+    private static final int PERTURB_SHIFT = 3;
 
     /**
      * Constructor by default. No length or items needed.
@@ -154,9 +154,8 @@ public class Dictionary implements Iterable<Object> {
         int i = hash & mask;
         int perturb = hash;
         Integer index = indexes[i];
-        while (true) {
-            if (index == null) break;
-            if (index != -1  && items[index].key().equals(key)) break;
+        while (index != null) {
+            //if (index != -1  && items[index].key().equals(key)) break;
             perturb >>>= PERTURB_SHIFT;
             i = (i*PERTURB_SHIFT + perturb + 1) & mask;
             index = indexes[i];
@@ -187,7 +186,6 @@ public class Dictionary implements Iterable<Object> {
         int perturb = hash;
         Integer index = indexes[i];
         while (true) {
-            if (index == null) break;
             if (index != -1  && items[index].key().equals(key)) break;
             perturb >>>= PERTURB_SHIFT;
             i = (i*PERTURB_SHIFT + perturb + 1) & mask;
@@ -243,7 +241,10 @@ public class Dictionary implements Iterable<Object> {
     private void addEntries(
             Object key, Object value, Integer[] indexes, Node[] items
     ) {
+        //if (!containsKey(key, indexes));
+
         int index = hash(key, indexes);
+
         Integer i = indexes[index];
 
         if (i != null) {
@@ -353,6 +354,7 @@ public class Dictionary implements Iterable<Object> {
         }
 
         Node node = items[indexes[index]];
+        node.index(-1);
         indexes[index] = -1;
         size--;
 
@@ -451,6 +453,12 @@ public class Dictionary implements Iterable<Object> {
      * @param key to test
      * @return true if Dictionary contains key else false
      */
+    public boolean containsKey(Object key, Integer[] indexes) {
+        int index = hash(key, indexes);
+
+        return index >= 0;
+    }
+
     public boolean containsKey(Object key) {
         int index = hash(key);
 
@@ -511,12 +519,10 @@ public class Dictionary implements Iterable<Object> {
         if (size != other.size()) return false;
 
         Iterator<Tuple> it1 = items().iterator();
-        Iterator<Tuple> it2 = other.items().iterator();
 
-        while (it1.hasNext() && it2.hasNext()) {
+        while (it1.hasNext()) {
             Tuple x = it1.next();
-            Tuple y = it2.next();
-            if (!x.get(0).equals(y.get(0)) || !x.get(1).equals(y.get(1))) return false;
+            if (!other.containsKey(x.get(0))) return false;
         }
 
         return true;

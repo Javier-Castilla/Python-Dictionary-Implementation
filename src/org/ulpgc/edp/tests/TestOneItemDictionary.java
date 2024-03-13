@@ -207,7 +207,7 @@ public class TestOneItemDictionary {
 
     @Test(expected = KeyException.class)
     public void testGetNoneExistingKey() throws KeyException {
-        dictionary.get("2");
+        dictionary.getItem("2");
     }
 
     @Test
