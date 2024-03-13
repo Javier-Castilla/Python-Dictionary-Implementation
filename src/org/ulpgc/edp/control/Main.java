@@ -6,6 +6,8 @@ import org.junit.runners.Suite.SuiteClasses;
 import org.ulpgc.edp.model.*;
 import org.ulpgc.edp.tests.*;
 
+import java.util.ArrayList;
+
 @RunWith(Suite.class)
 @SuiteClasses({
         TestEmptyDictionary.class,
@@ -14,10 +16,10 @@ import org.ulpgc.edp.tests.*;
 })
 
 public class Main {
-    static final int LIMIT = 16777216;
+    static final int LIMIT = 16777216 / 16;
     static final Object[] objects = new Object[LIMIT];
     static final String URL = "To access this Dictionary documentation you can" +
-            " access to the Documentation Web with the URL given in" +
+            " visit the Documentation Website with the URL given in" +
             " doc/DocumentationWeb";
     public static void main(String[] args) throws Exception {
         System.out.println(String.format("\033[1;33m%s\033[m\n", URL));
@@ -25,20 +27,21 @@ public class Main {
         // Comment the line below to make your own tests.
         //org.junit.runner.JUnitCore.main("org.ulpgc.edp.control.Main");
 
-        //Documentation.open(false);
+        // Make tests inserting power of two elements into the Dictionary.
+        //TimesTesting.doTestPop(2);
 
-        //long startTime = System.nanoTime();
-        //new TimesTesting(2);
-        //Dictionary d = new Dictionary();
-
-        for (int i = 0; i < objects.length; i++) {
-            objects[i] = "TestingKey" + i;
+        ArrayList<Object> l = new ArrayList<>();
+        for (int i = 0; i <= 9; i++) {
+            l.add(i);
         }
+        Tuple t = new Tuple(new Object[]{1, 2, "3", 4, 5, 6, 7, 8, 9});
+        System.out.println(t);
 
+        /*
         long startTime = System.nanoTime();
         Dictionary d = new Dictionary();
 
-        for (int i = 0; i < objects.length; i++) {
+        for (int i = 0; i < LIMIT; i++) {
             d.put("TestingKey" + i, i);
         }
 
@@ -51,5 +54,6 @@ public class Main {
                 "Tiempo de ejecución para " + LIMIT + " elementos: "+
                         ms + "ms (" + sc + " segs)"
         );
+        */
     }
 }

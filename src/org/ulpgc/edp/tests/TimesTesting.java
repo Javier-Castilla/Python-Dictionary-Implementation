@@ -2,47 +2,94 @@ package org.ulpgc.edp.tests;
 
 import org.ulpgc.edp.model.Dictionary;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-
 public class TimesTesting {
-    public TimesTesting(int maxElements) {
-        String rutaArchivo = "times.csv";
+
+    /**
+     * Static method used to test dicctionary insert method rate.
+     */
+    public static void doTestPut(int maxMElements) {
         int size = 1;
-        double times = (maxElements + 2)*1e6;
+        double times = (maxMElements + 2)*1e6;
 
-        try {
-            File archivo = new File(rutaArchivo);
-            FileWriter escritor = new FileWriter(archivo);
-            BufferedWriter bufferEscritor = new BufferedWriter(escritor);
-            bufferEscritor.write("size;miliseconds;seconds");
-            bufferEscritor.newLine();
+        System.out.println("size;miliseconds;seconds");
 
-            while (size < times) {
-                long startTime = System.nanoTime();
-                Dictionary d = new Dictionary();
+        while (size < times) {
+            long startTime = System.nanoTime();
+            Dictionary d = new Dictionary();
 
-                for (int i = 0; i < size; i++) {
-                    d.put("TestingKey" + i, i);
-                }
-
-                long endTime = System.nanoTime();
-                long duration = (endTime - startTime);
-                double ms = duration / 1e6;
-                double sc = ms / 1000;
-
-                bufferEscritor.write(String.format("%d;%.3f;%.3f", size, ms, sc));
-                bufferEscritor.newLine();
-                size <<= 1;
+            for (int i = 0; i < size; i++) {
+                d.put("TestingKey" + i, i);
             }
 
-            bufferEscritor.close();
-            System.out.println("Se ha creado el archivo correctamente.");
+            long endTime = System.nanoTime();
+            long duration = (endTime - startTime);
+            double ms = duration / 1e6;
+            double sc = ms / 1000;
 
-        } catch (IOException e) {
-            System.out.println("Error al crear el archivo: " + e.getMessage());
+            System.out.println(String.format("%d;%.3f;%.3f", size, ms, sc));
+            size <<= 1;
+        }
+    }
+
+    /**
+     * Static method used to test dicctionary get method rate.
+     */
+    public static void doTestGet(int maxMElements) {
+        int size = 1;
+        double times = (maxMElements + 2)*1e6;
+
+        System.out.println("size;miliseconds;seconds");
+
+        while (size < times) {
+            Dictionary d = new Dictionary();
+
+            for (int i = 0; i < size; i++) {
+                d.put("TestingKey" + i, i);
+            }
+
+            long startTime = System.nanoTime();
+            for (int i = 0; i < size; i++) {
+                d.get("TestingKey" + i);
+            }
+
+            long endTime = System.nanoTime();
+            long duration = (endTime - startTime);
+            double ms = duration / 1e6;
+            double sc = ms / 1000;
+
+            System.out.println(String.format("%d;%.3f;%.3f", size, ms, sc));
+            size <<= 1;
+        }
+    }
+
+    /**
+     * Static method used to test dicctionary pop method rate.
+     */
+    public static void doTestPop(int maxMElements) {
+        int size = 1;
+        double times = (maxMElements + 2)*1e6;
+
+        System.out.println("size;miliseconds;seconds");
+
+        while (size < times) {
+            Dictionary d = new Dictionary();
+
+            for (int i = 0; i < size; i++) {
+                d.put("TestingKey" + i, i);
+            }
+
+            long startTime = System.nanoTime();
+            for (int i = 0; i < size; i++) {
+                d.pop("TestingKey" + i, null);
+            }
+
+            long endTime = System.nanoTime();
+            long duration = (endTime - startTime);
+            double ms = duration / 1e6;
+            double sc = ms / 1000;
+
+            System.out.println(String.format("%d;%.3f;%.3f", size, ms, sc));
+            size <<= 1;
         }
     }
 }
