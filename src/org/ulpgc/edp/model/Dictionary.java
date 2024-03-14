@@ -212,7 +212,7 @@ public class Dictionary implements Iterable<Object> {
      *
      * @param key to compare
      * @param index to search into indexes array
-     * @return true if not searched key else false
+     * @return true if is not searched key else false
      */
     private boolean isNotSearchedKey(Object key, int index) {
         Integer i = indexes[index];
@@ -396,6 +396,29 @@ public class Dictionary implements Iterable<Object> {
             );
         }
 
+        return remove(index);
+    }
+
+    /**
+     * Removes the pair key - value with the given key.
+     *
+     * @param key to remove
+     * @return the value of the removed pair key - value
+     */
+    public Object pop(Object key, Object defaultValue) {
+        Integer index = hash(key);
+
+        if (index == null) return defaultValue;
+        return remove(index);
+    }
+
+    /**
+     * Private inner method that removes the pair key - value located at the given index.
+     *
+     * @param index
+     * @return the removed pair
+     */
+    private Object remove(int index) {
         Node node = items[indexes[index]];
         indexes[index] = -1;
         size--;
@@ -426,7 +449,7 @@ public class Dictionary implements Iterable<Object> {
     }
 
     /**
-     * Clears all the Dictionary, like if a new Dictionary has been created.
+     * Clears all the Dictionary, like if a new empty Dictionary has been created.
      */
     public void clear() {
         indexes = new Integer[indexes.length];
@@ -437,21 +460,28 @@ public class Dictionary implements Iterable<Object> {
     }
 
     /**
-     * Searches and returns the value in pair with the given key.
+     * Searches and returns the value paired with the given key.
      *
      * @param key to search the value
      * @return the value in pair with the given key
      * @throws KeyException
      */
-    public Object get(Object key) throws KeyException {
-        int index = hash(key);
+    public Object get(Object key) {
+        Integer index = hash(key);
+        if (index == null) return null;
+        return items[indexes[index]].value();
+    }
 
-        if (index < 0) {
-            throw new KeyException(
-                    "The key is not contained into the dictionary"
-            );
-        }
-
+    /**
+     * Searches and returns the value paired with the given key.
+     *
+     * @param key to search the value
+     * @return the value in pair with the given key
+     * @throws KeyException
+     */
+    public Object get(Object key, Object defaultValue) {
+        Integer index = hash(key);
+        if (index == null) return defaultValue;
         return items[indexes[index]].value();
     }
 
@@ -466,7 +496,6 @@ public class Dictionary implements Iterable<Object> {
 
         return index >= 0;
     }
-
 
     /**
      * Method that creates a copy of the current Dictionary. Equivalent to instance

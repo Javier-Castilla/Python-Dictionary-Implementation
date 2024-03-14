@@ -16,7 +16,7 @@ public class Tuple implements Iterable<Object> {
     private Object[] items;
 
     /**
-     * Constructor given dinamically all the items wanted to be into the Tuple.
+     * Constructor given dynamically all the items wanted to be into the Tuple.
      *
      * @param items to add into de Tuple
      */
@@ -61,6 +61,15 @@ public class Tuple implements Iterable<Object> {
      */
     Object[] items() {
         return items;
+    }
+
+    /**
+     * Method that return the length of the current Tuple object.
+     *
+     * @return current Tuple length
+     */
+    public int length() {
+        return items.length;
     }
 
     /**

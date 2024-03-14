@@ -29,8 +29,8 @@ public class Main {
         System.out.println(String.format("\033[1;33m%s\033[m\n", URL));
 
         // Comment the line below to make your own tests.
-        timesFile();
-        //org.junit.runner.JUnitCore.main("org.ulpgc.edp.control.Main");
+        //timesFile();
+        org.junit.runner.JUnitCore.main("org.ulpgc.edp.control.Main");
 
         //Documentation.open(false);
 
