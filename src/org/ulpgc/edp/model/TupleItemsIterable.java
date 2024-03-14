@@ -31,7 +31,7 @@ public class TupleItemsIterable implements Iterable<Object> {
 
         @Override
         public boolean hasNext() {
-            return index < tuple.items().length && tuple.items()[index] != null;
+            return index < tuple.length() && tuple.items()[index] != null;
         }
 
         @Override

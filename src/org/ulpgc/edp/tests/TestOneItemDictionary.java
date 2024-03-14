@@ -4,10 +4,12 @@ import org.junit.*;
 import org.ulpgc.edp.exceptions.*;
 import java.security.KeyException;
 import org.ulpgc.edp.model.Dictionary;
+import org.ulpgc.edp.model.Tuple;
+
 import static org.junit.Assert.*;
 
 /**
- * Testing class for test a Dictionary eith one element.
+ * Testing class for test a Dictionary with one element.
  *
  * @author Javier Castilla
  * @author David Miranda
@@ -46,10 +48,10 @@ public class TestOneItemDictionary {
     @Test
     public void testPutAndPop3() throws EmptyDictionaryException {
         dictionary.put("2", 2);
-        Object[] item = dictionary.popitem();
+        Tuple item = dictionary.popitem();
         assertEquals(
                 "Valor incorrecto",
-                new Object[]{"2", 2}, item
+                new Tuple("2", 2), item
         );
     }
 
@@ -186,10 +188,10 @@ public class TestOneItemDictionary {
 
     @Test
     public void testPopItem1() throws EmptyDictionaryException {
-        Object[] values = dictionary.popitem();
+        Tuple values = dictionary.popitem();
         assertEquals(
                 "Valor incorrecto",
-                new Object[]{"1", 1}, values
+                new Tuple("1", 1), values
         );
     }
 
@@ -205,7 +207,7 @@ public class TestOneItemDictionary {
 
     @Test(expected = KeyException.class)
     public void testGetNoneExistingKey() throws KeyException {
-        dictionary.get("2");
+        dictionary.getItem("2");
     }
 
     @Test

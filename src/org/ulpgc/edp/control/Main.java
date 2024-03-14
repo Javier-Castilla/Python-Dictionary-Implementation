@@ -3,14 +3,10 @@ package org.ulpgc.edp.control;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
-import org.ulpgc.edp.doc.Documentation;
 import org.ulpgc.edp.model.*;
 import org.ulpgc.edp.tests.*;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.util.ArrayList;
 
 @RunWith(Suite.class)
 @SuiteClasses({
@@ -20,34 +16,35 @@ import java.io.IOException;
 })
 
 public class Main {
-    static final int LIMIT = 1048576;
+    static final int LIMIT = 16777216 / 16;
     static final Object[] objects = new Object[LIMIT];
     static final String URL = "To access this Dictionary documentation you can" +
-            " access to the Documentation Web with the URL given in" +
+            " visit the Documentation Website with the URL given in" +
             " doc/DocumentationWeb";
     public static void main(String[] args) throws Exception {
         System.out.println(String.format("\033[1;33m%s\033[m\n", URL));
 
         // Comment the line below to make your own tests.
-        //timesFile();
-        org.junit.runner.JUnitCore.main("org.ulpgc.edp.control.Main");
+        //org.junit.runner.JUnitCore.main("org.ulpgc.edp.control.Main");
 
-        //Documentation.open(false);
+        // Make tests inserting power of two elements into the Dictionary.
+        //TimesTesting.doTestPop(2);
 
-        //long startTime = System.nanoTime();
-        //Dictionary d = new Dictionary();
-
-        for (int i = 0; i < objects.length; i++) {
-            objects[i] = "Testing" + i;
+        ArrayList<Object> l = new ArrayList<>();
+        for (int i = 0; i <= 9; i++) {
+            l.add(i);
         }
+        Tuple t = new Tuple(new Object[]{1, 2, "3", 4, 5, 6, 7, 8, 9});
+        System.out.println(t);
 
+        /*
         long startTime = System.nanoTime();
         Dictionary d = new Dictionary();
 
-        for (int i = 0; i < objects.length; i++) {
-            d.put("Testing" + i, i);
+        for (int i = 0; i < LIMIT; i++) {
+            d.put("TestingKey" + i, i);
         }
-        
+
         long endTime = System.nanoTime();
         long duration = (endTime - startTime);
         double ms = duration / 1e6;
@@ -57,43 +54,6 @@ public class Main {
                 "Tiempo de ejecución para " + LIMIT + " elementos: "+
                         ms + "ms (" + sc + " segs)"
         );
-    }
-
-    public static void timesFile() {
-        String rutaArchivo = "times.txt";
-        int size = 1;
-        double times = 20*1e6;
-
-        try {
-            File archivo = new File(rutaArchivo);
-            FileWriter escritor = new FileWriter(archivo);
-            BufferedWriter bufferEscritor = new BufferedWriter(escritor);
-            bufferEscritor.write("size;miliseconds;seconds");
-            bufferEscritor.newLine();
-
-            while (size < times) {
-                long startTime = System.nanoTime();
-                Dictionary d = new Dictionary();
-
-                for (int i = 0; i < size; i++) {
-                    d.put("TestingKEY" + i, i);
-                }
-
-                long endTime = System.nanoTime();
-                long duration = (endTime - startTime);
-                double ms = duration / 1e6;
-                double sc = ms / 1000;
-
-                bufferEscritor.write(String.format("%d;%.3f;%.3f", size, ms, sc));
-                bufferEscritor.newLine();
-                size <<= 1;
-            }
-
-            bufferEscritor.close();
-            System.out.println("Se ha creado el archivo correctamente.");
-
-        } catch (IOException e) {
-            System.out.println("Error al crear el archivo: " + e.getMessage());
-        }
+        */
     }
 }

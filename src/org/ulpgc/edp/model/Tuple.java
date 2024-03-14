@@ -14,6 +14,7 @@ import java.util.Iterator;
  */
 public class Tuple implements Iterable<Object> {
     private Object[] items;
+    private int length;
 
     /**
      * Constructor given dynamically all the items wanted to be into the Tuple.
@@ -30,6 +31,7 @@ public class Tuple implements Iterable<Object> {
                 );
             }
             this.items[index] = item;
+            length++;
             index++;
         }
     }
@@ -82,6 +84,10 @@ public class Tuple implements Iterable<Object> {
         return items[index];
     }
 
+    public int length() {
+        return length;
+    }
+
     /**
      * Overrided method that compares a given object with the current one.
      *
@@ -104,10 +110,10 @@ public class Tuple implements Iterable<Object> {
 
             if (!item1.equals(item2)) return false;
 
-            counter++;
+            counter += 2;
         }
 
-        return counter == items().length * 2;
+        return counter == this.length() * 2;
     }
 
     /**

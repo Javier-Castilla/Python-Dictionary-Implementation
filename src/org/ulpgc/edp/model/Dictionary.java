@@ -20,7 +20,7 @@ import java.util.Objects;
 public class Dictionary implements Iterable<Object> {
     private Integer[] indexes;
     private Node[] items;
-    private int lastIndex = -1;
+    private int lastIndex;
     private int size;
     private int occupiedBoxes;
     private int mask;
@@ -34,34 +34,28 @@ public class Dictionary implements Iterable<Object> {
         this.indexes = new Integer[8];
         this.items = new Node[8];
         this.mask = indexes.length - 1;
+        this.lastIndex = -1;
     }
 
     /**
-     * Constructor with initial length of the hash table specified.
-     *
-     * @param length of the initial hash table
-     */
-    public Dictionary(int length) {
-        int itemsLen = ((int) (Math.log(length) / Math.log(2)) + 1);
-        this.indexes = new Integer[1 << itemsLen];
-        this.items = new Node[1 << itemsLen];
-        this.mask = indexes.length - 1;
-    }
-
-    /**
-     * Constructor given an iterable of pairs key - value
+     * Constructor given an iterable of pairs key - value as Tuples
      * to put into the new dictionary.
      *
      * @param items to put into the new dictionary
      */
-    public Dictionary(Iterable<Object[]> items) {
+    public Dictionary(Iterable<Tuple> items) {
         this.indexes = new Integer[8];
         this.items = new Node[8];
         this.mask = indexes.length - 1;
-        Iterator<Object[]> itemsIterator = items.iterator();
-        while (itemsIterator.hasNext()) {
-            Object[] item = itemsIterator.next();
-            put(item[0], item[1]);
+        this.lastIndex = -1;
+
+        for (Tuple item : items) {
+            if (item.length() != 2) {
+                throw new UnsupportedOperationException(
+                        "The size of the pair differs from the expected (2)"
+                );
+            }
+            put(item.get(0), item.get(1));
         }
     }
 
@@ -74,6 +68,8 @@ public class Dictionary implements Iterable<Object> {
         this.indexes = new Integer[8];
         this.items = new Node[8];
         this.mask = indexes.length - 1;
+        this.lastIndex = -1;
+
         for (Tuple item : dictionary.items()) {
             put(item.get(0), item.get(1));
         }
@@ -91,8 +87,8 @@ public class Dictionary implements Iterable<Object> {
         Dictionary newDictionary = new Dictionary();
         Iterator<Object> keySet = keys.iterator();
 
-        while (keySet.hasNext()) {
-            newDictionary.put(keySet.next(), null);
+        for (Object key : keys) {
+            newDictionary.put(key, null);
         }
 
         return newDictionary;
@@ -132,26 +128,6 @@ public class Dictionary implements Iterable<Object> {
     }
 
     /**
-     * Private method which calculates the next prime number of the given one.
-     *
-     * @param num to calculate the next prime number
-     * @return the next prime number
-     */
-    private int nextPrimeNumber(int num) {
-        while (true) {
-            int counter = 0;
-            for (int i = 2; i < num; i++) {
-                if (num % i == 0) {
-                    num++;
-                    counter++;
-                    break;
-                }
-            }
-            if (counter == 0) return num;
-        }
-    }
-
-    /**
      * Given a number, it returns the next power of two.
      *
      * @param num
@@ -159,21 +135,6 @@ public class Dictionary implements Iterable<Object> {
      */
     private int nextPowerOfTwo(int num) {
         return num << 1;
-    }
-
-    /**
-     * Private method used to know if a taken slot is available or not.
-     *
-     * @param key to compare
-     * @param index to search into indexes array
-     * @param indexes to take the pair key - value index from
-     * @return true if not available else false
-     */
-    private boolean isNotAvailableSlot(Object key, int index, Integer[] indexes) {
-        Integer i = indexes[index];
-        if (i == null) return false;
-        if (i == -1 || !items[i].key().equals(key)) return true;
-        return false;
     }
 
     /**
@@ -187,11 +148,18 @@ public class Dictionary implements Iterable<Object> {
      */
     private int findSlot(Object key, int hash, Integer[] indexes) {
         int i = hash & mask;
+        int perturb = hash;
+        Integer index = indexes[i];
 
-        for (int perturb = hash; isNotAvailableSlot(key, i, indexes);) {
+        while (true) {
+            if (
+                    index == null || (index != -1  && items[index].key().equals(key))
+            ) break;
             perturb >>>= PERTURB_SHIFT;
             i = (i*PERTURB_SHIFT + perturb + 1) & mask;
+            index = indexes[i];
         }
+
         return i;
     }
 
@@ -207,21 +175,6 @@ public class Dictionary implements Iterable<Object> {
     }
 
     /**
-     * Private method used to know if a taken slot has the searched
-     * key or not.
-     *
-     * @param key to compare
-     * @param index to search into indexes array
-     * @return true if is not searched key else false
-     */
-    private boolean isNotSearchedKey(Object key, int index) {
-        Integer i = indexes[index];
-        if (i == null) return false;
-        if (i == -1 || !items[i].key().equals(key)) return true;
-        return false;
-    }
-
-    /**
      * Private method used to find a slot which contains the given key.
      *
      * @param key to compare
@@ -230,12 +183,19 @@ public class Dictionary implements Iterable<Object> {
      */
     private int findSlot(Object key, int hash) {
         int i = hash & mask;
+        int perturb = hash;
+        Integer index = indexes[i];
 
-        for (int perturb = hash; isNotSearchedKey(key, i);) {
+        while (true) {
+            if (
+                    index == null || (index != -1  && items[index].key().equals(key))
+            ) break;
             perturb >>>= PERTURB_SHIFT;
             i = (i*PERTURB_SHIFT + perturb + 1) & mask;
+            index = indexes[i];
         }
-        return (indexes[i] != null) ? i : -1;
+
+        return i;
     }
 
     /**
@@ -287,14 +247,14 @@ public class Dictionary implements Iterable<Object> {
     ) {
         int index = hash(key, indexes);
 
-        if (indexes[index] != null) {
-            items[indexes[index]].value(value);
+        Integer i = indexes[index];
+        if (i != null) {
+            items[i].value(value);
             return;
         }
 
-        indexes[index] = lastIndex + 1;
-        items[lastIndex + 1] = new Node(key, value, index);
-        lastIndex++;
+        indexes[index] = ++lastIndex;
+        items[lastIndex] = new Node(key, value, index);
         occupiedBoxes++;
         size++;
 
@@ -331,7 +291,7 @@ public class Dictionary implements Iterable<Object> {
     }
 
     /**
-     * Return the value associated with the key if exists, else adds the
+     * Returns the value associated with the key if exists, else adds the
      * given pair key - value to the Dictionary and returns that value. Value
      * will be default as null.
      *
@@ -339,18 +299,11 @@ public class Dictionary implements Iterable<Object> {
      * @return the value found or added
      */
     public Object setDefault(Object key) {
-        Object result;
-        try {
-            result = get(key);
-        } catch (KeyException ex) {
-            put(key, null);
-            return null;
-        }
-        return result;
+        return setDefault(key, null);
     }
 
     /**
-     * Return the value associated with the key if exists, else adds the
+     * Returns the value associated with the key if exists, else adds the
      * given pair key - value to the Dictionary and return that value.
      *
      * @param key to search or add
@@ -358,13 +311,13 @@ public class Dictionary implements Iterable<Object> {
      * @return the value found or added
      */
     public Object setDefault(Object key, Object value) {
-        Object result;
-        try {
-            result = get(key);
-        } catch (KeyException ex) {
+        Object result = get(key);
+
+        if (result == null) {
             put(key, value);
             return value;
         }
+
         return result;
     }
 
@@ -388,15 +341,20 @@ public class Dictionary implements Iterable<Object> {
      * @throws KeyException
      */
     public Object pop(Object key) throws KeyException {
-        int index = hash(key);
+        Integer index = hash(key);
 
-        if (index < 0) {
+        if (index == null) {
             throw new KeyException(
                     "The given key is not in the dictionary: " + key
             );
         }
 
-        return remove(index);
+        Node node = items[indexes[index]];
+        node.index(-1);
+        indexes[index] = -1;
+        size--;
+
+        return node.value();
     }
 
     /**
@@ -404,22 +362,17 @@ public class Dictionary implements Iterable<Object> {
      *
      * @param key to remove
      * @return the value of the removed pair key - value
+     * @throws KeyException
      */
     public Object pop(Object key, Object defaultValue) {
         Integer index = hash(key);
 
-        if (index == null) return defaultValue;
-        return remove(index);
-    }
+        if (index == null) {
+            return defaultValue;
+        }
 
-    /**
-     * Private inner method that removes the pair key - value located at the given index.
-     *
-     * @param index
-     * @return the removed pair
-     */
-    private Object remove(int index) {
         Node node = items[indexes[index]];
+        node.index(-1);
         indexes[index] = -1;
         size--;
 
@@ -432,7 +385,7 @@ public class Dictionary implements Iterable<Object> {
      * @return the removed pair key - value
      * @throws EmptyDictionaryException
      */
-    public Object[] popitem() throws EmptyDictionaryException {
+    public Tuple popitem() throws EmptyDictionaryException {
         if (size == 0) {
             throw new EmptyDictionaryException("The dictionary is empty");
         }
@@ -442,18 +395,18 @@ public class Dictionary implements Iterable<Object> {
         if (node != null) {
             indexes[node.index()] = -1;
             size--;
-            return new Object[]{node.key(), node.value()};
+            return new Tuple(node.key(), node.value());
         }
 
         return null;
     }
 
     /**
-     * Clears all the Dictionary, like if a new empty Dictionary has been created.
+     * Clears all the Dictionary, like if a new Dictionary has been created.
      */
     public void clear() {
-        indexes = new Integer[indexes.length];
-        items = new Node[items.length];
+        indexes = new Integer[8];
+        items = new Node[8];
         lastIndex = -1;
         size = 0;
         occupiedBoxes = 0;
@@ -466,10 +419,16 @@ public class Dictionary implements Iterable<Object> {
      * @return the value in pair with the given key
      * @throws KeyException
      */
-    public Object get(Object key) {
+    public Object getItem(Object key) throws KeyException {
         Integer index = hash(key);
-        if (index == null) return null;
-        return items[indexes[index]].value();
+
+        if (index != null) {
+            return items[indexes[index]].value();
+        }
+
+        throw new KeyException(
+                "The key is not contained into the dictionary"
+        );
     }
 
     /**
@@ -477,11 +436,31 @@ public class Dictionary implements Iterable<Object> {
      *
      * @param key to search the value
      * @return the value in pair with the given key
+     */
+    public Object get(Object key) {
+        Integer index = hash(key);
+
+        if (index != null) {
+            return items[indexes[index]].value();
+        }
+
+        return null;
+    }
+
+    /**
+     * Searches and returns the value in pair with the given key.
+     *
+     * @param key to search the value
+     * @return the value in pair with the given key
      * @throws KeyException
      */
-    public Object get(Object key, Object defaultValue) {
-        Integer index = hash(key);
-        if (index == null) return defaultValue;
+    public Object get(Object key, Object value) {
+        int index = hash(key);
+
+        if (index < 0) {
+            return value;
+        }
+
         return items[indexes[index]].value();
     }
 
@@ -491,10 +470,12 @@ public class Dictionary implements Iterable<Object> {
      * @param key to test
      * @return true if Dictionary contains key else false
      */
-    public boolean containsKey(Object key) {
-        int index = hash(key);
+    public boolean containsKey(Object key, Integer[] indexes) {
+        return (Integer) hash(key, indexes) != null;
+    }
 
-        return index >= 0;
+    public boolean containsKey(Object key) {
+        return  (Integer) hash(key) != null;
     }
 
     /**
@@ -551,12 +532,10 @@ public class Dictionary implements Iterable<Object> {
         if (size != other.size()) return false;
 
         Iterator<Tuple> it1 = items().iterator();
-        Iterator<Tuple> it2 = other.items().iterator();
 
-        while (it1.hasNext() && it2.hasNext()) {
+        while (it1.hasNext()) {
             Tuple x = it1.next();
-            Tuple y = it2.next();
-            if (!x.get(0).equals(y.get(0)) || !x.get(1).equals(y.get(1))) return false;
+            if (!other.containsKey(x.get(0))) return false;
         }
 
         return true;
