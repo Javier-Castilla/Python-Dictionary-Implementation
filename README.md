@@ -14,15 +14,18 @@ associated with them (values).
 ```java
 import org.ulpgc.edp.model.dct;
 
-// Creates an empty dictionary
-Dictionary myDict = new Dictionary();
+public static void main(String[] args) {
+        // Creates an empty dictionary
+        Dictionary myDict = new Dictionary();
 
-// Insert pairs into the dictionary
-myDict.put("key1", 1);
-myDict.put("key2", 2);
+        // Insert pairs into the dictionary
+        myDict.put("key1", 1);
+        myDict.put("key2", 2);
 
-// Get an element from the dictionary
-System.out.println(myDict.get("key1")); // Will print 1
+        // Get an element from the dictionary
+        System.out.println(myDict.get("key1")); // Will print 1
+}
+
 ```
 
 ## Tuple
@@ -35,11 +38,13 @@ Useful to store short - medium amount of data that have to stay immutable.
 ```java
 import org.ulpgc.edp.model.tpl;
 
-// Create a tuple
-Tuple myTuple = new Tuple(1, 2, 3, 4);
+public static void main(String[] args) {
+        // Create a tuple
+        Tuple myTuple = new Tuple(1, 2, 3, 4);
 
-// Get an element from the tuple (via index)
-System.out.println(myTuple.get(0)); // Will print 1
+        // Get an element from the tuple (via index)
+        System.out.println(myTuple.get(0)); // Will print 1
+}
 ```
 
 ## Documentation
@@ -48,7 +53,7 @@ To see full documentation of both classes visit the Official Documentation Websi
 
 ## Authors
 
-Developed by Javier Castilla with help of:
+Developed by **Javier Castilla** with help of
 - David Miranda
 - Esteban Trujillo
 - Elena Artiles.
