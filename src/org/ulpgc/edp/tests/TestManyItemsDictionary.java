@@ -2,12 +2,20 @@ package org.ulpgc.edp.tests;
 
 import org.junit.*;
 import org.ulpgc.edp.exceptions.*;
-import org.ulpgc.edp.model.Dictionary;
+import java.security.KeyException;
+import org.ulpgc.edp.model.dictionaryobject.Dictionary;
+import org.ulpgc.edp.model.tupleobject.Tuple;
 
 import java.util.Arrays;
-
 import static org.junit.Assert.*;
 
+/**
+ * Testing class for test a Dictionary with many items.
+ *
+ * @author Javier Castilla
+ * @version 15-03-2024
+ * @since 15-03-2024
+ */
 public class TestManyItemsDictionary {
     private Dictionary dictionary;
     private Object[] keys;
@@ -54,10 +62,10 @@ public class TestManyItemsDictionary {
     @Test
     public void testPutAndPopitem3() throws EmptyDictionaryException {
         dictionary.put("Testing", 10);
-        Object[] item = dictionary.popitem();
+        Tuple item = dictionary.popitem();
         assertEquals(
                 "El elemento devuelto no es correcto",
-                new Object[]{"Testing", 10}, item
+                new Tuple("Testing", 10), item
         );
     }
 
@@ -72,7 +80,7 @@ public class TestManyItemsDictionary {
     }
 
     @Test
-    public void testReplace2() throws KeyErrorException {
+    public void testReplace2() {
         dictionary.put(17, 100);
         Object value = dictionary.get(17);
         assertEquals(
@@ -92,7 +100,7 @@ public class TestManyItemsDictionary {
     }
 
     @Test
-    public void testReplace4() throws KeyErrorException {
+    public void testReplace4() throws KeyException {
         dictionary.put(17, 100);
         Object value = dictionary.pop(17);
         assertEquals(

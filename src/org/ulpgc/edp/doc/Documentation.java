@@ -16,7 +16,7 @@ public class Documentation {
         if (!permission) return;
 
         // URL que deseas abrir en el navegador
-        String url = "https://javier-castilla.github.io/Java-own-Python-dictionary-implementation-DOCUMENTATION/org/ulpgc/edp/model/package-summary.html";
+        String url = "https://javier-castilla.github.io/Java-own-Python-dictionary-implementation-DOCUMENTATION/";
 
         // Intentar abrir la URL en el navegador
         try {
