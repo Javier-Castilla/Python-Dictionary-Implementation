@@ -3,16 +3,18 @@ package org.ulpgc.edp.tests;
 import org.junit.*;
 import org.ulpgc.edp.exceptions.*;
 import java.security.KeyException;
-import org.ulpgc.edp.model.*;
+
+import org.ulpgc.edp.model.dictionaryobject.Dictionary;
+import org.ulpgc.edp.model.tupleobject.Tuple;
+
 import static org.junit.Assert.*;
 
 /**
  * Testing class for test an empty Dictionary.
  *
  * @author Javier Castilla
- * @author David Miranda
- * @author Esteban Trujillo
- * @author Elena Artiles
+ * @version 15-03-2024
+ * @since 15-03-2024
  */
 public class TestEmptyDictionary {
     private Dictionary dictionary;

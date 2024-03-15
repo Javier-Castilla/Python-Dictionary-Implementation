@@ -3,8 +3,8 @@ package org.ulpgc.edp.tests;
 import org.junit.*;
 import org.ulpgc.edp.exceptions.*;
 import java.security.KeyException;
-import org.ulpgc.edp.model.Dictionary;
-import org.ulpgc.edp.model.Tuple;
+import org.ulpgc.edp.model.dictionaryobject.Dictionary;
+import org.ulpgc.edp.model.tupleobject.Tuple;
 
 import java.util.Arrays;
 import static org.junit.Assert.*;
@@ -13,9 +13,8 @@ import static org.junit.Assert.*;
  * Testing class for test a Dictionary with many items.
  *
  * @author Javier Castilla
- * @author David Miranda
- * @author Esteban Trujillo
- * @author Elena Artiles
+ * @version 15-03-2024
+ * @since 15-03-2024
  */
 public class TestManyItemsDictionary {
     private Dictionary dictionary;

@@ -1,13 +1,11 @@
-package org.ulpgc.edp.model;
+package org.ulpgc.edp.model.dictionaryobject;
 
 /**
  * Node class used to storage a pair key - value and its index of and indexes
  * hash table.
  *
  * @author Javier Castilla
- * @author David Miranda
- * @author Esteban Trujillo
- * @author Elena Artiles
+ * @version 15-03-2024
  */
 class Node {
     private Object key;
@@ -15,7 +13,7 @@ class Node {
     private int index;
 
     /**
-     * Constructor of the Node Class.
+     * Constructor of the node class.
      *
      * @param key
      * @param value
@@ -28,7 +26,7 @@ class Node {
     }
 
     /**
-     * Getter for key attribute
+     * Getter for key attribute.
      *
      * @return key
      */
@@ -37,7 +35,7 @@ class Node {
     }
 
     /**
-     * Setter for key attribute
+     * Setter for key attribute.
      *
      * @param key
      */
@@ -46,7 +44,7 @@ class Node {
     }
 
     /**
-     * Getter for value attribute
+     * Getter for value attribute.
      *
      * @return value
      */
@@ -55,7 +53,7 @@ class Node {
     }
 
     /**
-     * Setter for value attribute
+     * Setter for value attribute.
      *
      * @param value
      */
@@ -64,7 +62,7 @@ class Node {
     }
 
     /**
-     * Getter for index attribute
+     * Getter for index attribute.
      *
      * @return index
      */
@@ -73,7 +71,7 @@ class Node {
     }
 
     /**
-     * Setter for index value
+     * Setter for index value.
      *
      * @param index
      */
@@ -82,26 +80,31 @@ class Node {
     }
 
     /**
+     * Private inner method used to format the items of the current node in
+     * order to make the string representation.
+     *
+     * @param item to format
+     * @return formatted item
+     */
+    private String format(Object item) {
+        if (item.getClass() == String.class) {
+            return String.format("\'%s\'", item);
+        } else {
+            return item.toString();
+        }
+    }
+
+    /**
      * String representation of the Node class.
+     *
      * @return a string representation
      */
     @Override
     public String toString() {
         StringBuilder str = new StringBuilder();
-
-        if (key.getClass() == String.class) {
-            str.append(String.format("\'%s\'", key));
-        } else {
-            str.append(key);
-        }
-
+        str.append(format(key));
         str.append(": ");
-
-        if (value.getClass() == String.class) {
-            str.append(String.format("\'%s\'", value));
-        } else {
-            str.append(value);
-        }
+        str.append(format(value));
 
         return str.toString();
     }

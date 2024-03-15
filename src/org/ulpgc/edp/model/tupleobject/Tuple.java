@@ -1,4 +1,4 @@
-package org.ulpgc.edp.model;
+package org.ulpgc.edp.model.tupleobject;
 
 import java.util.Arrays;
 import java.util.Iterator;
@@ -8,23 +8,22 @@ import java.util.Iterator;
  * once it is created.
  *
  * @author Javier Castilla
- * @author David Miranda
- * @author Esteban Trujillo
- * @author Elena Artiles
+ * @version 15-03-2024
  */
 public class Tuple implements Iterable<Object> {
     private Object[] items;
     private int length;
 
     /**
-     * Constructor given dinamically all the items wanted to be into the Tuple.
+     * Constructor given dynamically all the items wanted to be into the tuple.
      *
-     * @param items to add into de Tuple
+     * @param items to add into de tuple
      */
     public Tuple(Object... items) {
         this.items = new Object[8];
         int index = 0;
         for (Object item : items) {
+            if (item == null) continue;
             if (index == this.items.length) {
                 this.items = Arrays.copyOf(
                         this.items, this.items.length << 1
@@ -32,26 +31,6 @@ public class Tuple implements Iterable<Object> {
             }
             this.items[index] = item;
             length++;
-            index++;
-        }
-    }
-
-    /**
-     * Constructor given an iterable object. Used to iterate it and add the
-     * elements into the Tuple.
-     *
-     * @param items to iterate and add into the Tuple
-     */
-    public Tuple(Iterable<Object> items) {
-        this.items = new Object[8];
-        int index = 0;
-        for (Object item : items) {
-            if (index == this.items.length) {
-                this.items = Arrays.copyOf(
-                        this.items, this.items.length << 1
-                );
-            }
-            this.items[index] = item;
             index++;
         }
     }
@@ -66,7 +45,7 @@ public class Tuple implements Iterable<Object> {
     }
 
     /**
-     * Method that returns the element contained in the specified index.
+     * Returns the element contained in the specified index.
      *
      * @param index of the item
      * @return item at given index
@@ -75,12 +54,17 @@ public class Tuple implements Iterable<Object> {
         return items[index];
     }
 
+    /**
+     * Returns the tuple`s length.
+     *
+     * @return tuple's length
+     */
     public int length() {
         return length;
     }
 
     /**
-     * Overrided method that compares a given object with the current one.
+     * Override method that compares a given object with the current one.
      *
      * @param object to compare
      * @return true if objects are equals else false
@@ -90,6 +74,7 @@ public class Tuple implements Iterable<Object> {
         if (this == object) return true;
         if (object == null || getClass() != object.getClass()) return false;
         Tuple other = (Tuple) object;
+        if (length() != other.length()) return false;
 
         Iterator<Object> it1 = iterator();
         Iterator<Object> it2 = other.iterator();
@@ -108,7 +93,7 @@ public class Tuple implements Iterable<Object> {
     }
 
     /**
-     * Overrided method that returns the hashCode of the instanc3ed object.
+     * Override method that returns the hashCode of the instanced object.
      *
      * @return hashCode of the instance object
      */
@@ -118,7 +103,7 @@ public class Tuple implements Iterable<Object> {
     }
 
     /**
-     * Overrided method used to iterate over the Tuple.
+     * Override method used to iterate over the Tuple.
      *
      * @return an iterator of the Tuple class
      */
@@ -128,7 +113,7 @@ public class Tuple implements Iterable<Object> {
     }
 
     /**
-     * Overrided method that gives the string representation of the object.
+     * Override method that gives the string representation of the object.
      *
      * @return the string representation
      */

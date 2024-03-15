@@ -1,11 +1,19 @@
 package org.ulpgc.edp.tests;
 
-import org.ulpgc.edp.model.Dictionary;
+import org.ulpgc.edp.model.dictionaryobject.Dictionary;
 
+/**
+ * Class used to test several cases of the developed dictionary main methods.
+ * The class creates a file with the time of execution.
+ *
+ * @author Javier Castilla
+ * @version 15-03-2024
+ * @since 15-03-2024
+ */
 public class TimesTesting {
 
     /**
-     * Static method used to test dicctionary insert method rate.
+     * Static method used to test dictionary insert method rate.
      */
     public static void doTestPut(int maxMElements) {
         int size = 1;
@@ -32,7 +40,7 @@ public class TimesTesting {
     }
 
     /**
-     * Static method used to test dicctionary get method rate.
+     * Static method used to test dictionary get method rate.
      */
     public static void doTestGet(int maxMElements) {
         int size = 1;
@@ -63,7 +71,7 @@ public class TimesTesting {
     }
 
     /**
-     * Static method used to test dicctionary pop method rate.
+     * Static method used to test dictionary pop method rate.
      */
     public static void doTestPop(int maxMElements) {
         int size = 1;

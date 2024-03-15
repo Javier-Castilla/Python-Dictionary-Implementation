@@ -1,12 +1,9 @@
 package org.ulpgc.edp.exceptions;
 
 /**
- * Exception class thrown when trying to access an empty dictionary elements.
+ * Exception class thrown when trying to access an empty dictionary's elements.
  *
  * @author Javier Castilla
- * @author David Miranda
- * @author Esteban Trujillo
- * @author Elena Artiles
  */
 public class EmptyDictionaryException extends Exception {
     /**

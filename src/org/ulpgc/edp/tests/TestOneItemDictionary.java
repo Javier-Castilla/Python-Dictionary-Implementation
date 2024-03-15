@@ -3,8 +3,8 @@ package org.ulpgc.edp.tests;
 import org.junit.*;
 import org.ulpgc.edp.exceptions.*;
 import java.security.KeyException;
-import org.ulpgc.edp.model.Dictionary;
-import org.ulpgc.edp.model.Tuple;
+import org.ulpgc.edp.model.dictionaryobject.Dictionary;
+import org.ulpgc.edp.model.tupleobject.Tuple;
 
 import static org.junit.Assert.*;
 
@@ -12,9 +12,8 @@ import static org.junit.Assert.*;
  * Testing class for test a Dictionary with one element.
  *
  * @author Javier Castilla
- * @author David Miranda
- * @author Esteban Trujillo
- * @author Elena Artiles
+ * @version 15-03-2024
+ * @since 15-03-2024
  */
 public class TestOneItemDictionary {
     private Dictionary dictionary;
@@ -29,7 +28,7 @@ public class TestOneItemDictionary {
         dictionary.put("2", 2);
         int len = dictionary.size();
         assertEquals(
-                "Tamaño incorrecto",
+                "Wrong size",
                 2, len
         );
     }
@@ -40,7 +39,7 @@ public class TestOneItemDictionary {
         dictionary.pop("2");
         int len = dictionary.size();
         assertEquals(
-                "Tamaño incorrecto",
+                "Wrong size",
                 1, len
         );
     }
@@ -50,7 +49,7 @@ public class TestOneItemDictionary {
         dictionary.put("2", 2);
         Tuple item = dictionary.popitem();
         assertEquals(
-                "Valor incorrecto",
+                "Wrong value",
                 new Tuple("2", 2), item
         );
     }
@@ -60,7 +59,7 @@ public class TestOneItemDictionary {
         dictionary.put("2", 2);
         Object value = dictionary.pop("2");
         assertEquals(
-                "Valor incorrecto",
+                "Wrong value",
                 2, value
         );
     }
@@ -70,7 +69,7 @@ public class TestOneItemDictionary {
         dictionary.put("2", 2);
         Object value = dictionary.pop("2");
         assertEquals(
-                "Valor incorrecto",
+                "Wrong value",
                 2, value
         );
     }
@@ -80,7 +79,7 @@ public class TestOneItemDictionary {
         dictionary.put("1", 100);
         int dictionaryLength = dictionary.size();
         assertEquals(
-                "Tamaño incorrecto",
+                "Wrong size",
                 1, dictionaryLength
         );
     }
@@ -90,7 +89,7 @@ public class TestOneItemDictionary {
         dictionary.put("1", 100);
         Object value = dictionary.get("1");
         assertEquals(
-                "Valor incorrecto",
+                "Wrong value",
                 100, value
         );
     }
@@ -104,7 +103,7 @@ public class TestOneItemDictionary {
         dictionary.update(otherDictionary);
         int dictionaryLength = dictionary.size();
         assertEquals(
-                "Tamaño incorrecto",
+                "Wrong size",
                 5, dictionaryLength
         );
     }
@@ -118,7 +117,7 @@ public class TestOneItemDictionary {
         dictionary.update(otherDictionary);
         String str = dictionary.toString();
         assertEquals(
-                "Los elementos son incorrectos",
+                "The elements are not correct ",
                 "{'1': 1, 0: 0, 1: 1, 2: 2, 3: 3}", str
         );
     }
@@ -127,7 +126,7 @@ public class TestOneItemDictionary {
     public void testString()  {
         String str = dictionary.toString();
         assertEquals(
-                "Representación incorrecta",
+                "Representations is not correct ",
                 "{'1': 1}", str
         );
     }
@@ -137,7 +136,7 @@ public class TestOneItemDictionary {
         dictionary.clear();
         int dictionaryLength = dictionary.size();
         assertEquals(
-                "Tamaño incorrecto",
+                "Wrong size",
                 0, dictionaryLength
         );
     }
@@ -152,8 +151,8 @@ public class TestOneItemDictionary {
     public void testKeys() {
         String keys = dictionary.keys().toString();
         assertEquals(
-                "Las claves devueltas no corresponden " +
-                        "con las esperadas.",
+                "Returned keys do not match  " +
+                        "with the expected. ",
                 "DictionaryKeys(['1'])", keys
         );
     }
@@ -162,8 +161,8 @@ public class TestOneItemDictionary {
     public void testValues() {
         String values = dictionary.values().toString();
         assertEquals(
-                "Los valores devueltos no corresponden " +
-                        "con las esperados.",
+                "Returned values do not match  " +
+                        "with the expected. ",
                 "DictionaryValues([1])", values
         );
     }
@@ -172,8 +171,8 @@ public class TestOneItemDictionary {
     public void testItems() {
         String items = dictionary.items().toString();
         assertEquals(
-                "Las parejas devueltas no coinciden con " +
-                        "las esperadas",
+                "Returned pairs do not match  " +
+                        "with the expected. ",
                 "DictionaryItems([('1', 1)])", items
         );
     }
@@ -181,7 +180,7 @@ public class TestOneItemDictionary {
     @Test
     public void testContainsKey() {
         assertTrue(
-                "Valor incorrecto",
+                "Wrong value",
                 dictionary.containsKey("1")
         );
     }
@@ -190,7 +189,7 @@ public class TestOneItemDictionary {
     public void testPopItem1() throws EmptyDictionaryException {
         Tuple values = dictionary.popitem();
         assertEquals(
-                "Valor incorrecto",
+                "Wrong value",
                 new Tuple("1", 1), values
         );
     }
@@ -200,7 +199,7 @@ public class TestOneItemDictionary {
         dictionary.popitem();
         int dictionaryLength = dictionary.size();
         assertEquals(
-                "Tamaño incorrecto",
+                "Wrong size",
                 0, dictionaryLength
         );
     }
@@ -214,8 +213,8 @@ public class TestOneItemDictionary {
     public void tesPop() throws KeyException {
         Object value = dictionary.pop("1");
         assertEquals(
-                "El elemento devuelto al eliminar una pareja clave -" +
-                        " valor no es el esperado.",
+                "The element when removing a pair key - value " +
+                        "is not correct",
                 1, value
         );
     }
@@ -225,7 +224,7 @@ public class TestOneItemDictionary {
         Dictionary otherDictionary = new Dictionary();
         otherDictionary.put("1", 1);
         assertTrue(
-                "Valor incorrecto",
+                "Wrong value",
                 dictionary.equals(otherDictionary)
         );
     }
@@ -233,7 +232,7 @@ public class TestOneItemDictionary {
     @Test
     public void testEquals2() {
         assertTrue(
-                "Valor incorrecto",
+                "Wrong value",
                 dictionary.equals(dictionary)
         );
     }
@@ -243,7 +242,7 @@ public class TestOneItemDictionary {
         Dictionary otherDictionary = new Dictionary();
         otherDictionary.put(1, 1);
         assertFalse(
-                "Valor incorrecto",
+                "Wrong value",
                 dictionary.equals(otherDictionary)
         );
     }

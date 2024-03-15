@@ -3,10 +3,8 @@ package org.ulpgc.edp.control;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
-import org.ulpgc.edp.model.*;
+import org.ulpgc.edp.model.dictionaryobject.Dictionary;
 import org.ulpgc.edp.tests.*;
-
-import java.util.ArrayList;
 
 @RunWith(Suite.class)
 @SuiteClasses({
@@ -30,12 +28,10 @@ public class Main {
         // Make tests inserting power of two elements into the Dictionary.
         //TimesTesting.doTestPop(2);
 
-        ArrayList<Object> l = new ArrayList<>();
-        for (int i = 0; i <= 9; i++) {
-            l.add(i);
-        }
-        Tuple t = new Tuple(new Object[]{1, 2, "3", 4, 5, 6, 7, 8, 9});
-        System.out.println(t);
+        Dictionary d = new Dictionary(1, "1");
+        Dictionary d1 = new Dictionary("1", 1);
+
+        System.out.println(d);
 
         /*
         long startTime = System.nanoTime();

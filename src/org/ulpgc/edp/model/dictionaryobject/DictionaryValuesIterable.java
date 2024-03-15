@@ -1,16 +1,14 @@
-package org.ulpgc.edp.model;
+package org.ulpgc.edp.model.dictionaryobject;
 
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Objects;
 
 /**
- * Iterable class used to iterate over the Dictionary values.
+ * Iterable class used to iterate over the dictionary's values.
  *
  * @author Javier Castilla
- * @author David Miranda
- * @author Esteban Trujillo
- * @author Elena Artiles
+ * @version 15-03-2024
  */
 class DictionaryValuesIterable implements Iterable<Object> {
     private Dictionary dict;
@@ -24,6 +22,7 @@ class DictionaryValuesIterable implements Iterable<Object> {
 
     /**
      * Iterator method.
+     *
      * @return an iterator
      */
     @Override
@@ -32,7 +31,7 @@ class DictionaryValuesIterable implements Iterable<Object> {
     }
 
     /**
-     * Private inner class used to iterate over the Dictionary values.
+     * Private inner class used to iterate over the dictionary's values.
      */
     private class DictionaryValues implements Iterator<Object> {
         private int index, length;
@@ -45,9 +44,9 @@ class DictionaryValuesIterable implements Iterable<Object> {
         }
 
         /**
-         * Overrided method which returns if there is a next element or not.
+         * Override method which returns if there is a next element or not.
          *
-         * @return true if has next element else false
+         * @return true if it has next element else false
          */
         @Override
         public boolean hasNext() {
@@ -55,9 +54,9 @@ class DictionaryValuesIterable implements Iterable<Object> {
         }
 
         /**
-         * Method that returns the node iterating upon the LinkedList.
+         * Method that returns the value iterating upon the items array.
          *
-         * @return the next node
+         * @return the next value
          */
         @Override
         public Object next() {
@@ -72,8 +71,7 @@ class DictionaryValuesIterable implements Iterable<Object> {
     }
 
     /**
-     * Overrided equals method that compares a given object with the current
-     * one.
+     * Override method that compares a given object with the current one.
      *
      * @param object to compare
      * @return true if equals else false
@@ -87,7 +85,7 @@ class DictionaryValuesIterable implements Iterable<Object> {
     }
 
     /**
-     * Overrided hashCode method that returns an integer representation
+     * Override hashCode method that returns an integer representation
      * of the object.
      *
      * @return an integer representation
@@ -95,19 +93,19 @@ class DictionaryValuesIterable implements Iterable<Object> {
     @Override
     public int hashCode() {
         int result = Objects.hash(dict);
-        result = 31 * result + Arrays.hashCode(dict.indexes());
-        result = 31 * result + Arrays.hashCode(dict.entries());
+        result = 11 * result + Arrays.hashCode(dict.indexes());
+        result = 11 * result + Arrays.hashCode(dict.entries());
         return result;
     }
 
     /**
      * String representation of the Iterable class
+     *
      * @return a string representation
      */
     @Override
     public String toString() {
         StringBuilder str = new StringBuilder();
-
         str.append("DictionaryValues([");
 
         for (Object value : this) {
