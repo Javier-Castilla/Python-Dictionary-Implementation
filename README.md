@@ -9,7 +9,7 @@ A Dictionary is a data structure used to store pairs of keys and values in an ef
 complexity near O(1). Its functionality is simple, link it with the idea of having an index (keys) and some values
 associated with them (values).
 
-# Example
+### Example
 
 ```java
 import org.ulpgc.edp.model.dct.*;
@@ -33,7 +33,7 @@ public static void main(String[] args) {
 A Tuple is an immutable data structure used to store values or items. Once it is created, it cannot be changed.
 Useful to store short - medium amount of data that have to stay immutable.
 
-## Example
+### Example
 
 ```java
 import org.ulpgc.edp.model.tpl.*;
