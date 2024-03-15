@@ -49,7 +49,7 @@ public static void main(String[] args) {
 
 ## Documentation
 
-To see full documentation of both classes visit the [Official Documentation Website]()
+To see full documentation of both classes visit the [Official Documentation Website](https://javier-castilla.github.io/Java-own-Python-dictionary-implementation-DOCUMENTATION/)
 
 ## Authors
 
