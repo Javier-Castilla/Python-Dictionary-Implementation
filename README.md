@@ -12,7 +12,7 @@ associated with them (values).
 # Example
 
 ```java
-import org.ulpgc.edp.model.dct;
+import org.ulpgc.edp.model.dct.*;
 
 public static void main(String[] args) {
         // Creates an empty dictionary
@@ -36,7 +36,7 @@ Useful to store short - medium amount of data that have to stay immutable.
 ## Example
 
 ```java
-import org.ulpgc.edp.model.tpl;
+import org.ulpgc.edp.model.tpl.*;
 
 public static void main(String[] args) {
         // Create a tuple
@@ -49,7 +49,7 @@ public static void main(String[] args) {
 
 ## Documentation
 
-To see full documentation of both classes visit the Official Documentation Website
+To see full documentation of both classes visit the [Official Documentation Website]()
 
 ## Authors
 
