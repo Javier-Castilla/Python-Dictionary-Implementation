@@ -2,10 +2,9 @@ package org.ulpgc.edp.tests;
 
 import org.junit.*;
 import org.ulpgc.edp.exceptions.*;
-import java.security.KeyException;
 
-import org.ulpgc.edp.model.dictionaryobject.Dictionary;
-import org.ulpgc.edp.model.tupleobject.Tuple;
+import org.ulpgc.edp.model.dct.Dictionary;
+import org.ulpgc.edp.model.tpl.Tuple;
 
 import static org.junit.Assert.*;
 
@@ -28,8 +27,7 @@ public class TestEmptyDictionary {
     public void testLen()  {
         int dictionaryLen = dictionary.size();
         assertEquals(
-                "El tamaño debe ser 0 al inicializar el diccionario " +
-                        "sin un tamaño determinado",
+                "Length must be 0 after initializing empty dictionary",
                 0, dictionaryLen
         );
     }
@@ -39,32 +37,37 @@ public class TestEmptyDictionary {
         dictionary.put("1", 1);
         int dictionaryLen = dictionary.size();
         assertEquals(
-                "Tamaño incorrecto al insertar una pareja en" +
-                        " diccionario vacío",
+                "Wrong size after inserting new pair into empty dictionary",
                 1, dictionaryLen
         );
     }
 
     @Test
-    public void testPut2() throws KeyException {
+    public void testPut2() {
         dictionary.put("1", 1);
-        dictionary.pop("1");
-        int dictionaryLength = dictionary.size();
+        Object value = dictionary.get("1");
         assertEquals(
-                "Al introducir una pareja en un diccionario vacío" +
-                        " y quitarlo después, no se obtiene el tamaño esperado",
-                0, dictionaryLength
+                "Wrong value after inserting new pair into empty dictionary",
+                1, value
         );
     }
 
     @Test
-    public void testPut3() throws KeyException {
+    public void testPut3() {
         dictionary.put("1", 1);
-        Object value = dictionary.pop("1");
+        Object value = dictionary.setDefault("1");
         assertEquals(
-                "Tras introducir una pareja en un diccionario vacío" +
-                        " y quitarla después, no coincide con el valor esperado",
+                "Wrong value after inserting new pair into empty dictionary",
                 1, value
+        );
+    }
+
+    @Test
+    public void testPut4() {
+        dictionary.put("1", 1);
+        assertTrue(
+                "True expected",
+                dictionary.containsKey("1")
         );
     }
 
@@ -77,7 +80,7 @@ public class TestEmptyDictionary {
         dictionary.update(otherDictionary);
         int dictionaryLength = dictionary.size();
         assertEquals(
-                "Tamaño incorrecto al actualizar un diccionario vacío",
+                "Wrong size after updating empty dictionary",
                 4, dictionaryLength
         );
     }
@@ -91,8 +94,7 @@ public class TestEmptyDictionary {
         dictionary.update(otherDictionary);
         String str = dictionary.toString();
         assertEquals(
-                "Los elementos son incorrectos al actualizar un" +
-                        " diccionario vacío",
+                "Wrong values after updating empty dictionary",
                 "{0: 0, 1: 1, 2: 2, 3: 3}", str
         );
     }
@@ -106,8 +108,7 @@ public class TestEmptyDictionary {
         dictionary.update(otherDictionary);
         Tuple value = dictionary.popitem();
         assertEquals(
-                "El último elemento no es correcto al actualizar" +
-                        " un diccionario vacío",
+                "Wrong last item",
                 new Tuple(3, 3), value
         );
     }
@@ -116,7 +117,7 @@ public class TestEmptyDictionary {
     public void testCopy1() {
         Dictionary dictionaryCopy = dictionary.copy();
         assertTrue(
-                "Valor incorrecto al copiar un diccionario vacío",
+                "True expected",
                 dictionary.equals(dictionaryCopy)
         );
     }
@@ -126,7 +127,7 @@ public class TestEmptyDictionary {
         Dictionary dictionaryCopy = dictionary.copy();
         int dictionaryCopyLength = dictionaryCopy.size();
         assertEquals(
-                "Tamaño incorrecto al copiar un diccionario vacío",
+                "Wrong size after copying empty dictionary",
                 0, dictionaryCopyLength
 
         );
@@ -136,7 +137,7 @@ public class TestEmptyDictionary {
     public void testSetDefault1() {
         Object value = dictionary.setDefault("Test");
         assertEquals(
-                "Valor incorrecto",
+                "Wrong value",
                 null, value
         );
     }
@@ -145,28 +146,37 @@ public class TestEmptyDictionary {
     public void testSetDefault2() {
         Object value = dictionary.setDefault("Test", 10);
         assertEquals(
-                "Valor incorrecto",
+                "Wrong value",
                 10, value
         );
     }
 
     @Test
-    public void testSetDefault3() throws KeyException {
+    public void testSetDefault3() {
         dictionary.setDefault("Test");
         Object value = dictionary.get("Test");
         assertEquals(
-                "Valor incorrecto",
+                "Wrong value",
                 null, value
         );
     }
 
     @Test
-    public void testSetDefault4() throws KeyException {
+    public void testSetDefault4() {
         dictionary.setDefault("Test", 10);
         Object value = dictionary.get("Test");
         assertEquals(
-                "Valor incorrecto",
+                "Wrong value",
                 10, value
+        );
+    }
+
+    @Test
+    public void testGet() {
+        Object value = dictionary.get("Test", 100);
+        assertEquals(
+                "Wrong value",
+                100, value
         );
     }
 
@@ -174,7 +184,7 @@ public class TestEmptyDictionary {
     public void testString()  {
         String str = dictionary.toString();
         assertEquals(
-                "Representación incorrecta",
+                "Wrong representation",
                 "{}", str
         );
     }
@@ -183,8 +193,7 @@ public class TestEmptyDictionary {
     public void testKeys() {
         String keys = dictionary.keys().toString();
         assertEquals(
-                "Las claves devueltas no corresponden " +
-                        "con las esperadas.",
+                "Dictionary's keys string does not match the expected",
                 "DictionaryKeys([])", keys
         );
     }
@@ -193,8 +202,7 @@ public class TestEmptyDictionary {
     public void testValues() {
         String values = dictionary.values().toString();
         assertEquals(
-                "Los valores devueltos no corresponden " +
-                        "con las esperados.",
+                "Dictionary's values string does not match the expected",
                 "DictionaryValues([])", values
         );
     }
@@ -203,8 +211,7 @@ public class TestEmptyDictionary {
     public void testItems() {
         String items = dictionary.items().toString();
         assertEquals(
-                "Las parejas devueltas no coinciden con " +
-                        "las esperadas",
+                "Dictionary's items string does not match the expected",
                 "DictionaryItems([])", items
         );
     }
@@ -212,7 +219,7 @@ public class TestEmptyDictionary {
     @Test
     public void testContainsKey() {
         assertFalse(
-                "Valor incorrecto",
+                "False expected",
                 dictionary.containsKey("key")
         );
     }
@@ -221,7 +228,7 @@ public class TestEmptyDictionary {
     public void testEquals1() {
         Dictionary otherDictionary = new Dictionary();
         assertTrue(
-                "Valor incorrecto",
+                "True expected after comparing dictionary copy",
                 dictionary.equals(otherDictionary)
         );
     }
@@ -229,7 +236,7 @@ public class TestEmptyDictionary {
     @Test
     public void testEquals2() {
         assertTrue(
-                "Valor incorrecto",
+                "True expected after comparing self dictionary",
                 dictionary.equals(dictionary)
         );
     }
@@ -239,19 +246,45 @@ public class TestEmptyDictionary {
         Dictionary otherDictionary = new Dictionary();
         otherDictionary.put(1, 1);
         assertFalse(
-                "Valor incorrecto",
+                "False expected after comparing non equal dictionary",
                 dictionary.equals(otherDictionary)
         );
     }
 
-    @Test(expected = KeyException.class)
-    public void testGetNoneExistingKey() throws KeyException {
+    @Test(expected = KeyErrorException.class)
+    public void testGetNoneExistingKey() throws KeyErrorException {
         dictionary.getItem("1");
     }
 
-    @Test(expected = KeyException.class)
-    public void tesPop() throws KeyException {
+    @Test
+    public void testKeyErrorException1() {
+        try {
+            dictionary.getItem("1");
+        } catch (KeyErrorException err) {
+            assertEquals(
+                    "Wrong exception value",
+                    "1", err.value()
+            );
+        }
+
+    }
+
+    @Test(expected = KeyErrorException.class)
+    public void tesPop1() throws KeyErrorException {
         dictionary.pop("1");
+    }
+
+    @Test
+    public void tesPop2() throws KeyErrorException {
+        try {
+            dictionary.pop("1");
+        } catch (KeyErrorException err) {
+            assertEquals(
+                    "The key that caused the exception does not" +
+                            "match the one located in the exception",
+                    "1", err.value()
+            );
+        }
     }
 
     @Test(expected = EmptyDictionaryException.class)

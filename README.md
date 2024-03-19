@@ -56,4 +56,4 @@ To see full documentation of both classes visit the [Official Documentation Webs
 Developed by **Javier Castilla** with help of
 - David Miranda
 - Esteban Trujillo
-- Elena Artiles.
+- Elena Artiles

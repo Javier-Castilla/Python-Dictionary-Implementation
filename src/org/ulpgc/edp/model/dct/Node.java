@@ -1,4 +1,4 @@
-package org.ulpgc.edp.model.dictionaryobject;
+package org.ulpgc.edp.model.dct;
 
 /**
  * Node class used to storage a pair key - value and its index of and indexes

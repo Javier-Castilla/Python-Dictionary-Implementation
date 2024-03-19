@@ -1,6 +1,6 @@
 package org.ulpgc.edp.tests;
 
-import org.ulpgc.edp.model.dictionaryobject.Dictionary;
+import org.ulpgc.edp.model.dct.Dictionary;
 
 /**
  * Class used to test several cases of the developed dictionary main methods.
@@ -19,7 +19,7 @@ public class TimesTesting {
         int size = 1;
         double times = (maxMElements + 2)*1e6;
 
-        System.out.println("size;miliseconds;seconds");
+        System.out.println("PUT\nsize;miliseconds;seconds");
 
         while (size < times) {
             long startTime = System.nanoTime();
@@ -37,6 +37,7 @@ public class TimesTesting {
             System.out.println(String.format("%d;%.3f;%.3f", size, ms, sc));
             size <<= 1;
         }
+        System.out.println("\n=============================================\n");
     }
 
     /**
@@ -46,7 +47,7 @@ public class TimesTesting {
         int size = 1;
         double times = (maxMElements + 2)*1e6;
 
-        System.out.println("size;miliseconds;seconds");
+        System.out.println("GET\nsize;miliseconds;seconds");
 
         while (size < times) {
             Dictionary d = new Dictionary();
@@ -68,6 +69,7 @@ public class TimesTesting {
             System.out.println(String.format("%d;%.3f;%.3f", size, ms, sc));
             size <<= 1;
         }
+        System.out.println("\n=============================================\n");
     }
 
     /**
@@ -77,7 +79,7 @@ public class TimesTesting {
         int size = 1;
         double times = (maxMElements + 2)*1e6;
 
-        System.out.println("size;miliseconds;seconds");
+        System.out.println("POP\nsize;miliseconds;seconds");
 
         while (size < times) {
             Dictionary d = new Dictionary();
@@ -99,5 +101,6 @@ public class TimesTesting {
             System.out.println(String.format("%d;%.3f;%.3f", size, ms, sc));
             size <<= 1;
         }
+        System.out.println("\n=============================================\n");
     }
 }

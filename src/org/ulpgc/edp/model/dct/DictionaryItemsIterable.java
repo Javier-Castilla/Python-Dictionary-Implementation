@@ -1,6 +1,6 @@
-package org.ulpgc.edp.model.dictionaryobject;
+package org.ulpgc.edp.model.dct;
 
-import org.ulpgc.edp.model.tupleobject.*;
+import org.ulpgc.edp.model.tpl.*;
 
 import java.util.Arrays;
 import java.util.Iterator;

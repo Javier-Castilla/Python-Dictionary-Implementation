@@ -1,4 +1,4 @@
-package org.ulpgc.edp.model.tupleobject;
+package org.ulpgc.edp.model.tpl;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;

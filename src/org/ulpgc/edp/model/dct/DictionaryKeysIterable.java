@@ -1,22 +1,22 @@
-package org.ulpgc.edp.model.dictionaryobject;
+package org.ulpgc.edp.model.dct;
 
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Objects;
 
 /**
- * Iterable class used to iterate over the dictionary's values.
+ * Iterable class used to iterate over the dictionary's keys.
  *
  * @author Javier Castilla
  * @version 15-03-2024
  */
-class DictionaryValuesIterable implements Iterable<Object> {
+class DictionaryKeysIterable implements Iterable<Object> {
     private Dictionary dict;
 
     /**
      * Constructor of the iterable class.
      */
-    DictionaryValuesIterable(Dictionary dict) {
+    DictionaryKeysIterable(Dictionary dict) {
         this.dict = dict;
     }
 
@@ -27,22 +27,21 @@ class DictionaryValuesIterable implements Iterable<Object> {
      */
     @Override
     public Iterator<Object> iterator() {
-        return new DictionaryValues();
+        return new DictionaryKeys();
     }
 
     /**
-     * Private inner class used to iterate over the dictionary's values.
+     * Private inner class used to iterate over the dictionary's keys.
      */
-    private class DictionaryValues implements Iterator<Object> {
+    private class DictionaryKeys implements Iterator<Object> {
         private int index, length;
         private Node node;
 
-        private DictionaryValues() {
+        private DictionaryKeys() {
             this.index = 0;
             this.length = dict.entries().length;
             this.node = dict.entries()[index];
         }
-
         /**
          * Override method which returns if there is a next element or not.
          *
@@ -54,17 +53,16 @@ class DictionaryValuesIterable implements Iterable<Object> {
         }
 
         /**
-         * Method that returns the value iterating upon the items array.
+         * Method that returns the key iterating upon the items array.
          *
-         * @return the next value
+         * @return the next key
          */
         @Override
         public Object next() {
             if (hasNext()) {
-                Object value = node.value();
+                Object key = node.key();
                 node = dict.entries()[++index];
-
-                return value;
+                return key;
             }
             throw new java.util.NoSuchElementException();
         }
@@ -80,7 +78,7 @@ class DictionaryValuesIterable implements Iterable<Object> {
     public boolean equals(Object object) {
         if (this == object) return true;
         if (object == null || getClass() != object.getClass()) return false;
-        DictionaryValuesIterable other = (DictionaryValuesIterable) object;
+        DictionaryKeysIterable other = (DictionaryKeysIterable) object;
         return toString().equals(other.toString());
     }
 
@@ -106,14 +104,13 @@ class DictionaryValuesIterable implements Iterable<Object> {
     @Override
     public String toString() {
         StringBuilder str = new StringBuilder();
-        str.append("DictionaryValues([");
+        str.append("DictionaryKeys([");
 
-        for (Object value : this) {
-            System.out.println(value);
-            if (value.getClass() == String.class) {
-                str.append(String.format("\'%s\'", value));
+        for (Object key : this) {
+            if (key.getClass() == String.class) {
+                str.append(String.format("\'%s\'", key));
             } else {
-                str.append(value);
+                str.append(key);
             }
             str.append(", ");
         }

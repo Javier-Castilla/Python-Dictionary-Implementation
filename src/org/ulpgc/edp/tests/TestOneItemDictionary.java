@@ -2,9 +2,8 @@ package org.ulpgc.edp.tests;
 
 import org.junit.*;
 import org.ulpgc.edp.exceptions.*;
-import java.security.KeyException;
-import org.ulpgc.edp.model.dictionaryobject.Dictionary;
-import org.ulpgc.edp.model.tupleobject.Tuple;
+import org.ulpgc.edp.model.dct.Dictionary;
+import org.ulpgc.edp.model.tpl.Tuple;
 
 import static org.junit.Assert.*;
 
@@ -34,7 +33,7 @@ public class TestOneItemDictionary {
     }
 
     @Test
-    public void testPutAndPop2() throws KeyException {
+    public void testPutAndPop2() throws KeyErrorException {
         dictionary.put("2", 2);
         dictionary.pop("2");
         int len = dictionary.size();
@@ -55,7 +54,7 @@ public class TestOneItemDictionary {
     }
 
     @Test
-    public void testPutAndPop4() throws KeyException {
+    public void testPutAndPop4() throws KeyErrorException {
         dictionary.put("2", 2);
         Object value = dictionary.pop("2");
         assertEquals(
@@ -65,7 +64,7 @@ public class TestOneItemDictionary {
     }
 
     @Test
-    public void testPutAndPop5() throws KeyException {
+    public void testPutAndPop5() throws KeyErrorException {
         dictionary.put("2", 2);
         Object value = dictionary.pop("2");
         assertEquals(
@@ -85,7 +84,7 @@ public class TestOneItemDictionary {
     }
 
     @Test
-    public void testReplace2() throws KeyException {
+    public void testReplace2() throws KeyErrorException {
         dictionary.put("1", 100);
         Object value = dictionary.get("1");
         assertEquals(
@@ -204,13 +203,13 @@ public class TestOneItemDictionary {
         );
     }
 
-    @Test(expected = KeyException.class)
-    public void testGetNoneExistingKey() throws KeyException {
+    @Test(expected = KeyErrorException.class)
+    public void testGetNoneExistingKey() throws KeyErrorException {
         dictionary.getItem("2");
     }
 
     @Test
-    public void tesPop() throws KeyException {
+    public void tesPop() throws KeyErrorException {
         Object value = dictionary.pop("1");
         assertEquals(
                 "The element when removing a pair key - value " +

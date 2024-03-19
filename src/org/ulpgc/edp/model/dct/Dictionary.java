@@ -1,9 +1,7 @@
-package org.ulpgc.edp.model.dictionaryobject;
+package org.ulpgc.edp.model.dct;
 
 import org.ulpgc.edp.exceptions.*;
-import org.ulpgc.edp.model.tupleobject.*;
-
-import java.security.KeyException;
+import org.ulpgc.edp.model.tpl.*;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Objects;
@@ -28,14 +26,11 @@ import java.util.Objects;
  * @version 15-03-2024
  */
 public class Dictionary implements Iterable<Object> {
-    private Integer[] indexes;
-    private Node[] items;
-    private int lastIndex;
-    private int size;
-    private int occupiedBoxes;
-    private int mask;
     private static final double OV_FACTOR = 0.66;
     private static final int PERTURB_SHIFT = 5;
+    private Integer[] indexes;
+    private Node[] items;
+    private int size, lastIndex, mask;
 
     /**
      * Constructor by default. No length or items needed.
@@ -43,7 +38,7 @@ public class Dictionary implements Iterable<Object> {
      * @author Javier Castilla
      */
     public Dictionary() {
-        clear();
+        initDictionary();
     }
 
     /**
@@ -53,8 +48,8 @@ public class Dictionary implements Iterable<Object> {
      * @param items to put into the new dictionary
      * @author Javier Castilla
      */
-    public Dictionary(Iterable<Tuple> items) {
-        this();
+    public Dictionary(Iterable<Tuple> items) throws UnsupportedOperationException {
+        initDictionary();
 
         for (Tuple item : items) {
             if (item.length() != 2) {
@@ -73,7 +68,7 @@ public class Dictionary implements Iterable<Object> {
      * @author Javier Castilla
      */
     public Dictionary(Dictionary dictionary) {
-        this();
+        initDictionary();
 
         for (Tuple item : dictionary.items()) {
             put(item.get(0), item.get(1));
@@ -87,7 +82,7 @@ public class Dictionary implements Iterable<Object> {
      * @author Javier Castilla
      */
     public Dictionary(Object... items) throws UnsupportedOperationException {
-        this();
+        initDictionary();
 
         if (items.length % 2 != 0) {
             throw new UnsupportedOperationException(
@@ -99,6 +94,23 @@ public class Dictionary implements Iterable<Object> {
         for (int i = 0; i < items.length - 1; i += 2) {
             put(items[i], items[i + 1]);
         }
+    }
+
+    /**
+     * Clears all the dictionary, like if a new dictionary has been created.
+     * @author Javier Castilla
+     * @author Elena Artiles
+     */
+    public void clear() {
+        initDictionary();
+    }
+
+    private void initDictionary() {
+        indexes = new Integer[8];
+        items = new Node[8];
+        lastIndex = -1;
+        mask = indexes.length - 1;
+        size = 0;
     }
 
     /**
@@ -185,82 +197,6 @@ public class Dictionary implements Iterable<Object> {
     }
 
     /**
-     * Given a number, it returns the next power of two.
-     *
-     * @param num
-     * @return the next power of two
-     * @author Javier Castilla
-     */
-    private int nextPowerOfTwo(int num) {
-        return num << 1;
-    }
-
-    /**
-     * Private method used to find an empty slot or one that contains the
-     * given key.
-     *
-     * @param key to compare
-     * @param hash used to calculate the index
-     * @param indexes to search in
-     * @return an index where an available slot or existing key could be found
-     * @author Javier Castilla
-     */
-    private int findSlot(Object key, int hash, Integer[] indexes) {
-        int i = hash & mask;
-        int perturb = hash;
-        Integer index = indexes[i];
-
-        while (true) {
-            if (
-                    index == null || (index != -1  && items[index].key().equals(key))
-            ) break;
-            perturb >>>= PERTURB_SHIFT;
-            i = (i*PERTURB_SHIFT + perturb + 1) & mask;
-            index = indexes[i];
-        }
-
-        return i;
-    }
-
-    /**
-     * Private method used to get and available or wanted slot.
-     *
-     * @param key to apply the hash function
-     * @param indexes search for and available or wanted slot
-     * @return an index where and available or wanted slot is found
-     * @author Javier Castilla
-     */
-    private int hash(Object key, Integer[] indexes) {
-        return findSlot(key, key.hashCode(), indexes);
-    }
-
-    /**
-     * Private method used to resize the dictionary when an overload factor
-     * (OV_FACTOR) is reached.
-     * @author Javier Castilla
-     */
-    private void resize() {
-        int newLength = nextPowerOfTwo(items.length);
-        int len = lastIndex;
-
-        mask = newLength - 1;
-        lastIndex = -1;
-        size = 0;
-        occupiedBoxes = 0;
-
-        Integer[] newIndexes = new Integer[newLength];
-        Node[] newItems = new Node[newLength];
-
-        for (int i = 0; i <= len; i++) {
-            Node node = items[i];
-            addEntries(node.key(), node.value(), newIndexes, newItems);
-        }
-
-        this.indexes = newIndexes;
-        this.items = newItems;
-    }
-
-    /**
      * Private method used to store the given pair key - value
      *
      * @param key to store or update
@@ -283,10 +219,9 @@ public class Dictionary implements Iterable<Object> {
 
         indexes[index] = ++lastIndex;
         items[lastIndex] = new Node(key, value, index);
-        occupiedBoxes++;
         size++;
 
-        if (occupiedBoxes > indexes.length * OV_FACTOR) {
+        if (size > indexes.length * OV_FACTOR) {
             resize();
         }
     }
@@ -315,7 +250,6 @@ public class Dictionary implements Iterable<Object> {
         node.index(-1);
         indexes[index] = -1;
         size--;
-        occupiedBoxes--;
 
         return node.value();
     }
@@ -325,17 +259,17 @@ public class Dictionary implements Iterable<Object> {
      *
      * @param key to remove
      * @return the value of the removed pair key - value
-     * @throws KeyException
+     * @throws KeyErrorException
      * @author Javier Castilla
      * @author Esteban Trujillo
      */
-    public Object pop(Object key) throws KeyException {
+    public Object pop(Object key) throws KeyErrorException {
         int index = hash(key, indexes);
 
         Integer i = indexes[index];
         if (i == null) {
-            throw new KeyException(
-                    "The given key is not in the dictionary: " + key
+            throw new KeyErrorException(
+                    "The given key is not in the dictionary", key
             );
         }
 
@@ -376,7 +310,6 @@ public class Dictionary implements Iterable<Object> {
         Node node = items[lastIndex];
         indexes[node.index()] = -1;
         size--;
-        occupiedBoxes--;
         return new Tuple(node.key(), node.value());
     }
 
@@ -387,10 +320,10 @@ public class Dictionary implements Iterable<Object> {
      *
      * @param key to search the value
      * @return the value in pair with the given key
-     * @throws KeyException
+     * @throws KeyErrorException
      * @author Javier Castilla
      */
-    public Object getItem(Object key) throws KeyException {
+    public Object getItem(Object key) throws KeyErrorException {
         int index = hash(key, indexes);
 
         Integer i = indexes[index];
@@ -398,8 +331,8 @@ public class Dictionary implements Iterable<Object> {
             return items[i].value();
         }
 
-        throw new KeyException(
-                "The key is not contained into the dictionary"
+        throw new KeyErrorException(
+                "The given key is not in the dictionary", key
         );
     }
 
@@ -493,20 +426,6 @@ public class Dictionary implements Iterable<Object> {
     }
 
     /**
-     * Clears all the dictionary, like if a new dictionary has been created.
-     * @author Javier Castilla
-     * @author Elena Artiles
-     */
-    public void clear() {
-        indexes = new Integer[8];
-        items = new Node[8];
-        lastIndex = -1;
-        mask = indexes.length - 1;
-        size = 0;
-        occupiedBoxes = 0;
-    }
-
-    /**
      * Checks if the given key is contained into the dictionary.
      *
      * @param key
@@ -518,6 +437,82 @@ public class Dictionary implements Iterable<Object> {
         Integer index = indexes[hash(key, indexes)];
         return index != null && index != -1;
     }
+
+    /**
+     * Private method used to find an empty slot or one that contains the
+     * given key.
+     *
+     * @param key to compare
+     * @param hash used to calculate the index
+     * @param indexes to search in
+     * @return an index where an available slot or existing key could be found
+     * @author Javier Castilla
+     */
+    private int findSlot(Object key, int hash, Integer[] indexes) {
+        int i = hash & mask;
+        int perturb = hash;
+        Integer index = indexes[i];
+
+        while (true) {
+            if (
+                    index == null || (index != -1  && items[index].key().equals(key))
+            ) break;
+            perturb >>>= PERTURB_SHIFT;
+            i = (i*PERTURB_SHIFT + perturb + 1) & mask;
+            index = indexes[i];
+        }
+
+        return i;
+    }
+
+    /**
+     * Private method used to get and available or wanted slot.
+     *
+     * @param key to apply the hash function
+     * @param indexes search for and available or wanted slot
+     * @return an index where and available or wanted slot is found
+     * @author Javier Castilla
+     */
+    private int hash(Object key, Integer[] indexes) {
+        return findSlot(key, key.hashCode(), indexes);
+    }
+
+    /**
+     * Private method used to resize the dictionary when an overload factor
+     * (OV_FACTOR) is reached.
+     * @author Javier Castilla
+     */
+    private void resize() {
+        int newLength = nextPowerOfTwo(items.length);
+        int len = lastIndex;
+
+        mask = newLength - 1;
+        lastIndex = -1;
+        size = 0;
+
+        Integer[] newIndexes = new Integer[newLength];
+        Node[] newItems = new Node[newLength];
+
+        for (int i = 0; i <= len; i++) {
+            Node node = items[i];
+            addEntries(node.key(), node.value(), newIndexes, newItems);
+        }
+
+        this.indexes = newIndexes;
+        this.items = newItems;
+    }
+
+    /**
+     * Given a number, it returns the next power of two.
+     *
+     * @param num
+     * @return the next power of two
+     * @author Javier Castilla
+     */
+    private int nextPowerOfTwo(int num) {
+        return num << 1;
+    }
+
 
     /**
      * Returns an iterable containing all the keys in the dictionary.
