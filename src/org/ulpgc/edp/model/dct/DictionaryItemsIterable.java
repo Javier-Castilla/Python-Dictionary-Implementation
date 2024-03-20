@@ -7,7 +7,8 @@ import java.util.Iterator;
 import java.util.Objects;
 
 /**
- * Iterable class used to iterate over the dictionary's items.
+ * Iterable class used to iterate over the dictionary items.
+ * This class represents a dynamic view of dictionary items.
  *
  * @author Javier Castilla
  * @version 15-03-2024
@@ -16,7 +17,7 @@ class DictionaryItemsIterable implements Iterable<Tuple> {
     private Dictionary dict;
 
     /**
-     * Constructor of the iterable class.
+     * Constructor of the iterable class given the reference of the dictionary.
      */
     DictionaryItemsIterable(Dictionary dict) {
         this.dict = dict;
@@ -33,7 +34,7 @@ class DictionaryItemsIterable implements Iterable<Tuple> {
     }
 
     /**
-     * Private inner class used to iterate over the dictionary's items.
+     * Private inner class used to iterate over the dictionary items.
      */
     private class DictionaryItems implements Iterator<Tuple> {
         private int index, length;
@@ -46,7 +47,7 @@ class DictionaryItemsIterable implements Iterable<Tuple> {
         }
 
         /**
-         * Override method which returns if there is a next element or not.
+         * Override method which returns if there is such a next element.
          *
          * @return true if it has next element else false
          */
@@ -73,7 +74,8 @@ class DictionaryItemsIterable implements Iterable<Tuple> {
     }
 
     /**
-     * Override method that compares a given object with the current one.
+     * Compares a given object with the current dictionary items iterable,
+     * checking equality between them.
      *
      * @param object to compare
      * @return true if equals else false
@@ -101,7 +103,7 @@ class DictionaryItemsIterable implements Iterable<Tuple> {
     }
 
     /**
-     * String representation of the iterable class
+     * String representation of the iterable class.
      *
      * @return a string representation
      */

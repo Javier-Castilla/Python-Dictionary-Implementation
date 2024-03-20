@@ -12,7 +12,6 @@ import static org.junit.Assert.*;
  *
  * @author Javier Castilla
  * @version 15-03-2024
- * @since 15-03-2024
  */
 public class TestOneItemDictionary {
     private Dictionary dictionary;

@@ -8,12 +8,11 @@ package org.ulpgc.edp.model.dct;
  * @version 15-03-2024
  */
 class Node {
-    private Object key;
-    private Object value;
+    private Object key, value;
     private int index;
 
     /**
-     * Constructor of the node class.
+     * Constructor of the node class given a key, value and index.
      *
      * @param key of the inserted pair
      * @param value of the inserted pair
@@ -35,7 +34,7 @@ class Node {
     }
 
     /**
-     * Setter for key attribute.
+     *  Package level setter for key attribute.
      *
      * @param key to store
      */
@@ -44,7 +43,7 @@ class Node {
     }
 
     /**
-     * Getter for value attribute.
+     * Package level getter for value attribute.
      *
      * @return value
      */
@@ -53,7 +52,7 @@ class Node {
     }
 
     /**
-     * Setter for value attribute.
+     * Package level setter for value attribute.
      *
      * @param value to store
      */
@@ -62,7 +61,7 @@ class Node {
     }
 
     /**
-     * Getter for index attribute.
+     * Package level getter for index attribute.
      *
      * @return index
      */
@@ -71,12 +70,27 @@ class Node {
     }
 
     /**
-     * Setter for index value.
+     * Package level setter for index value.
      *
      * @param index to store
      */
     void index(int index) {
         this.index = index;
+    }
+
+    /**
+     * String representation of the Node class.
+     *
+     * @return a string representation
+     */
+    @Override
+    public String toString() {
+        StringBuilder str = new StringBuilder();
+        str.append(format(key));
+        str.append(": ");
+        str.append(format(value));
+
+        return str.toString();
     }
 
     /**
@@ -94,20 +108,5 @@ class Node {
         } else {
             return item.toString();
         }
-    }
-
-    /**
-     * String representation of the Node class.
-     *
-     * @return a string representation
-     */
-    @Override
-    public String toString() {
-        StringBuilder str = new StringBuilder();
-        str.append(format(key));
-        str.append(": ");
-        str.append(format(value));
-
-        return str.toString();
     }
 }

@@ -17,6 +17,14 @@ import org.ulpgc.edp.model.dct.*;
 public static void main(String[] args) {
         // Creates an empty dictionary
         Dictionary myDict = new Dictionary();
+        
+        // Creates a dictionary via other dictionary
+        Dictionary otherDict = new Dictionary(myDict);
+        System.out.println(anotherDict.equals(myDict)); // Will print true
+        
+        // Cereates a dictionary with dynamic number of arguments
+        Dictionary otherDict2 = new Dictionary(1, 2, 3, 4);
+        System.out.println(otherDict2); // Will print {1: 2, 3: 4}
 
         // Insert pairs into the dictionary
         myDict.put("key1", 1);
@@ -39,11 +47,15 @@ Useful to store short - medium amount of data that have to stay immutable.
 import org.ulpgc.edp.model.tpl.*;
 
 public static void main(String[] args) {
-        // Create a tuple
+        // Create a basic tuple
         Tuple myTuple = new Tuple(1, 2, 3, 4);
 
         // Get an element from the tuple (via index)
         System.out.println(myTuple.get(0)); // Will print 1
+        
+        // Create a tuple via iterable object
+        Tuple otherTuple = new Tuple(myTuple);
+        System.out.println(otherTuple.equals(myTuple));  // Will print true
 }
 ```
 

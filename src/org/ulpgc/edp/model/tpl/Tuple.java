@@ -23,6 +23,12 @@ public class Tuple implements Iterable<Object> {
         this(Arrays.asList(items));
     }
 
+    /**
+     * Constructor given an iterable to build the new tuple. The elements
+     * contained into that iterable must be tuples.
+     *
+     * @param items
+     */
     public Tuple(Iterable<?> items) {
         this.items = new Object[8];
         int index = 0;
@@ -39,7 +45,7 @@ public class Tuple implements Iterable<Object> {
     }
 
     /**
-     * Tuple items getter.
+     * Tuple items package level getter.
      *
      * @return tuple items reference
      */
@@ -48,7 +54,7 @@ public class Tuple implements Iterable<Object> {
     }
 
     /**
-     * Returns the element contained in the specified index.
+     * Returns the element located in the specified index.
      *
      * @param index of the item
      * @return item at given index
@@ -58,16 +64,16 @@ public class Tuple implements Iterable<Object> {
     }
 
     /**
-     * Returns the tuple`s length.
+     * Returns the tuple length.
      *
-     * @return tuple's length
+     * @return tuple length
      */
     public int length() {
         return length;
     }
 
     /**
-     * Override method that compares a given object with the current one.
+     * Compares a given object with the current one, checking equality between them.
      *
      * @param object to compare
      * @return true if objects are equals else false

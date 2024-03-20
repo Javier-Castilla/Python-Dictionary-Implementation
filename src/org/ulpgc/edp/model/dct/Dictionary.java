@@ -571,7 +571,7 @@ public class Dictionary implements Iterable<Object> {
     }
 
     /**
-     * Iterator of the dictionary object.
+     * Iterator method of the dictionary object.
      *
      * @return a dictionary keys iterator
      * @author Javier Castilla
@@ -582,7 +582,7 @@ public class Dictionary implements Iterable<Object> {
     }
 
     /**
-     * Override method to know if other object is equals to the current object.
+     * Compares a given object with the current dictionary to check equality.
      *
      * @param object to compare
      * @return true if equals else false
@@ -617,7 +617,7 @@ public class Dictionary implements Iterable<Object> {
     }
 
     /**
-     * String representation of the dictionary object.
+     * String representation of the dictionary.
      *
      * @return string representation
      * @author Javier Castilla

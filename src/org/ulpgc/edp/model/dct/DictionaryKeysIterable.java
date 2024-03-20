@@ -5,7 +5,8 @@ import java.util.Iterator;
 import java.util.Objects;
 
 /**
- * Iterable class used to iterate over the dictionary's keys.
+ * Iterable class used to iterate over the dictionary keys.
+ * This class represents a dynamic view of the dictionary keys.
  *
  * @author Javier Castilla
  * @version 15-03-2024
@@ -14,7 +15,7 @@ class DictionaryKeysIterable implements Iterable<Object> {
     private Dictionary dict;
 
     /**
-     * Constructor of the iterable class.
+     * Constructor of the iterable class given a reference of a dictionary.
      */
     DictionaryKeysIterable(Dictionary dict) {
         this.dict = dict;
@@ -31,7 +32,7 @@ class DictionaryKeysIterable implements Iterable<Object> {
     }
 
     /**
-     * Private inner class used to iterate over the dictionary's keys.
+     * Private inner class used to iterate over the dictionary keys.
      */
     private class DictionaryKeys implements Iterator<Object> {
         private int index, length;
@@ -43,7 +44,7 @@ class DictionaryKeysIterable implements Iterable<Object> {
             this.node = dict.entries()[index];
         }
         /**
-         * Override method which returns if there is a next element or not.
+         * Override method which returns if there is such a next element.
          *
          * @return true if it has next element else false
          */
@@ -69,7 +70,8 @@ class DictionaryKeysIterable implements Iterable<Object> {
     }
 
     /**
-     * Override method that compares a given object with the current one.
+     * Compares a given object with the current dictionary keys iterable,
+     * checking equality between them.
      *
      * @param object to compare
      * @return true if equals else false
@@ -108,7 +110,7 @@ class DictionaryKeysIterable implements Iterable<Object> {
 
         for (Object key : this) {
             if (key.getClass() == String.class) {
-                str.append(String.format("\'%s\'", key));
+                str.append(String.format("'%s'", key));
             } else {
                 str.append(key);
             }

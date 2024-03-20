@@ -5,6 +5,7 @@ import java.util.NoSuchElementException;
 
 /**
  * Iterable class used to iterate over the Tuple Items.
+ * This class represents a dynamic view of the tuple items.
  *
  * @author Javier Castilla
  * @version 15-03-2024
@@ -32,7 +33,7 @@ class TupleItemsIterable implements Iterable<Object> {
     }
 
     /**
-     * Inner private class used to iterate over the tuple's items.
+     * Inner private class used to iterate over the tuple items.
      */
     private class TupleItemsIterator implements Iterator<Object> {
         private int index;
@@ -42,7 +43,7 @@ class TupleItemsIterable implements Iterable<Object> {
         }
 
         /**
-         * Override method which returns if there is a next element or not.
+         * Override method which returns if there is such a next element.
          *
          * @return true if it has next element else false
          */

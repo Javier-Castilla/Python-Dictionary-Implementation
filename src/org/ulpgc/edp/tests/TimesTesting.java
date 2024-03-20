@@ -8,9 +8,10 @@ import org.ulpgc.edp.model.dct.Dictionary;
  *
  * @author Javier Castilla
  * @version 15-03-2024
- * @since 15-03-2024
  */
 public class TimesTesting {
+    private static final String SEPARATOR = "\n=============================================\n";
+    private static final String HEADER = "\nsize;miliseconds;seconds";
 
     /**
      * Static method used to test dictionary insert method rate.
@@ -19,7 +20,7 @@ public class TimesTesting {
         int size = 1;
         double times = (maxMElements + 2)*1e6;
 
-        System.out.println("PUT\nsize;miliseconds;seconds");
+        System.out.println("PUT" + HEADER);
 
         while (size < times) {
             long startTime = System.nanoTime();
@@ -37,7 +38,7 @@ public class TimesTesting {
             System.out.println(String.format("%d;%.3f;%.3f", size, ms, sc));
             size <<= 1;
         }
-        System.out.println("\n=============================================\n");
+        System.out.println(SEPARATOR);
     }
 
     /**
@@ -47,7 +48,7 @@ public class TimesTesting {
         int size = 1;
         double times = (maxMElements + 2)*1e6;
 
-        System.out.println("GET\nsize;miliseconds;seconds");
+        System.out.println("GET" + HEADER);
 
         while (size < times) {
             Dictionary d = new Dictionary();
@@ -69,7 +70,7 @@ public class TimesTesting {
             System.out.println(String.format("%d;%.3f;%.3f", size, ms, sc));
             size <<= 1;
         }
-        System.out.println("\n=============================================\n");
+        System.out.println(SEPARATOR);
     }
 
     /**
@@ -79,7 +80,7 @@ public class TimesTesting {
         int size = 1;
         double times = (maxMElements + 2)*1e6;
 
-        System.out.println("POP\nsize;miliseconds;seconds");
+        System.out.println("POP" + HEADER);
 
         while (size < times) {
             Dictionary d = new Dictionary();
@@ -101,6 +102,6 @@ public class TimesTesting {
             System.out.println(String.format("%d;%.3f;%.3f", size, ms, sc));
             size <<= 1;
         }
-        System.out.println("\n=============================================\n");
+        System.out.println(SEPARATOR);
     }
 }

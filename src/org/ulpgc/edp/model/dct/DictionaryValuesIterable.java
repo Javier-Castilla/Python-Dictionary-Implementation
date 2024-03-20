@@ -5,7 +5,8 @@ import java.util.Iterator;
 import java.util.Objects;
 
 /**
- * Iterable class used to iterate over the dictionary's values.
+ * Iterable class used to iterate over the dictionary values.
+ * This class represents a dynamic view of the dictionary values.
  *
  * @author Javier Castilla
  * @version 15-03-2024
@@ -14,7 +15,7 @@ class DictionaryValuesIterable implements Iterable<Object> {
     private Dictionary dict;
 
     /**
-     * Constructor of the iterable class.
+     * Constructor of the iterable class given a reference of a dictionary.
      */
     DictionaryValuesIterable(Dictionary dict) {
         this.dict = dict;
@@ -31,7 +32,7 @@ class DictionaryValuesIterable implements Iterable<Object> {
     }
 
     /**
-     * Private inner class used to iterate over the dictionary's values.
+     * Private inner class used to iterate over the dictionary values.
      */
     private class DictionaryValues implements Iterator<Object> {
         private int index, length;
@@ -44,7 +45,7 @@ class DictionaryValuesIterable implements Iterable<Object> {
         }
 
         /**
-         * Override method which returns if there is a next element or not.
+         * Override method which returns if there is such a next element.
          *
          * @return true if it has next element else false
          */
@@ -71,7 +72,8 @@ class DictionaryValuesIterable implements Iterable<Object> {
     }
 
     /**
-     * Override method that compares a given object with the current one.
+     * Compares a given object with the current dictionary values iterable,
+     * checking equality between them.
      *
      * @param object to compare
      * @return true if equals else false
@@ -99,7 +101,7 @@ class DictionaryValuesIterable implements Iterable<Object> {
     }
 
     /**
-     * String representation of the Iterable class
+     * String representation of the Iterable class.
      *
      * @return a string representation
      */
@@ -111,7 +113,7 @@ class DictionaryValuesIterable implements Iterable<Object> {
         for (Object value : this) {
             System.out.println(value);
             if (value.getClass() == String.class) {
-                str.append(String.format("\'%s\'", value));
+                str.append(String.format("'%s'", value));
             } else {
                 str.append(value);
             }

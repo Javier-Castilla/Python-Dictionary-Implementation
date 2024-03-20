@@ -6,7 +6,7 @@ package org.ulpgc.edp.exceptions;
  *
  * @author Javier Castilla
  */
-public class KeyErrorException extends Exception {
+public class KeyErrorException extends RuntimeException {
     private Object key;
 
     /**
@@ -16,17 +16,7 @@ public class KeyErrorException extends Exception {
      * @param key that caused the exception
      */
     public KeyErrorException(String msg, Object key) {
-        super(msg + ": " + key);
-        this.key = key;
-    }
-
-    /**
-     * Constructor of the class given a message and a key.
-     *
-     * @param key that caused the exception
-     */
-    public KeyErrorException(Object key) {
-        super(key.toString());
+        this(msg + ": " + key);
         this.key = key;
     }
 
