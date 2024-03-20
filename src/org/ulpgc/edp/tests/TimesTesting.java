@@ -1,6 +1,6 @@
 package org.ulpgc.edp.tests;
 
-import org.ulpgc.edp.model.dictionaryobject.Dictionary;
+import org.ulpgc.edp.model.dct.Dictionary;
 
 /**
  * Class used to test several cases of the developed dictionary main methods.
@@ -8,9 +8,10 @@ import org.ulpgc.edp.model.dictionaryobject.Dictionary;
  *
  * @author Javier Castilla
  * @version 15-03-2024
- * @since 15-03-2024
  */
 public class TimesTesting {
+    private static final String SEPARATOR = "\n=============================================\n";
+    private static final String HEADER = "\nsize;miliseconds;seconds";
 
     /**
      * Static method used to test dictionary insert method rate.
@@ -19,7 +20,7 @@ public class TimesTesting {
         int size = 1;
         double times = (maxMElements + 2)*1e6;
 
-        System.out.println("size;miliseconds;seconds");
+        System.out.println("PUT" + HEADER);
 
         while (size < times) {
             long startTime = System.nanoTime();
@@ -37,6 +38,7 @@ public class TimesTesting {
             System.out.println(String.format("%d;%.3f;%.3f", size, ms, sc));
             size <<= 1;
         }
+        System.out.println(SEPARATOR);
     }
 
     /**
@@ -46,7 +48,7 @@ public class TimesTesting {
         int size = 1;
         double times = (maxMElements + 2)*1e6;
 
-        System.out.println("size;miliseconds;seconds");
+        System.out.println("GET" + HEADER);
 
         while (size < times) {
             Dictionary d = new Dictionary();
@@ -68,6 +70,7 @@ public class TimesTesting {
             System.out.println(String.format("%d;%.3f;%.3f", size, ms, sc));
             size <<= 1;
         }
+        System.out.println(SEPARATOR);
     }
 
     /**
@@ -77,7 +80,7 @@ public class TimesTesting {
         int size = 1;
         double times = (maxMElements + 2)*1e6;
 
-        System.out.println("size;miliseconds;seconds");
+        System.out.println("POP" + HEADER);
 
         while (size < times) {
             Dictionary d = new Dictionary();
@@ -99,5 +102,6 @@ public class TimesTesting {
             System.out.println(String.format("%d;%.3f;%.3f", size, ms, sc));
             size <<= 1;
         }
+        System.out.println(SEPARATOR);
     }
 }

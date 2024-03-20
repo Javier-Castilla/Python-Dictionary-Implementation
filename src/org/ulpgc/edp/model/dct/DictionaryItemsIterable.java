@@ -1,22 +1,25 @@
-package org.ulpgc.edp.model.dictionaryobject;
+package org.ulpgc.edp.model.dct;
+
+import org.ulpgc.edp.model.tpl.*;
 
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Objects;
 
 /**
- * Iterable class used to iterate over the dictionary's keys.
+ * Iterable class used to iterate over the dictionary items.
+ * This class represents a dynamic view of dictionary items.
  *
  * @author Javier Castilla
  * @version 15-03-2024
  */
-class DictionaryKeysIterable implements Iterable<Object> {
+class DictionaryItemsIterable implements Iterable<Tuple> {
     private Dictionary dict;
 
     /**
-     * Constructor of the iterable class.
+     * Constructor of the iterable class given the reference of the dictionary.
      */
-    DictionaryKeysIterable(Dictionary dict) {
+    DictionaryItemsIterable(Dictionary dict) {
         this.dict = dict;
     }
 
@@ -26,24 +29,25 @@ class DictionaryKeysIterable implements Iterable<Object> {
      * @return an iterator
      */
     @Override
-    public Iterator<Object> iterator() {
-        return new DictionaryKeys();
+    public Iterator<Tuple> iterator() {
+        return new DictionaryItems();
     }
 
     /**
-     * Private inner class used to iterate over the dictionary's keys.
+     * Private inner class used to iterate over the dictionary items.
      */
-    private class DictionaryKeys implements Iterator<Object> {
+    private class DictionaryItems implements Iterator<Tuple> {
         private int index, length;
         private Node node;
 
-        private DictionaryKeys() {
+        private DictionaryItems() {
             this.index = 0;
             this.length = dict.entries().length;
             this.node = dict.entries()[index];
         }
+
         /**
-         * Override method which returns if there is a next element or not.
+         * Override method which returns if there is such a next element.
          *
          * @return true if it has next element else false
          */
@@ -53,23 +57,25 @@ class DictionaryKeysIterable implements Iterable<Object> {
         }
 
         /**
-         * Method that returns the key iterating upon the items array.
+         * Method that returns the entry iterating upon the items array.
          *
-         * @return the next key
+         * @return the next pair
          */
         @Override
-        public Object next() {
+        public Tuple next() {
             if (hasNext()) {
-                Object key = node.key();
+                Tuple returnedItems = new Tuple(node.key(), node.value());
                 node = dict.entries()[++index];
-                return key;
+
+                return returnedItems;
             }
             throw new java.util.NoSuchElementException();
         }
     }
 
     /**
-     * Override method that compares a given object with the current one.
+     * Compares a given object with the current dictionary items iterable,
+     * checking equality between them.
      *
      * @param object to compare
      * @return true if equals else false
@@ -78,7 +84,7 @@ class DictionaryKeysIterable implements Iterable<Object> {
     public boolean equals(Object object) {
         if (this == object) return true;
         if (object == null || getClass() != object.getClass()) return false;
-        DictionaryKeysIterable other = (DictionaryKeysIterable) object;
+        DictionaryItemsIterable other = (DictionaryItemsIterable) object;
         return toString().equals(other.toString());
     }
 
@@ -97,21 +103,17 @@ class DictionaryKeysIterable implements Iterable<Object> {
     }
 
     /**
-     * String representation of the Iterable class
+     * String representation of the iterable class.
      *
      * @return a string representation
      */
     @Override
     public String toString() {
         StringBuilder str = new StringBuilder();
-        str.append("DictionaryKeys([");
+        str.append("DictionaryItems([");
 
-        for (Object key : this) {
-            if (key.getClass() == String.class) {
-                str.append(String.format("\'%s\'", key));
-            } else {
-                str.append(key);
-            }
+        for (Tuple item : this) {
+            str.append(item);
             str.append(", ");
         }
 

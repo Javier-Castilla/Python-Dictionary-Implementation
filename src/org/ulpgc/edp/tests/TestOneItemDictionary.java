@@ -2,9 +2,8 @@ package org.ulpgc.edp.tests;
 
 import org.junit.*;
 import org.ulpgc.edp.exceptions.*;
-import java.security.KeyException;
-import org.ulpgc.edp.model.dictionaryobject.Dictionary;
-import org.ulpgc.edp.model.tupleobject.Tuple;
+import org.ulpgc.edp.model.dct.Dictionary;
+import org.ulpgc.edp.model.tpl.Tuple;
 
 import static org.junit.Assert.*;
 
@@ -13,7 +12,6 @@ import static org.junit.Assert.*;
  *
  * @author Javier Castilla
  * @version 15-03-2024
- * @since 15-03-2024
  */
 public class TestOneItemDictionary {
     private Dictionary dictionary;
@@ -34,7 +32,7 @@ public class TestOneItemDictionary {
     }
 
     @Test
-    public void testPutAndPop2() throws KeyException {
+    public void testPutAndPop2() throws KeyErrorException {
         dictionary.put("2", 2);
         dictionary.pop("2");
         int len = dictionary.size();
@@ -47,7 +45,7 @@ public class TestOneItemDictionary {
     @Test
     public void testPutAndPop3() throws EmptyDictionaryException {
         dictionary.put("2", 2);
-        Tuple item = dictionary.popitem();
+        Tuple item = dictionary.popItem();
         assertEquals(
                 "Wrong value",
                 new Tuple("2", 2), item
@@ -55,7 +53,7 @@ public class TestOneItemDictionary {
     }
 
     @Test
-    public void testPutAndPop4() throws KeyException {
+    public void testPutAndPop4() throws KeyErrorException {
         dictionary.put("2", 2);
         Object value = dictionary.pop("2");
         assertEquals(
@@ -65,7 +63,7 @@ public class TestOneItemDictionary {
     }
 
     @Test
-    public void testPutAndPop5() throws KeyException {
+    public void testPutAndPop5() throws KeyErrorException {
         dictionary.put("2", 2);
         Object value = dictionary.pop("2");
         assertEquals(
@@ -85,7 +83,7 @@ public class TestOneItemDictionary {
     }
 
     @Test
-    public void testReplace2() throws KeyException {
+    public void testReplace2() throws KeyErrorException {
         dictionary.put("1", 100);
         Object value = dictionary.get("1");
         assertEquals(
@@ -144,7 +142,7 @@ public class TestOneItemDictionary {
     @Test(expected = EmptyDictionaryException.class)
     public void testClear2() throws EmptyDictionaryException {
         dictionary.clear();
-        dictionary.popitem();
+        dictionary.popItem();
     }
 
     @Test
@@ -187,7 +185,7 @@ public class TestOneItemDictionary {
 
     @Test
     public void testPopItem1() throws EmptyDictionaryException {
-        Tuple values = dictionary.popitem();
+        Tuple values = dictionary.popItem();
         assertEquals(
                 "Wrong value",
                 new Tuple("1", 1), values
@@ -196,7 +194,7 @@ public class TestOneItemDictionary {
 
     @Test
     public void testPopItem2() throws EmptyDictionaryException {
-        dictionary.popitem();
+        dictionary.popItem();
         int dictionaryLength = dictionary.size();
         assertEquals(
                 "Wrong size",
@@ -204,13 +202,13 @@ public class TestOneItemDictionary {
         );
     }
 
-    @Test(expected = KeyException.class)
-    public void testGetNoneExistingKey() throws KeyException {
+    @Test(expected = KeyErrorException.class)
+    public void testGetNoneExistingKey() throws KeyErrorException {
         dictionary.getItem("2");
     }
 
     @Test
-    public void tesPop() throws KeyException {
+    public void tesPop() throws KeyErrorException {
         Object value = dictionary.pop("1");
         assertEquals(
                 "The element when removing a pair key - value " +

@@ -1,4 +1,4 @@
-package org.ulpgc.edp.model.dictionaryobject;
+package org.ulpgc.edp.model.dct;
 
 /**
  * Node class used to storage a pair key - value and its index of and indexes
@@ -8,16 +8,15 @@ package org.ulpgc.edp.model.dictionaryobject;
  * @version 15-03-2024
  */
 class Node {
-    private Object key;
-    private Object value;
+    private Object key, value;
     private int index;
 
     /**
-     * Constructor of the node class.
+     * Constructor of the node class given a key, value and index.
      *
-     * @param key
-     * @param value
-     * @param index
+     * @param key of the inserted pair
+     * @param value of the inserted pair
+     * @param index where current reference index is stores
      */
     Node(Object key, Object value, int index) {
         this.key = key;
@@ -35,16 +34,16 @@ class Node {
     }
 
     /**
-     * Setter for key attribute.
+     *  Package level setter for key attribute.
      *
-     * @param key
+     * @param key to store
      */
     void key(Object key) {
         this.key = key;
     }
 
     /**
-     * Getter for value attribute.
+     * Package level getter for value attribute.
      *
      * @return value
      */
@@ -53,16 +52,16 @@ class Node {
     }
 
     /**
-     * Setter for value attribute.
+     * Package level setter for value attribute.
      *
-     * @param value
+     * @param value to store
      */
     void value(Object value) {
         this.value = value;
     }
 
     /**
-     * Getter for index attribute.
+     * Package level getter for index attribute.
      *
      * @return index
      */
@@ -71,27 +70,12 @@ class Node {
     }
 
     /**
-     * Setter for index value.
+     * Package level setter for index value.
      *
-     * @param index
+     * @param index to store
      */
     void index(int index) {
         this.index = index;
-    }
-
-    /**
-     * Private inner method used to format the items of the current node in
-     * order to make the string representation.
-     *
-     * @param item to format
-     * @return formatted item
-     */
-    private String format(Object item) {
-        if (item.getClass() == String.class) {
-            return String.format("\'%s\'", item);
-        } else {
-            return item.toString();
-        }
     }
 
     /**
@@ -107,5 +91,22 @@ class Node {
         str.append(format(value));
 
         return str.toString();
+    }
+
+    /**
+     * Private inner method used to format the items of the current node in
+     * order to make the string representation.
+     *
+     * @param item to format
+     * @return formatted item
+     */
+    private String format(Object item) {
+        if (item == null) {
+            return "null";
+        } else if (item.getClass() == String.class) {
+            return String.format("'%s'", item);
+        } else {
+            return item.toString();
+        }
     }
 }

@@ -9,14 +9,22 @@ A Dictionary is a data structure used to store pairs of keys and values in an ef
 complexity near O(1). Its functionality is simple, link it with the idea of having an index (keys) and some values
 associated with them (values).
 
-# Example
+### Example
 
 ```java
-import org.ulpgc.edp.model.dct;
+import org.ulpgc.edp.model.dct.*;
 
 public static void main(String[] args) {
         // Creates an empty dictionary
         Dictionary myDict = new Dictionary();
+        
+        // Creates a dictionary via other dictionary
+        Dictionary otherDict = new Dictionary(myDict);
+        System.out.println(anotherDict.equals(myDict)); // Will print true
+        
+        // Cereates a dictionary with dynamic number of arguments
+        Dictionary otherDict2 = new Dictionary(1, 2, 3, 4);
+        System.out.println(otherDict2); // Will print {1: 2, 3: 4}
 
         // Insert pairs into the dictionary
         myDict.put("key1", 1);
@@ -33,27 +41,31 @@ public static void main(String[] args) {
 A Tuple is an immutable data structure used to store values or items. Once it is created, it cannot be changed.
 Useful to store short - medium amount of data that have to stay immutable.
 
-## Example
+### Example
 
 ```java
-import org.ulpgc.edp.model.tpl;
+import org.ulpgc.edp.model.tpl.*;
 
 public static void main(String[] args) {
-        // Create a tuple
+        // Create a basic tuple
         Tuple myTuple = new Tuple(1, 2, 3, 4);
 
         // Get an element from the tuple (via index)
         System.out.println(myTuple.get(0)); // Will print 1
+        
+        // Create a tuple via iterable object
+        Tuple otherTuple = new Tuple(myTuple);
+        System.out.println(otherTuple.equals(myTuple));  // Will print true
 }
 ```
 
 ## Documentation
 
-To see full documentation of both classes visit the Official Documentation Website
+To see full documentation of both classes visit the [Official Documentation Website](https://javier-castilla.github.io/Java-own-Python-dictionary-implementation-DOCUMENTATION/)
 
 ## Authors
 
 Developed by **Javier Castilla** with help of
 - David Miranda
 - Esteban Trujillo
-- Elena Artiles.
+- Elena Artiles

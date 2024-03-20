@@ -5,7 +5,7 @@ package org.ulpgc.edp.exceptions;
  *
  * @author Javier Castilla
  */
-public class EmptyDictionaryException extends Exception {
+public class EmptyDictionaryException extends RuntimeException {
     /**
      * Constructor of the class.
      *

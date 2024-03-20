@@ -1,24 +1,23 @@
-package org.ulpgc.edp.model.dictionaryobject;
-
-import org.ulpgc.edp.model.tupleobject.*;
+package org.ulpgc.edp.model.dct;
 
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Objects;
 
 /**
- * Iterable class used to iterate over the dictionary's items.
+ * Iterable class used to iterate over the dictionary keys.
+ * This class represents a dynamic view of the dictionary keys.
  *
  * @author Javier Castilla
  * @version 15-03-2024
  */
-class DictionaryItemsIterable implements Iterable<Tuple> {
+class DictionaryKeysIterable implements Iterable<Object> {
     private Dictionary dict;
 
     /**
-     * Constructor of the iterable class.
+     * Constructor of the iterable class given a reference of a dictionary.
      */
-    DictionaryItemsIterable(Dictionary dict) {
+    DictionaryKeysIterable(Dictionary dict) {
         this.dict = dict;
     }
 
@@ -28,25 +27,24 @@ class DictionaryItemsIterable implements Iterable<Tuple> {
      * @return an iterator
      */
     @Override
-    public Iterator<Tuple> iterator() {
-        return new DictionaryItems();
+    public Iterator<Object> iterator() {
+        return new DictionaryKeys();
     }
 
     /**
-     * Private inner class used to iterate over the dictionary's items.
+     * Private inner class used to iterate over the dictionary keys.
      */
-    private class DictionaryItems implements Iterator<Tuple> {
+    private class DictionaryKeys implements Iterator<Object> {
         private int index, length;
         private Node node;
 
-        private DictionaryItems() {
+        private DictionaryKeys() {
             this.index = 0;
             this.length = dict.entries().length;
             this.node = dict.entries()[index];
         }
-
         /**
-         * Override method which returns if there is a next element or not.
+         * Override method which returns if there is such a next element.
          *
          * @return true if it has next element else false
          */
@@ -56,24 +54,24 @@ class DictionaryItemsIterable implements Iterable<Tuple> {
         }
 
         /**
-         * Method that returns the entry iterating upon the items array.
+         * Method that returns the key iterating upon the items array.
          *
-         * @return the next pair
+         * @return the next key
          */
         @Override
-        public Tuple next() {
+        public Object next() {
             if (hasNext()) {
-                Tuple returnedItems = new Tuple(node.key(), node.value());
+                Object key = node.key();
                 node = dict.entries()[++index];
-
-                return returnedItems;
+                return key;
             }
             throw new java.util.NoSuchElementException();
         }
     }
 
     /**
-     * Override method that compares a given object with the current one.
+     * Compares a given object with the current dictionary keys iterable,
+     * checking equality between them.
      *
      * @param object to compare
      * @return true if equals else false
@@ -82,7 +80,7 @@ class DictionaryItemsIterable implements Iterable<Tuple> {
     public boolean equals(Object object) {
         if (this == object) return true;
         if (object == null || getClass() != object.getClass()) return false;
-        DictionaryItemsIterable other = (DictionaryItemsIterable) object;
+        DictionaryKeysIterable other = (DictionaryKeysIterable) object;
         return toString().equals(other.toString());
     }
 
@@ -101,17 +99,21 @@ class DictionaryItemsIterable implements Iterable<Tuple> {
     }
 
     /**
-     * String representation of the iterable class
+     * String representation of the Iterable class
      *
      * @return a string representation
      */
     @Override
     public String toString() {
         StringBuilder str = new StringBuilder();
-        str.append("DictionaryItems([");
+        str.append("DictionaryKeys([");
 
-        for (Tuple item : this) {
-            str.append(item);
+        for (Object key : this) {
+            if (key.getClass() == String.class) {
+                str.append(String.format("'%s'", key));
+            } else {
+                str.append(key);
+            }
             str.append(", ");
         }
 
