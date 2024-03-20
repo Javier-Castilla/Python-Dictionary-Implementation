@@ -106,7 +106,7 @@ public class TestEmptyDictionary {
             otherDictionary.put(i, i);
         }
         dictionary.update(otherDictionary);
-        Tuple value = dictionary.popitem();
+        Tuple value = dictionary.popItem();
         assertEquals(
                 "Wrong last item",
                 new Tuple(3, 3), value
@@ -289,6 +289,6 @@ public class TestEmptyDictionary {
 
     @Test(expected = EmptyDictionaryException.class)
     public void testPopItem() throws EmptyDictionaryException {
-        dictionary.popitem();
+        dictionary.popItem();
     }
 }

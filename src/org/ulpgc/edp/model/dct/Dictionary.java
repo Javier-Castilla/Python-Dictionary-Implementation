@@ -33,7 +33,7 @@ public class Dictionary implements Iterable<Object> {
     private int size, lastIndex, mask;
 
     /**
-     * Constructor by default. No length or items needed.
+     * Constructor by default. Initializes an empty dictionary.
      *
      * @author Javier Castilla
      */
@@ -46,18 +46,50 @@ public class Dictionary implements Iterable<Object> {
      * to put into the new dictionary.
      *
      * @param items to put into the new dictionary
+     * @throws UnsupportedOperationException if the elements contained
+     * into the iterable are not tuples or length of those elements is not 2
      * @author Javier Castilla
      */
-    public Dictionary(Iterable<Tuple> items) throws UnsupportedOperationException {
+    public Dictionary(Iterable<?> items) throws UnsupportedOperationException {
         initDictionary();
 
-        for (Tuple item : items) {
-            if (item.length() != 2) {
+        for (Object item : items) {
+            if (item.getClass() != Tuple.class) {
+                throw new UnsupportedOperationException(
+                        "Pairs into iterable must be tuples"
+                );
+            }
+
+            Tuple pair = (Tuple) item;
+
+            if (pair.length() != 2) {
                 throw new UnsupportedOperationException(
                         "The size of the pair differs from the expected (2)"
                 );
             }
-            put(item.get(0), item.get(1));
+            put(pair.get(0), pair.get(1));
+        }
+    }
+
+    /**
+     * Constructor given some arguments dynamically. The first argument
+     * will be the key, the next one its value, and so on and so for.
+     * It is absolutely necessary an even number of arguments.
+     * @throws UnsupportedOperationException if the number of elements is not even
+     * @author Javier Castilla
+     */
+    public Dictionary(Object... items) throws UnsupportedOperationException {
+        initDictionary();
+
+        if (items.length % 2 != 0) {
+            throw new UnsupportedOperationException(
+                    "The number or arguments given does not match the" +
+                            " needed dimensions. It must be multiple of 2"
+            );
+        }
+
+        for (int i = 0; i < items.length - 1; i += 2) {
+            put(items[i], items[i + 1]);
         }
     }
 
@@ -76,28 +108,7 @@ public class Dictionary implements Iterable<Object> {
     }
 
     /**
-     * Constructor given some arguments dynamically. The first argument
-     * will be the key, the next one its value, and so on and so for.
-     *
-     * @author Javier Castilla
-     */
-    public Dictionary(Object... items) throws UnsupportedOperationException {
-        initDictionary();
-
-        if (items.length % 2 != 0) {
-            throw new UnsupportedOperationException(
-                    "The number or arguments given does not match the" +
-                            " needed dimensions"
-            );
-        }
-
-        for (int i = 0; i < items.length - 1; i += 2) {
-            put(items[i], items[i + 1]);
-        }
-    }
-
-    /**
-     * Clears all the dictionary, like if a new dictionary has been created.
+     * Clears all the dictionary, like if a new empty dictionary has been created.
      * @author Javier Castilla
      * @author Elena Artiles
      */
@@ -105,6 +116,11 @@ public class Dictionary implements Iterable<Object> {
         initDictionary();
     }
 
+    /**
+     * Initializes or reinitialize the current dictionary.
+     *
+     * @author Javier Castilla
+     */
     private void initDictionary() {
         indexes = new Integer[8];
         items = new Node[8];
@@ -149,10 +165,9 @@ public class Dictionary implements Iterable<Object> {
      *
      * @param keys an iterable containing desire keys to add
      * @return a new dictionary containing given keys and null as values
-     * @throws UnsupportedOperationException
      * @author Javier Castilla
      */
-    public static Dictionary fromKeys(Iterable<Object> keys) {
+    public static Dictionary fromKeys(Iterable<?> keys) {
         Dictionary newDictionary = new Dictionary();
 
         for (Object key : keys) {
@@ -169,7 +184,7 @@ public class Dictionary implements Iterable<Object> {
      * @param keys an iterable containing desire keys to add
      * @param values and iterable containing desire values to add
      * @return a new dictionary containing given keys and values
-     * @throws UnsupportedOperationException
+     * @throws UnsupportedOperationException if there are not enough elements to make pairs
      * @author Javier Castilla
      */
     public static Dictionary fromKeys(
@@ -238,28 +253,12 @@ public class Dictionary implements Iterable<Object> {
     }
 
     /**
-     * Private inner method used to remove a pair key - value located in the
-     * given index.
-     *
-     * @param index
-     * @return the removed value
-     * @author Javier Castilla
-     */
-    private Object remove(int index) {
-        Node node = items[indexes[index]];
-        node.index(-1);
-        indexes[index] = -1;
-        size--;
-
-        return node.value();
-    }
-
-    /**
      * Removes the pair key - value associated to the given key.
+     * <b>If the exception is needed to be avoided, use {@link #pop(Object, Object)}</b>.
      *
      * @param key to remove
      * @return the value of the removed pair key - value
-     * @throws KeyErrorException
+     * @throws KeyErrorException if the dictionary does not contain the given key
      * @author Javier Castilla
      * @author Esteban Trujillo
      */
@@ -278,7 +277,7 @@ public class Dictionary implements Iterable<Object> {
 
     /**
      * Removes the pair key - value with the given key. If the key is not
-     * into the dictionary, defaultValue will be returned.
+     * into the dictionary, a default value will be returned.
      *
      * @param key to remove
      * @return the value of the removed pair key - value
@@ -296,13 +295,30 @@ public class Dictionary implements Iterable<Object> {
     }
 
     /**
+     * Private inner method used to remove a pair key - value located in the
+     * given index.
+     *
+     * @param index where the pair is located
+     * @return the removed value
+     * @author Javier Castilla
+     */
+    private Object remove(int index) {
+        Node node = items[indexes[index]];
+        node.index(-1);
+        indexes[index] = -1;
+        size--;
+
+        return node.value();
+    }
+
+    /**
      * Removes the last introduced pair key - value.
      *
      * @return the removed pair key - value
-     * @throws EmptyDictionaryException
+     * @throws EmptyDictionaryException if the dictionary is empty
      * @author Javier Castilla
      */
-    public Tuple popitem() throws EmptyDictionaryException {
+    public Tuple popItem() throws EmptyDictionaryException {
         if (size == 0) {
             throw new EmptyDictionaryException("The dictionary is empty");
         }
@@ -310,6 +326,7 @@ public class Dictionary implements Iterable<Object> {
         Node node = items[lastIndex];
         indexes[node.index()] = -1;
         size--;
+
         return new Tuple(node.key(), node.value());
     }
 
@@ -320,7 +337,7 @@ public class Dictionary implements Iterable<Object> {
      *
      * @param key to search the value
      * @return the value in pair with the given key
-     * @throws KeyErrorException
+     * @throws KeyErrorException if the
      * @author Javier Castilla
      */
     public Object getItem(Object key) throws KeyErrorException {
@@ -354,7 +371,7 @@ public class Dictionary implements Iterable<Object> {
      * Searches and returns the value in pair with the given key.
      *
      * @param key to search the value
-     * @return the value in pair with the given key if contained else defaultValue
+     * @return the value in pair with the given key if contained else a default value
      * @author Javier Castilla
      */
     public Object get(Object key, Object defaultValue) {
@@ -371,7 +388,8 @@ public class Dictionary implements Iterable<Object> {
     /**
      * Returns the value paired with the key if exists, else adds the
      * given pair key - value to the dictionary and returns that value. Value
-     * will be default as null.
+     * will be default as null. <b>If it is needed a certain default value,
+     * use {@link #setDefault(Object, Object)}</b>
      *
      * @param key to search or add
      * @return the value found or added
@@ -416,7 +434,7 @@ public class Dictionary implements Iterable<Object> {
 
     /**
      * Creates a copy of the current dictionary. Equivalent to instance
-     * a dictionary with new Dictionary(Dictionary dictionary) constructor.
+     * a dictionary with new {@link #Dictionary(Dictionary dictionary)} constructor.
      *
      * @return a copy of a dictionary
      * @author Javier Castilla
@@ -428,7 +446,7 @@ public class Dictionary implements Iterable<Object> {
     /**
      * Checks if the given key is contained into the dictionary.
      *
-     * @param key
+     * @param key to search
      * @return true if the key exists else false
      * @author Javier Castilla
      * @author Elena Artiles
@@ -453,9 +471,9 @@ public class Dictionary implements Iterable<Object> {
         int perturb = hash;
         Integer index = indexes[i];
 
-        while (true) {
+        while (index != null) {
             if (
-                    index == null || (index != -1  && items[index].key().equals(key))
+                    (index != -1  && items[index].key().equals(key))
             ) break;
             perturb >>>= PERTURB_SHIFT;
             i = (i*PERTURB_SHIFT + perturb + 1) & mask;
@@ -479,7 +497,7 @@ public class Dictionary implements Iterable<Object> {
 
     /**
      * Private method used to resize the dictionary when an overload factor
-     * (OV_FACTOR) is reached.
+     * (OV_FACTOR) is reached. The overload factor is defined as 2/3.
      * @author Javier Castilla
      */
     private void resize() {
@@ -505,7 +523,7 @@ public class Dictionary implements Iterable<Object> {
     /**
      * Given a number, it returns the next power of two.
      *
-     * @param num
+     * @param num to shift
      * @return the next power of two
      * @author Javier Castilla
      */
@@ -516,6 +534,8 @@ public class Dictionary implements Iterable<Object> {
 
     /**
      * Returns an iterable containing all the keys in the dictionary.
+     * Basically, it is a dynamic view of the keys, if the dictionary
+     * associated to that view is changed, the view will be too.
      * Order of insertion is preserved.
      *
      * @return all the dictionary's keys iterable
@@ -525,10 +545,12 @@ public class Dictionary implements Iterable<Object> {
     }
 
     /**
-     * Returns an iterable containing all the values in the dictionary. Order of
+     * Returns an iterable containing all the values in the dictionary.
+     * Basically, it is a dynamic view of the values, if the dictionary
+     * associated to that view is changed, the view will be too.Order of
      * insertion is preserved.
      *
-     * @return all the dictionary's values iterable
+     * @return all the dictionary values iterable
      * @author Javier Castilla
      */
     public Iterable<Object> values() {
@@ -537,9 +559,11 @@ public class Dictionary implements Iterable<Object> {
 
     /**
      * Returns an iterable of arrays containing all the pairs key - value in the
-     * dictionary. Order of insertion is preserved.
+     * dictionary. Basically, it is a dynamic view of the items, if the dictionary
+     * associated to that view is changed, the view will be too.
+     * Order of insertion is preserved.
      *
-     * @return all the dictionary's pairs key - value (Tuple) iterable
+     * @return all the dictionary pairs key - value (Tuple) iterable
      * @author Javier Castilla
      */
     public Iterable<Tuple> items() {
@@ -549,7 +573,7 @@ public class Dictionary implements Iterable<Object> {
     /**
      * Iterator of the dictionary object.
      *
-     * @return a dictionary's keys iterator
+     * @return a dictionary keys iterator
      * @author Javier Castilla
      */
     @Override

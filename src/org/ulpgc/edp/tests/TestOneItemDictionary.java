@@ -46,7 +46,7 @@ public class TestOneItemDictionary {
     @Test
     public void testPutAndPop3() throws EmptyDictionaryException {
         dictionary.put("2", 2);
-        Tuple item = dictionary.popitem();
+        Tuple item = dictionary.popItem();
         assertEquals(
                 "Wrong value",
                 new Tuple("2", 2), item
@@ -143,7 +143,7 @@ public class TestOneItemDictionary {
     @Test(expected = EmptyDictionaryException.class)
     public void testClear2() throws EmptyDictionaryException {
         dictionary.clear();
-        dictionary.popitem();
+        dictionary.popItem();
     }
 
     @Test
@@ -186,7 +186,7 @@ public class TestOneItemDictionary {
 
     @Test
     public void testPopItem1() throws EmptyDictionaryException {
-        Tuple values = dictionary.popitem();
+        Tuple values = dictionary.popItem();
         assertEquals(
                 "Wrong value",
                 new Tuple("1", 1), values
@@ -195,7 +195,7 @@ public class TestOneItemDictionary {
 
     @Test
     public void testPopItem2() throws EmptyDictionaryException {
-        dictionary.popitem();
+        dictionary.popItem();
         int dictionaryLength = dictionary.size();
         assertEquals(
                 "Wrong size",

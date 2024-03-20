@@ -15,9 +15,9 @@ class Node {
     /**
      * Constructor of the node class.
      *
-     * @param key
-     * @param value
-     * @param index
+     * @param key of the inserted pair
+     * @param value of the inserted pair
+     * @param index where current reference index is stores
      */
     Node(Object key, Object value, int index) {
         this.key = key;
@@ -37,7 +37,7 @@ class Node {
     /**
      * Setter for key attribute.
      *
-     * @param key
+     * @param key to store
      */
     void key(Object key) {
         this.key = key;
@@ -55,7 +55,7 @@ class Node {
     /**
      * Setter for value attribute.
      *
-     * @param value
+     * @param value to store
      */
     void value(Object value) {
         this.value = value;
@@ -73,7 +73,7 @@ class Node {
     /**
      * Setter for index value.
      *
-     * @param index
+     * @param index to store
      */
     void index(int index) {
         this.index = index;
@@ -87,8 +87,10 @@ class Node {
      * @return formatted item
      */
     private String format(Object item) {
-        if (item.getClass() == String.class) {
-            return String.format("\'%s\'", item);
+        if (item == null) {
+            return "null";
+        } else if (item.getClass() == String.class) {
+            return String.format("'%s'", item);
         } else {
             return item.toString();
         }

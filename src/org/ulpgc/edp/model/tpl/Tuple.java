@@ -20,10 +20,13 @@ public class Tuple implements Iterable<Object> {
      * @param items to add into de tuple
      */
     public Tuple(Object... items) {
+        this(Arrays.asList(items));
+    }
+
+    public Tuple(Iterable<?> items) {
         this.items = new Object[8];
         int index = 0;
         for (Object item : items) {
-            if (item == null) continue;
             if (index == this.items.length) {
                 this.items = Arrays.copyOf(
                         this.items, this.items.length << 1
@@ -122,12 +125,11 @@ public class Tuple implements Iterable<Object> {
         StringBuilder str = new StringBuilder();
         str.append("(");
 
-        for (Object item : items) {
-            if (item == null) continue;
-            if (item.getClass() == String.class) {
-                str.append(String.format("\'%s\'", item));
+        for (int i = 0; i < length; i++) {
+            if (items[i].getClass() == String.class) {
+                str.append(String.format("'%s'", items[i]));
             } else {
-                str.append(item);
+                str.append(items[i]);
             }
             str.append(", ");
         }

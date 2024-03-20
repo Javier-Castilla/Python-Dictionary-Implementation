@@ -5,7 +5,6 @@ import org.ulpgc.edp.exceptions.*;
 import org.ulpgc.edp.model.dct.Dictionary;
 import org.ulpgc.edp.model.tpl.Tuple;
 
-import java.util.Arrays;
 import static org.junit.Assert.*;
 
 /**
@@ -54,7 +53,7 @@ public class TestManyItemsDictionary {
 
     @Test
     public void testPopItem1() throws EmptyDictionaryException {
-        Tuple item = dictionary.popitem();
+        Tuple item = dictionary.popItem();
         assertEquals(
                 "Wrong last inserted value",
                 new Tuple(31, 31), item
@@ -63,7 +62,7 @@ public class TestManyItemsDictionary {
 
     @Test
     public void testPopItem2() throws EmptyDictionaryException {
-        dictionary.popitem();
+        dictionary.popItem();
         assertEquals(
                 "Wrong size after deleting last introduced item",
                 31, dictionary.size()
@@ -93,7 +92,7 @@ public class TestManyItemsDictionary {
     @Test
     public void testReplace3() throws EmptyDictionaryException {
         dictionary.put(17, 100);
-        Object value = dictionary.popitem();
+        Object value = dictionary.popItem();
         assertEquals(
                 "Wrong last inserted value after updating pair",
                 new Tuple(31, 31), value
@@ -123,7 +122,7 @@ public class TestManyItemsDictionary {
     @Test(expected = EmptyDictionaryException.class)
     public void testClear2() throws EmptyDictionaryException {
         dictionary.clear();
-        dictionary.popitem();
+        dictionary.popItem();
     }
 
     @Test
