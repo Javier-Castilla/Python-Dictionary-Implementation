@@ -50,7 +50,7 @@ class DictionaryKeysIterable implements Iterable<Object> {
          */
         @Override
         public boolean hasNext() {
-            return index < length && node != null && dict.indexes()[node.index()] != -1;
+            return index < length && node != null && node.index() != -1;
         }
 
         /**

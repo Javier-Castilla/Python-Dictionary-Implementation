@@ -188,11 +188,11 @@ public class Dictionary implements Iterable<Object> {
      * @author Javier Castilla
      */
     public static Dictionary fromKeys(
-            Iterable<Object> keys, Iterable<Object> values
+            Iterable<?> keys, Iterable<?> values
     ) throws UnsupportedOperationException {
         Dictionary newDictionary = new Dictionary();
-        Iterator<Object> keySet = keys.iterator();
-        Iterator<Object> valueSet = values.iterator();
+        Iterator<?> keySet = keys.iterator();
+        Iterator<?> valueSet = values.iterator();
 
         int keysCounter = 0;
         int valuesCounter = 0;
