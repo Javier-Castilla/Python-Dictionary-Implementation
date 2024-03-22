@@ -1,7 +1,6 @@
 package org.ulpgc.edp.model.tpl;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Iterator;
 
 /**
@@ -31,18 +30,25 @@ public class Tuple implements Iterable<Object> {
      * @param items
      */
     public Tuple(Iterable<?> items) {
-        this.items = new Object[8];
-        int index = 0;
+        this.items = new Object[getSuitableLength(items)];
 
+        int index = 0;
         for (Object item : items) {
-            if (index == this.items.length) {
-                this.items = Arrays.copyOf(
-                        this.items, this.items.length << 1
-                );
-            }
             this.items[index++] = item;
             length++;
         }
+    }
+
+    /**
+     * Calculates the length of the given iterable.
+     *
+     * @param iterable to calculate length
+     * @return iterable length
+     */
+    private int getSuitableLength(Iterable<?> iterable) {
+        int length = 0;
+        for (Object item : iterable) length++;
+        return length;
     }
 
     /**
@@ -61,6 +67,9 @@ public class Tuple implements Iterable<Object> {
      * @return item at given index
      */
     public Object get(int index) {
+        if (index < 0 || index >= length) {
+            throw new IndexOutOfBoundsException();
+        }
         return items[index];
     }
 
