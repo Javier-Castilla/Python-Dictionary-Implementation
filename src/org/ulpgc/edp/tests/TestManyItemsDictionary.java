@@ -51,7 +51,7 @@ public class TestManyItemsDictionary {
     }
 
     @Test
-    public void testPopItem1() throws EmptyDictionaryException {
+    public void testPopItem1() throws KeyErrorException {
         Tuple item = dictionary.popItem();
         assertEquals(
                 "Wrong last inserted value",
@@ -60,7 +60,7 @@ public class TestManyItemsDictionary {
     }
 
     @Test
-    public void testPopItem2() throws EmptyDictionaryException {
+    public void testPopItem2() throws KeyErrorException {
         dictionary.popItem();
         assertEquals(
                 "Wrong size after deleting last introduced item",
@@ -89,7 +89,7 @@ public class TestManyItemsDictionary {
     }
 
     @Test
-    public void testReplace3() throws EmptyDictionaryException {
+    public void testReplace3() throws KeyErrorException {
         dictionary.put(17, 100);
         Object value = dictionary.popItem();
         assertEquals(
@@ -118,8 +118,8 @@ public class TestManyItemsDictionary {
         );
     }
 
-    @Test(expected = EmptyDictionaryException.class)
-    public void testClear2() throws EmptyDictionaryException {
+    @Test(expected = KeyErrorException.class)
+    public void testClear2() throws KeyErrorException {
         dictionary.clear();
         dictionary.popItem();
     }
@@ -256,12 +256,12 @@ public class TestManyItemsDictionary {
     @Test
     public void testFromKeys6() {
         Dictionary newDictionary = Dictionary.fromKeys(
-                new Tuple(keys), new Tuple(keys)
+                new Tuple(keys), "Test"
         );
         for (Object key : dictionary.keys()) {
             assertEquals(
                     "From keys dictionary does not have expected items",
-                    dictionary.get(key), newDictionary.get(key)
+                    newDictionary.get(key), "Test"
             );
         }
     }

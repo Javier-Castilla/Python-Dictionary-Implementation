@@ -12,6 +12,7 @@ import java.util.NoSuchElementException;
  */
 class TupleItemsIterable implements Iterable<Object> {
     private Tuple tuple;
+    private int length;
 
     /**
      * Constructor of the iterable class.
@@ -20,6 +21,15 @@ class TupleItemsIterable implements Iterable<Object> {
      */
     public TupleItemsIterable(Tuple tuple) {
         this.tuple = tuple;
+    }
+
+    /**
+     * Returns the length of the items set of the tuple.
+     *
+     * @return length of dynamic view
+     */
+    public int length() {
+        return tuple.length();
     }
 
     /**

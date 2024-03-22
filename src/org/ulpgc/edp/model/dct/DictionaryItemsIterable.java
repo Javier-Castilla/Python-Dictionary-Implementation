@@ -24,6 +24,15 @@ class DictionaryItemsIterable implements Iterable<Tuple> {
     }
 
     /**
+     * Returns the length of the items set of the dictionary.
+     *
+     * @return length of dynamic view
+     */
+    public int length() {
+        return dict.size();
+    }
+
+    /**
      * Iterator method.
      *
      * @return an iterator
@@ -113,8 +122,7 @@ class DictionaryItemsIterable implements Iterable<Tuple> {
         str.append("DictionaryItems([");
 
         for (Tuple item : this) {
-            str.append(item);
-            str.append(", ");
+            str.append(item + ", ");
         }
 
         if (dict.size() != 0) {

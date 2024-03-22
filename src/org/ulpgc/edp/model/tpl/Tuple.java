@@ -1,6 +1,7 @@
 package org.ulpgc.edp.model.tpl;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Iterator;
 
 /**
@@ -32,15 +33,15 @@ public class Tuple implements Iterable<Object> {
     public Tuple(Iterable<?> items) {
         this.items = new Object[8];
         int index = 0;
+
         for (Object item : items) {
             if (index == this.items.length) {
                 this.items = Arrays.copyOf(
                         this.items, this.items.length << 1
                 );
             }
-            this.items[index] = item;
+            this.items[index++] = item;
             length++;
-            index++;
         }
     }
 
@@ -131,13 +132,13 @@ public class Tuple implements Iterable<Object> {
         StringBuilder str = new StringBuilder();
         str.append("(");
 
-        for (int i = 0; i < length; i++) {
-            if (items[i].getClass() == String.class) {
-                str.append(String.format("'%s'", items[i]));
+        for (Object item : items) {
+            if (item == null) continue;
+            if (item.getClass() == String.class) {
+                str.append(String.format("'%s', ", item));
             } else {
-                str.append(items[i]);
+                str.append(item + ", ");
             }
-            str.append(", ");
         }
 
         if (items.length > 0) {

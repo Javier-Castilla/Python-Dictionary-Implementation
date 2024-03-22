@@ -86,8 +86,7 @@ class Node {
     @Override
     public String toString() {
         StringBuilder str = new StringBuilder();
-        str.append(format(key));
-        str.append(": ");
+        str.append(format(key) + ": ");
         str.append(format(value));
 
         return str.toString();

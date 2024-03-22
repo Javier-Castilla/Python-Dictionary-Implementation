@@ -22,6 +22,15 @@ class DictionaryKeysIterable implements Iterable<Object> {
     }
 
     /**
+     * Returns the length of the keys set of the dictionary.
+     *
+     * @return length of dynamic view
+     */
+    public int length() {
+        return dict.size();
+    }
+
+    /**
      * Iterator method.
      *
      * @return an iterator
@@ -110,11 +119,10 @@ class DictionaryKeysIterable implements Iterable<Object> {
 
         for (Object key : this) {
             if (key.getClass() == String.class) {
-                str.append(String.format("'%s'", key));
+                str.append(String.format("'%s', ", key));
             } else {
-                str.append(key);
+                str.append(key + ", ");
             }
-            str.append(", ");
         }
 
         if (dict.size() != 0) {

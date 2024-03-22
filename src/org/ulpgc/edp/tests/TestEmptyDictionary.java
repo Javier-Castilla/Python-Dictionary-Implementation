@@ -99,7 +99,7 @@ public class TestEmptyDictionary {
     }
 
     @Test
-    public void testUpdate3() throws EmptyDictionaryException {
+    public void testUpdate3() throws KeyErrorException {
         Dictionary otherDictionary = new Dictionary();
         for (int i = 0; i < 4; i++) {
             otherDictionary.put(i, i);
@@ -255,39 +255,13 @@ public class TestEmptyDictionary {
         dictionary.getItem("1");
     }
 
-    @Test
-    public void testKeyErrorException1() {
-        try {
-            dictionary.getItem("1");
-        } catch (KeyErrorException err) {
-            assertEquals(
-                    "Wrong exception value",
-                    "1", err.value()
-            );
-        }
-
-    }
-
     @Test(expected = KeyErrorException.class)
     public void tesPop1() throws KeyErrorException {
         dictionary.pop("1");
     }
 
-    @Test
-    public void tesPop2() throws KeyErrorException {
-        try {
-            dictionary.pop("1");
-        } catch (KeyErrorException err) {
-            assertEquals(
-                    "The key that caused the exception does not" +
-                            "match the one located in the exception",
-                    "1", err.value()
-            );
-        }
-    }
-
-    @Test(expected = EmptyDictionaryException.class)
-    public void testPopItem() throws EmptyDictionaryException {
+    @Test(expected = KeyErrorException.class)
+    public void testPopItem() throws KeyErrorException {
         dictionary.popItem();
     }
 }

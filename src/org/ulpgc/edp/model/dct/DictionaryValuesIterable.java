@@ -22,6 +22,15 @@ class DictionaryValuesIterable implements Iterable<Object> {
     }
 
     /**
+     * Returns the length of the values set of the dictionary.
+     *
+     * @return length of dynamic view
+     */
+    public int length() {
+        return dict.size();
+    }
+
+    /**
      * Iterator method.
      *
      * @return an iterator
@@ -113,11 +122,10 @@ class DictionaryValuesIterable implements Iterable<Object> {
         for (Object value : this) {
             System.out.println(value);
             if (value.getClass() == String.class) {
-                str.append(String.format("'%s'", value));
+                str.append(String.format("'%s', ", value));
             } else {
-                str.append(value);
+                str.append(value + ", ");
             }
-            str.append(", ");
         }
 
         if (dict.size() != 0) {

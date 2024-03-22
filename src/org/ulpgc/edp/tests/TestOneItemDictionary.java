@@ -43,7 +43,7 @@ public class TestOneItemDictionary {
     }
 
     @Test
-    public void testPutAndPop3() throws EmptyDictionaryException {
+    public void testPutAndPop3() throws KeyErrorException {
         dictionary.put("2", 2);
         Tuple item = dictionary.popItem();
         assertEquals(
@@ -139,8 +139,8 @@ public class TestOneItemDictionary {
         );
     }
 
-    @Test(expected = EmptyDictionaryException.class)
-    public void testClear2() throws EmptyDictionaryException {
+    @Test(expected = KeyErrorException.class)
+    public void testClear2() throws KeyErrorException {
         dictionary.clear();
         dictionary.popItem();
     }
@@ -184,7 +184,7 @@ public class TestOneItemDictionary {
     }
 
     @Test
-    public void testPopItem1() throws EmptyDictionaryException {
+    public void testPopItem1() throws KeyErrorException {
         Tuple values = dictionary.popItem();
         assertEquals(
                 "Wrong value",
@@ -193,7 +193,7 @@ public class TestOneItemDictionary {
     }
 
     @Test
-    public void testPopItem2() throws EmptyDictionaryException {
+    public void testPopItem2() throws KeyErrorException {
         dictionary.popItem();
         int dictionaryLength = dictionary.size();
         assertEquals(
