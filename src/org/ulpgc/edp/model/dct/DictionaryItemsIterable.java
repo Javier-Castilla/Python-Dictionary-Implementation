@@ -4,6 +4,7 @@ import org.ulpgc.edp.model.tpl.*;
 
 import java.util.Arrays;
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 import java.util.Objects;
 
 /**
@@ -11,7 +12,7 @@ import java.util.Objects;
  * This class represents a dynamic view of dictionary items.
  *
  * @author Javier Castilla
- * @version 15-03-2024
+ * @version 22-03-2024
  */
 class DictionaryItemsIterable implements Iterable<Tuple> {
     private Dictionary dict;
@@ -21,6 +22,15 @@ class DictionaryItemsIterable implements Iterable<Tuple> {
      */
     DictionaryItemsIterable(Dictionary dict) {
         this.dict = dict;
+    }
+
+    /**
+     * Returns the length of the items set of the dictionary.
+     *
+     * @return length of dynamic view
+     */
+    public int length() {
+        return dict.size();
     }
 
     /**
@@ -53,23 +63,24 @@ class DictionaryItemsIterable implements Iterable<Tuple> {
          */
         @Override
         public boolean hasNext() {
-            return index < length && node != null && dict.indexes()[node.index()] != -1;
+            return index < length && node != null && node.index() != -1;
         }
 
         /**
          * Method that returns the entry iterating upon the items array.
          *
          * @return the next pair
+         * @exception NoSuchElementException when there are no more items to iterate
          */
         @Override
-        public Tuple next() {
+        public Tuple next() throws NoSuchElementException {
             if (hasNext()) {
                 Tuple returnedItems = new Tuple(node.key(), node.value());
                 node = dict.entries()[++index];
 
                 return returnedItems;
             }
-            throw new java.util.NoSuchElementException();
+            throw new NoSuchElementException();
         }
     }
 
@@ -113,8 +124,7 @@ class DictionaryItemsIterable implements Iterable<Tuple> {
         str.append("DictionaryItems([");
 
         for (Tuple item : this) {
-            str.append(item);
-            str.append(", ");
+            str.append(item + ", ");
         }
 
         if (dict.size() != 0) {

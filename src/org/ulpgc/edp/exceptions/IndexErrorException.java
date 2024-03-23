@@ -1,18 +1,17 @@
 package org.ulpgc.edp.exceptions;
 
 /**
- * Exception class thrown when trying to access a dictionary element when the
- * given key is not contained in it.
+ * Exception class thrown when indexes are not correct.
  *
  * @author Javier Castilla
  * @version 22-03-2024
  */
-public class KeyErrorException extends RuntimeException {
+public class IndexErrorException extends IndexOutOfBoundsException {
 
     /**
      * Constructor by default, no message needed.
      */
-    public KeyErrorException() {
+    public IndexErrorException() {
         this("");
     }
 
@@ -21,7 +20,7 @@ public class KeyErrorException extends RuntimeException {
      *
      * @param msg to show when the exception is thrown
      */
-    public KeyErrorException(String msg) {
+    public IndexErrorException(String msg) {
         super(msg);
     }
 }

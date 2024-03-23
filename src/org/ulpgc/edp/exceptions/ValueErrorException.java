@@ -1,18 +1,17 @@
 package org.ulpgc.edp.exceptions;
 
 /**
- * Exception class thrown when trying to access a dictionary element when the
- * given key is not contained in it.
+ * Exception class thrown when an error related to given value occurs.
  *
  * @author Javier Castilla
  * @version 22-03-2024
  */
-public class KeyErrorException extends RuntimeException {
+public class ValueErrorException extends RuntimeException {
 
     /**
      * Constructor by default, no message needed.
      */
-    public KeyErrorException() {
+    public ValueErrorException() {
         this("");
     }
 
@@ -21,7 +20,7 @@ public class KeyErrorException extends RuntimeException {
      *
      * @param msg to show when the exception is thrown
      */
-    public KeyErrorException(String msg) {
+    public ValueErrorException(String msg) {
         super(msg);
     }
 }

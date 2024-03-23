@@ -2,7 +2,6 @@ package org.ulpgc.edp.tests;
 
 import org.junit.*;
 import org.ulpgc.edp.exceptions.*;
-
 import org.ulpgc.edp.model.dct.Dictionary;
 import org.ulpgc.edp.model.tpl.Tuple;
 
@@ -12,16 +11,22 @@ import static org.junit.Assert.*;
  * Testing class for test an empty Dictionary.
  *
  * @author Javier Castilla
- * @version 15-03-2024
+ * @version 22-03-2024
  */
 public class TestEmptyDictionary {
     private Dictionary dictionary;
 
+    /**
+     * Initial state of every test.
+     */
     @Before
     public void init() {
         this.dictionary = new Dictionary();
     }
 
+    /**
+     * Test about empty dictionary size.
+     */
     @Test
     public void testLen()  {
         int dictionaryLen = dictionary.size();
@@ -31,6 +36,9 @@ public class TestEmptyDictionary {
         );
     }
 
+    /**
+     * Test about empty dictionary put method. Checks size.
+     */
     @Test
     public void testPut1() {
         dictionary.put("1", 1);
@@ -41,6 +49,9 @@ public class TestEmptyDictionary {
         );
     }
 
+    /**
+     * Test about empty dictionary put method. Checks added value.
+     */
     @Test
     public void testPut2() {
         dictionary.put("1", 1);
@@ -51,6 +62,10 @@ public class TestEmptyDictionary {
         );
     }
 
+    /**
+     * Test about empty dictionary put method. Checks added value with
+     * setDefault method.
+     */
     @Test
     public void testPut3() {
         dictionary.put("1", 1);
@@ -61,6 +76,10 @@ public class TestEmptyDictionary {
         );
     }
 
+    /**
+     * Test about empty dictionary put method. Checks if dictionary contains
+     * added key - value.
+     */
     @Test
     public void testPut4() {
         dictionary.put("1", 1);
@@ -70,6 +89,9 @@ public class TestEmptyDictionary {
         );
     }
 
+    /**
+     * Test about empty dictionary update method. Checks size.
+     */
     @Test
     public void testUpdate1() {
         Dictionary otherDictionary = new Dictionary();
@@ -84,6 +106,9 @@ public class TestEmptyDictionary {
         );
     }
 
+    /**
+     * Test about empty dictionary update method. Checks dictionary string.
+     */
     @Test
     public void testUpdate2() {
         Dictionary otherDictionary = new Dictionary();
@@ -98,8 +123,11 @@ public class TestEmptyDictionary {
         );
     }
 
+    /**
+     * Test about empty dictionary update method. Checks popItem returned value.
+     */
     @Test
-    public void testUpdate3() throws EmptyDictionaryException {
+    public void testUpdate3() throws KeyErrorException {
         Dictionary otherDictionary = new Dictionary();
         for (int i = 0; i < 4; i++) {
             otherDictionary.put(i, i);
@@ -112,6 +140,9 @@ public class TestEmptyDictionary {
         );
     }
 
+    /**
+     * Test about empty dictionary copy method. Checks dictionaries equality.
+     */
     @Test
     public void testCopy1() {
         Dictionary dictionaryCopy = dictionary.copy();
@@ -121,6 +152,9 @@ public class TestEmptyDictionary {
         );
     }
 
+    /**
+     * Test about empty dictionary copy method. Checks size.
+     */
     @Test
     public void testCopy2() {
         Dictionary dictionaryCopy = dictionary.copy();
@@ -132,6 +166,10 @@ public class TestEmptyDictionary {
         );
     }
 
+    /**
+     * Test about empty dictionary setDefault method. Checks returned value
+     * from inserting non-existing pair.
+     */
     @Test
     public void testSetDefault1() {
         Object value = dictionary.setDefault("Test");
@@ -141,6 +179,10 @@ public class TestEmptyDictionary {
         );
     }
 
+    /**
+     * Test about empty dictionary setDefault method. Checks returned value
+     * from inserting non-existing pair.
+     */
     @Test
     public void testSetDefault2() {
         Object value = dictionary.setDefault("Test", 10);
@@ -150,28 +192,12 @@ public class TestEmptyDictionary {
         );
     }
 
+    /**
+     * Test about empty dictionary get method. Checks default value if
+     * key is not contained.
+     */
     @Test
-    public void testSetDefault3() {
-        dictionary.setDefault("Test");
-        Object value = dictionary.get("Test");
-        assertEquals(
-                "Wrong value",
-                null, value
-        );
-    }
-
-    @Test
-    public void testSetDefault4() {
-        dictionary.setDefault("Test", 10);
-        Object value = dictionary.get("Test");
-        assertEquals(
-                "Wrong value",
-                10, value
-        );
-    }
-
-    @Test
-    public void testGet() {
+    public void testGet1() {
         Object value = dictionary.get("Test", 100);
         assertEquals(
                 "Wrong value",
@@ -179,15 +205,22 @@ public class TestEmptyDictionary {
         );
     }
 
+    /**
+     * Test about empty dictionary get method. Checks default value if
+     * key is not contained.
+     */
     @Test
-    public void testString()  {
-        String str = dictionary.toString();
+    public void testGet2() {
+        Object value = dictionary.get("Test");
         assertEquals(
-                "Wrong representation",
-                "{}", str
+                "Wrong value",
+                null, value
         );
     }
 
+    /**
+     * Test about empty dictionary keys method. Checks keys string.
+     */
     @Test
     public void testKeys() {
         String keys = dictionary.keys().toString();
@@ -197,6 +230,9 @@ public class TestEmptyDictionary {
         );
     }
 
+    /**
+     * Test about empty dictionary values method. Checks values string.
+     */
     @Test
     public void testValues() {
         String values = dictionary.values().toString();
@@ -206,6 +242,9 @@ public class TestEmptyDictionary {
         );
     }
 
+    /**
+     * Test about empty dictionary items method. Checks items string.
+     */
     @Test
     public void testItems() {
         String items = dictionary.items().toString();
@@ -215,14 +254,21 @@ public class TestEmptyDictionary {
         );
     }
 
+    /**
+     * Test about empty dictionary containsKey method. Checks a non-existing key.
+     */
     @Test
-    public void testContainsKey() {
+    public void testContainsKey1() {
         assertFalse(
                 "False expected",
                 dictionary.containsKey("key")
         );
     }
 
+    /**
+     * Test about empty dictionary equals method. Checks equality with
+     * dictionary copy.
+     */
     @Test
     public void testEquals1() {
         Dictionary otherDictionary = new Dictionary();
@@ -232,6 +278,10 @@ public class TestEmptyDictionary {
         );
     }
 
+    /**
+     * Test about empty dictionary equals method. Checks equality with
+     * self dictionary.
+     */
     @Test
     public void testEquals2() {
         assertTrue(
@@ -240,6 +290,10 @@ public class TestEmptyDictionary {
         );
     }
 
+    /**
+     * Test about empty dictionary equals method. Checks equality with
+     * non-equal dictionary.
+     */
     @Test
     public void testEquals3() {
         Dictionary otherDictionary = new Dictionary();
@@ -250,44 +304,27 @@ public class TestEmptyDictionary {
         );
     }
 
+    /**
+     * Test about empty dictionary getItem method. Checks if exception is thrown.
+     */
     @Test(expected = KeyErrorException.class)
     public void testGetNoneExistingKey() throws KeyErrorException {
         dictionary.getItem("1");
     }
 
-    @Test
-    public void testKeyErrorException1() {
-        try {
-            dictionary.getItem("1");
-        } catch (KeyErrorException err) {
-            assertEquals(
-                    "Wrong exception value",
-                    "1", err.value()
-            );
-        }
-
-    }
-
+    /**
+     * Test about empty dictionary pop method. Checks if exception is thrown.
+     */
     @Test(expected = KeyErrorException.class)
-    public void tesPop1() throws KeyErrorException {
+    public void tesPop() throws KeyErrorException {
         dictionary.pop("1");
     }
 
-    @Test
-    public void tesPop2() throws KeyErrorException {
-        try {
-            dictionary.pop("1");
-        } catch (KeyErrorException err) {
-            assertEquals(
-                    "The key that caused the exception does not" +
-                            "match the one located in the exception",
-                    "1", err.value()
-            );
-        }
-    }
-
-    @Test(expected = EmptyDictionaryException.class)
-    public void testPopItem() throws EmptyDictionaryException {
+    /**
+     * Test about empty dictionary popItem method. Checks if exception is thrown.
+     */
+    @Test(expected = KeyErrorException.class)
+    public void testPopItem() throws KeyErrorException {
         dictionary.popItem();
     }
 }

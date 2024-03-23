@@ -1,5 +1,7 @@
 package org.ulpgc.edp.model.tpl;
 
+import org.ulpgc.edp.exceptions.IndexErrorException;
+
 import java.util.Arrays;
 import java.util.Iterator;
 
@@ -8,7 +10,7 @@ import java.util.Iterator;
  * once it is created.
  *
  * @author Javier Castilla
- * @version 15-03-2024
+ * @version 22-03-2024
  */
 public class Tuple implements Iterable<Object> {
     private Object[] items;
@@ -30,18 +32,25 @@ public class Tuple implements Iterable<Object> {
      * @param items
      */
     public Tuple(Iterable<?> items) {
-        this.items = new Object[8];
+        this.items = new Object[getSuitableLength(items)];
+
         int index = 0;
         for (Object item : items) {
-            if (index == this.items.length) {
-                this.items = Arrays.copyOf(
-                        this.items, this.items.length << 1
-                );
-            }
-            this.items[index] = item;
+            this.items[index++] = item;
             length++;
-            index++;
         }
+    }
+
+    /**
+     * Calculates the length of the given iterable.
+     *
+     * @param iterable to calculate length
+     * @return iterable length
+     */
+    private int getSuitableLength(Iterable<?> iterable) {
+        int length = 0;
+        for (Object ignored : iterable) length++;
+        return length;
     }
 
     /**
@@ -58,8 +67,12 @@ public class Tuple implements Iterable<Object> {
      *
      * @param index of the item
      * @return item at given index
+     * @exception IndexErrorException thrown when index is not suitable
      */
-    public Object get(int index) {
+    public Object get(int index) throws IndexErrorException {
+        if (length == 0 || index < 0 || index >= length) {
+            throw new IndexErrorException();
+        }
         return items[index];
     }
 
@@ -131,13 +144,12 @@ public class Tuple implements Iterable<Object> {
         StringBuilder str = new StringBuilder();
         str.append("(");
 
-        for (int i = 0; i < length; i++) {
-            if (items[i].getClass() == String.class) {
-                str.append(String.format("'%s'", items[i]));
+        for (Object item : items) {
+            if (item.getClass() == String.class) {
+                str.append(String.format("'%s', ", item));
             } else {
-                str.append(items[i]);
+                str.append(item + ", ");
             }
-            str.append(", ");
         }
 
         if (items.length > 0) {

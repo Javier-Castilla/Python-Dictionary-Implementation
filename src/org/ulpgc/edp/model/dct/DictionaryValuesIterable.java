@@ -2,6 +2,7 @@ package org.ulpgc.edp.model.dct;
 
 import java.util.Arrays;
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 import java.util.Objects;
 
 /**
@@ -9,7 +10,7 @@ import java.util.Objects;
  * This class represents a dynamic view of the dictionary values.
  *
  * @author Javier Castilla
- * @version 15-03-2024
+ * @version 22-03-2024
  */
 class DictionaryValuesIterable implements Iterable<Object> {
     private Dictionary dict;
@@ -19,6 +20,15 @@ class DictionaryValuesIterable implements Iterable<Object> {
      */
     DictionaryValuesIterable(Dictionary dict) {
         this.dict = dict;
+    }
+
+    /**
+     * Returns the length of the values set of the dictionary.
+     *
+     * @return length of dynamic view
+     */
+    public int length() {
+        return dict.size();
     }
 
     /**
@@ -51,23 +61,24 @@ class DictionaryValuesIterable implements Iterable<Object> {
          */
         @Override
         public boolean hasNext() {
-            return index < length && node != null && dict.indexes()[node.index()] != -1;
+            return index < length && node != null && node.index() != -1;
         }
 
         /**
          * Method that returns the value iterating upon the items array.
          *
          * @return the next value
+         * @exception NoSuchElementException when there are no more items to iterate
          */
         @Override
-        public Object next() {
+        public Object next() throws NoSuchElementException {
             if (hasNext()) {
                 Object value = node.value();
                 node = dict.entries()[++index];
 
                 return value;
             }
-            throw new java.util.NoSuchElementException();
+            throw new NoSuchElementException();
         }
     }
 
@@ -113,11 +124,10 @@ class DictionaryValuesIterable implements Iterable<Object> {
         for (Object value : this) {
             System.out.println(value);
             if (value.getClass() == String.class) {
-                str.append(String.format("'%s'", value));
+                str.append(String.format("'%s', ", value));
             } else {
-                str.append(value);
+                str.append(value + ", ");
             }
-            str.append(", ");
         }
 
         if (dict.size() != 0) {
