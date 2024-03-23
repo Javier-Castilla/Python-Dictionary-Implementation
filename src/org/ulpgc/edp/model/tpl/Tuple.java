@@ -1,5 +1,7 @@
 package org.ulpgc.edp.model.tpl;
 
+import org.ulpgc.edp.exceptions.IndexErrorException;
+
 import java.util.Arrays;
 import java.util.Iterator;
 
@@ -8,7 +10,7 @@ import java.util.Iterator;
  * once it is created.
  *
  * @author Javier Castilla
- * @version 15-03-2024
+ * @version 22-03-2024
  */
 public class Tuple implements Iterable<Object> {
     private Object[] items;
@@ -47,7 +49,7 @@ public class Tuple implements Iterable<Object> {
      */
     private int getSuitableLength(Iterable<?> iterable) {
         int length = 0;
-        for (Object item : iterable) length++;
+        for (Object ignored : iterable) length++;
         return length;
     }
 
@@ -65,10 +67,11 @@ public class Tuple implements Iterable<Object> {
      *
      * @param index of the item
      * @return item at given index
+     * @exception IndexErrorException thrown when index is not suitable
      */
-    public Object get(int index) {
-        if (index < 0 || index >= length) {
-            throw new IndexOutOfBoundsException();
+    public Object get(int index) throws IndexErrorException {
+        if (length == 0 || index < 0 || index >= length) {
+            throw new IndexErrorException();
         }
         return items[index];
     }
@@ -142,7 +145,6 @@ public class Tuple implements Iterable<Object> {
         str.append("(");
 
         for (Object item : items) {
-            if (item == null) continue;
             if (item.getClass() == String.class) {
                 str.append(String.format("'%s', ", item));
             } else {

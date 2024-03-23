@@ -5,8 +5,16 @@ package org.ulpgc.edp.exceptions;
  * given key is not contained in it.
  *
  * @author Javier Castilla
+ * @version 22-03-2024
  */
 public class KeyErrorException extends RuntimeException {
+
+    /**
+     * Constructor by default, no message needed.
+     */
+    public KeyErrorException() {
+        this("");
+    }
 
     /**
      * Constructor of the class given a message.

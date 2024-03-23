@@ -7,11 +7,16 @@ import org.ulpgc.edp.model.dct.*;
 import org.ulpgc.edp.model.tpl.*;
 import org.ulpgc.edp.tests.*;
 
+import java.util.Iterator;
+
 @RunWith(Suite.class)
 @SuiteClasses({
         TestEmptyDictionary.class,
         TestOneItemDictionary.class,
-        TestManyItemsDictionary.class
+        TestManyItemsDictionary.class,
+        TestDifferentItemsDictionary.class,
+        TestDictionaryConstructors.class,
+        TestTuple.class
 })
 
 public class Main {
@@ -26,7 +31,10 @@ public class Main {
         // Comment the lines below to make your own tests.
         //org.junit.runner.JUnitCore.main("org.ulpgc.edp.control.Main");
 
-        // Real example. Get pass grades from specific subject and the students names
+        // =====================================================================
+
+        // Real example.
+        // Get passed grades from specific subject and the students names.
         Dictionary subjects = new Dictionary(
                 "40953",
                 new Tuple("Fundamentos de Programación 1", 1, 6),
@@ -52,7 +60,8 @@ public class Main {
                 )
         );
 
-        System.out.println("Visualizing the created dictionaries separately");
+        System.out.println("REAL EXAMPLE OF THE USE OF DICTIONARIES"
+                + "Visualizing the created dictionaries separately");
         System.out.println(subjects + "\n");
         System.out.println(students + "\n");
         System.out.println(grades + "\n");
@@ -66,17 +75,10 @@ public class Main {
         Dictionary result3 = gradesExample(tuple, "12345", false);
         Dictionary result4 = gradesExample(tuple, "40953", false);
 
-        System.out.println("\nVisualizing the RESULT1");
-        System.out.println(result1);
-
-        System.out.println("\nVisualizing the RESULT2");
-        System.out.println(result2);
-
-        System.out.println("\nVisualizing the RESULT3");
-        System.out.println(result3);
-
-        System.out.println("\nVisualizing the RESULT4");
-        System.out.println(result4);
+        System.out.println("\nVisualizing the RESULT1\n" + result1);
+        System.out.println("\nVisualizing the RESULT2\n" + result2);
+        System.out.println("\nVisualizing the RESULT3\n" + result3);
+        System.out.println("\nVisualizing the RESULT4\n" + result4);
 
         // Make tests with main methods and prints result in csv format.
         // Parameter notes millions of elements to test.

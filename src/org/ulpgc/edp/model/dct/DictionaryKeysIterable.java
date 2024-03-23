@@ -2,6 +2,7 @@ package org.ulpgc.edp.model.dct;
 
 import java.util.Arrays;
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 import java.util.Objects;
 
 /**
@@ -9,7 +10,7 @@ import java.util.Objects;
  * This class represents a dynamic view of the dictionary keys.
  *
  * @author Javier Castilla
- * @version 15-03-2024
+ * @version 22-03-2024
  */
 class DictionaryKeysIterable implements Iterable<Object> {
     private Dictionary dict;
@@ -66,15 +67,16 @@ class DictionaryKeysIterable implements Iterable<Object> {
          * Method that returns the key iterating upon the items array.
          *
          * @return the next key
+         * @exception NoSuchElementException when there are no more items to iterate
          */
         @Override
-        public Object next() {
+        public Object next() throws NoSuchElementException {
             if (hasNext()) {
                 Object key = node.key();
                 node = dict.entries()[++index];
                 return key;
             }
-            throw new java.util.NoSuchElementException();
+            throw new NoSuchElementException();
         }
     }
 

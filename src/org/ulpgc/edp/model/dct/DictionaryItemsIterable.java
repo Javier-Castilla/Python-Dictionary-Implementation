@@ -4,6 +4,7 @@ import org.ulpgc.edp.model.tpl.*;
 
 import java.util.Arrays;
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 import java.util.Objects;
 
 /**
@@ -11,7 +12,7 @@ import java.util.Objects;
  * This class represents a dynamic view of dictionary items.
  *
  * @author Javier Castilla
- * @version 15-03-2024
+ * @version 22-03-2024
  */
 class DictionaryItemsIterable implements Iterable<Tuple> {
     private Dictionary dict;
@@ -69,16 +70,17 @@ class DictionaryItemsIterable implements Iterable<Tuple> {
          * Method that returns the entry iterating upon the items array.
          *
          * @return the next pair
+         * @exception NoSuchElementException when there are no more items to iterate
          */
         @Override
-        public Tuple next() {
+        public Tuple next() throws NoSuchElementException {
             if (hasNext()) {
                 Tuple returnedItems = new Tuple(node.key(), node.value());
                 node = dict.entries()[++index];
 
                 return returnedItems;
             }
-            throw new java.util.NoSuchElementException();
+            throw new NoSuchElementException();
         }
     }
 

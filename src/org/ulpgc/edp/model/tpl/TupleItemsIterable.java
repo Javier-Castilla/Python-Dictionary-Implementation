@@ -8,7 +8,7 @@ import java.util.NoSuchElementException;
  * This class represents a dynamic view of the tuple items.
  *
  * @author Javier Castilla
- * @version 15-03-2024
+ * @version 22-03-2024
  */
 class TupleItemsIterable implements Iterable<Object> {
     private Tuple tuple;
@@ -66,9 +66,10 @@ class TupleItemsIterable implements Iterable<Object> {
          * Method that returns the item iterating upon the items array of the tuple.
          *
          * @return the next item
+         * @exception NoSuchElementException when there are no more items to iterate
          */
         @Override
-        public Object next() {
+        public Object next() throws NoSuchElementException {
             if (hasNext()) {
                 Object item = tuple.items()[index];
                 index++;

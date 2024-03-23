@@ -23,7 +23,7 @@ import java.util.Objects;
  * @author Esteban Trujillo
  * @author Elena Artiles
  * @see Tuple
- * @version 15-03-2024
+ * @version 22-03-2024
  */
 public class Dictionary implements Iterable<Object> {
     private static final double OV_FACTOR = 0.66;

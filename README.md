@@ -33,7 +33,6 @@ public static void main(String[] args) {
         // Get an element from the dictionary
         System.out.println(myDict.get("key1")); // Will print 1
 }
-
 ```
 
 ## Tuple
@@ -58,6 +57,8 @@ public static void main(String[] args) {
         System.out.println(otherTuple.equals(myTuple));  // Will print true
 }
 ```
+
+For a more real example, see Main Class contained in org.ulpgc.edp.control package.
 
 ## Documentation
 

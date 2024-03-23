@@ -1,11 +1,13 @@
 package org.ulpgc.edp.model.dct;
 
+import java.util.Arrays;
+
 /**
  * Node class used to storage a pair key - value and its index of and indexes
  * hash table.
  *
  * @author Javier Castilla
- * @version 15-03-2024
+ * @version 22-03-2024
  */
 class Node {
     private Object key, value;
@@ -105,6 +107,9 @@ class Node {
         } else if (item.getClass() == String.class) {
             return String.format("'%s'", item);
         } else {
+            if (item instanceof Object[]) {
+                return Arrays.toString((Object[]) item);
+            }
             return item.toString();
         }
     }

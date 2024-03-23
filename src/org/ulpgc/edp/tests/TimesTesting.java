@@ -7,11 +7,11 @@ import org.ulpgc.edp.model.dct.Dictionary;
  * The class creates a file with the time of execution.
  *
  * @author Javier Castilla
- * @version 15-03-2024
+ * @version 22-03-2024
  */
 public class TimesTesting {
     private static final String SEPARATOR = "\n=============================================\n";
-    private static final String HEADER = "\nsize;miliseconds;seconds";
+    private static final String HEADER = "\nsize;milliseconds;seconds";
 
     /**
      * Static method used to test dictionary insert method rate.
