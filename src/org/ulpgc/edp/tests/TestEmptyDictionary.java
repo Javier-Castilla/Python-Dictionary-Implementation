@@ -37,52 +37,30 @@ public class TestEmptyDictionary {
     }
 
     /**
-     * Test about empty dictionary put method. Checks size.
+     * Test about empty dictionary put method.
      */
     @Test
-    public void testPut1() {
+    public void testPut() {
         dictionary.put("1", 1);
         int dictionaryLen = dictionary.size();
+
         assertEquals(
                 "Wrong size after inserting new pair into empty dictionary",
                 1, dictionaryLen
         );
-    }
 
-    /**
-     * Test about empty dictionary put method. Checks added value.
-     */
-    @Test
-    public void testPut2() {
-        dictionary.put("1", 1);
         Object value = dictionary.get("1");
         assertEquals(
                 "Wrong value after inserting new pair into empty dictionary",
                 1, value
         );
-    }
 
-    /**
-     * Test about empty dictionary put method. Checks added value with
-     * setDefault method.
-     */
-    @Test
-    public void testPut3() {
-        dictionary.put("1", 1);
-        Object value = dictionary.setDefault("1");
+        value = dictionary.setDefault("1");
         assertEquals(
                 "Wrong value after inserting new pair into empty dictionary",
-                1, value
+                "1", value
         );
-    }
 
-    /**
-     * Test about empty dictionary put method. Checks if dictionary contains
-     * added key - value.
-     */
-    @Test
-    public void testPut4() {
-        dictionary.put("1", 1);
         assertTrue(
                 "True expected",
                 dictionary.containsKey("1")
@@ -90,49 +68,28 @@ public class TestEmptyDictionary {
     }
 
     /**
-     * Test about empty dictionary update method. Checks size.
+     * Test about empty dictionary update method.
      */
     @Test
-    public void testUpdate1() {
+    public void testUpdate() {
         Dictionary otherDictionary = new Dictionary();
+
         for (int i = 0; i < 4; i++) {
             otherDictionary.put(i, i);
         }
+
         dictionary.update(otherDictionary);
         int dictionaryLength = dictionary.size();
         assertEquals(
                 "Wrong size after updating empty dictionary",
                 4, dictionaryLength
         );
-    }
 
-    /**
-     * Test about empty dictionary update method. Checks dictionary string.
-     */
-    @Test
-    public void testUpdate2() {
-        Dictionary otherDictionary = new Dictionary();
-        for (int i = 0; i < 4; i++) {
-            otherDictionary.put(i, i);
-        }
-        dictionary.update(otherDictionary);
-        String str = dictionary.toString();
         assertEquals(
                 "Wrong values after updating empty dictionary",
-                "{0: 0, 1: 1, 2: 2, 3: 3}", str
+                "{0: 0, 1: 1, 2: 2, 3: 3}", dictionary.toString()
         );
-    }
 
-    /**
-     * Test about empty dictionary update method. Checks popItem returned value.
-     */
-    @Test
-    public void testUpdate3() throws KeyErrorException {
-        Dictionary otherDictionary = new Dictionary();
-        for (int i = 0; i < 4; i++) {
-            otherDictionary.put(i, i);
-        }
-        dictionary.update(otherDictionary);
         Tuple value = dictionary.popItem();
         assertEquals(
                 "Wrong last item",
@@ -141,11 +98,19 @@ public class TestEmptyDictionary {
     }
 
     /**
-     * Test about empty dictionary copy method. Checks dictionaries equality.
+     * Test about empty dictionary copy method.
      */
     @Test
-    public void testCopy1() {
+    public void testCopy() {
         Dictionary dictionaryCopy = dictionary.copy();
+
+        int dictionaryCopyLength = dictionaryCopy.size();
+        assertEquals(
+                "Wrong size after copying empty dictionary",
+                0, dictionaryCopyLength
+
+        );
+
         assertTrue(
                 "True expected",
                 dictionary.equals(dictionaryCopy)
@@ -153,39 +118,19 @@ public class TestEmptyDictionary {
     }
 
     /**
-     * Test about empty dictionary copy method. Checks size.
+     * Test about empty dictionary setDefault method.
      */
     @Test
-    public void testCopy2() {
-        Dictionary dictionaryCopy = dictionary.copy();
-        int dictionaryCopyLength = dictionaryCopy.size();
-        assertEquals(
-                "Wrong size after copying empty dictionary",
-                0, dictionaryCopyLength
-
-        );
-    }
-
-    /**
-     * Test about empty dictionary setDefault method. Checks returned value
-     * from inserting non-existing pair.
-     */
-    @Test
-    public void testSetDefault1() {
+    public void testSetDefault() {
         Object value = dictionary.setDefault("Test");
         assertEquals(
                 "Wrong value",
                 null, value
         );
-    }
 
-    /**
-     * Test about empty dictionary setDefault method. Checks returned value
-     * from inserting non-existing pair.
-     */
-    @Test
-    public void testSetDefault2() {
-        Object value = dictionary.setDefault("Test", 10);
+        dictionary.pop("Test");
+
+        value = dictionary.setDefault("Test", 10);
         assertEquals(
                 "Wrong value",
                 10, value
@@ -193,8 +138,7 @@ public class TestEmptyDictionary {
     }
 
     /**
-     * Test about empty dictionary get method. Checks default value if
-     * key is not contained.
+     * Test about empty dictionary get method.
      */
     @Test
     public void testGet1() {
@@ -203,15 +147,8 @@ public class TestEmptyDictionary {
                 "Wrong value",
                 100, value
         );
-    }
 
-    /**
-     * Test about empty dictionary get method. Checks default value if
-     * key is not contained.
-     */
-    @Test
-    public void testGet2() {
-        Object value = dictionary.get("Test");
+        value = dictionary.get("Test");
         assertEquals(
                 "Wrong value",
                 null, value
@@ -219,7 +156,7 @@ public class TestEmptyDictionary {
     }
 
     /**
-     * Test about empty dictionary keys method. Checks keys string.
+     * Test about empty dictionary keys method.
      */
     @Test
     public void testKeys() {
@@ -231,7 +168,7 @@ public class TestEmptyDictionary {
     }
 
     /**
-     * Test about empty dictionary values method. Checks values string.
+     * Test about empty dictionary values method.
      */
     @Test
     public void testValues() {
@@ -243,7 +180,7 @@ public class TestEmptyDictionary {
     }
 
     /**
-     * Test about empty dictionary items method. Checks items string.
+     * Test about empty dictionary items method.
      */
     @Test
     public void testItems() {
@@ -255,10 +192,10 @@ public class TestEmptyDictionary {
     }
 
     /**
-     * Test about empty dictionary containsKey method. Checks a non-existing key.
+     * Test about empty dictionary containsKey method.
      */
     @Test
-    public void testContainsKey1() {
+    public void testContainsKey() {
         assertFalse(
                 "False expected",
                 dictionary.containsKey("key")
@@ -266,37 +203,22 @@ public class TestEmptyDictionary {
     }
 
     /**
-     * Test about empty dictionary equals method. Checks equality with
+     * Test about empty dictionary equals method.
      * dictionary copy.
      */
     @Test
-    public void testEquals1() {
+    public void testEquals() {
         Dictionary otherDictionary = new Dictionary();
         assertTrue(
                 "True expected after comparing dictionary copy",
                 dictionary.equals(otherDictionary)
         );
-    }
 
-    /**
-     * Test about empty dictionary equals method. Checks equality with
-     * self dictionary.
-     */
-    @Test
-    public void testEquals2() {
         assertTrue(
                 "True expected after comparing self dictionary",
                 dictionary.equals(dictionary)
         );
-    }
 
-    /**
-     * Test about empty dictionary equals method. Checks equality with
-     * non-equal dictionary.
-     */
-    @Test
-    public void testEquals3() {
-        Dictionary otherDictionary = new Dictionary();
         otherDictionary.put(1, 1);
         assertFalse(
                 "False expected after comparing non equal dictionary",
@@ -305,26 +227,26 @@ public class TestEmptyDictionary {
     }
 
     /**
-     * Test about empty dictionary getItem method. Checks if exception is thrown.
+     * Test about empty dictionary getItem method.
      */
-    @Test(expected = KeyErrorException.class)
-    public void testGetNoneExistingKey() throws KeyErrorException {
+    @Test(expected = KeyError.class)
+    public void testGetNoneExistingKey() throws KeyError {
         dictionary.getItem("1");
     }
 
     /**
-     * Test about empty dictionary pop method. Checks if exception is thrown.
+     * Test about empty dictionary pop method.
      */
-    @Test(expected = KeyErrorException.class)
-    public void tesPop() throws KeyErrorException {
+    @Test(expected = KeyError.class)
+    public void tesPopNonExistingKey() throws KeyError {
         dictionary.pop("1");
     }
 
     /**
-     * Test about empty dictionary popItem method. Checks if exception is thrown.
+     * Test about empty dictionary popItem method.
      */
-    @Test(expected = KeyErrorException.class)
-    public void testPopItem() throws KeyErrorException {
+    @Test(expected = KeyError.class)
+    public void testPopItem() throws KeyError {
         dictionary.popItem();
     }
 }

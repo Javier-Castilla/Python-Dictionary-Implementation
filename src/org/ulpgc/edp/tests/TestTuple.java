@@ -22,7 +22,7 @@ public class TestTuple {
 
         assertEquals(
                 "Wrong size after initializing empty tuple",
-                0, tuple.length()
+                0, tuple.size()
         );
     }
 
@@ -42,8 +42,8 @@ public class TestTuple {
     /**
      * Test about empty tuple exception thrown.
      */
-    @Test (expected = IndexErrorException.class)
-    public void testEmptyTuple3() throws IndexErrorException {
+    @Test (expected = IndexError.class)
+    public void testEmptyTuple3() throws IndexError {
         Tuple tuple = new Tuple();
         tuple.get(0);
     }
@@ -57,7 +57,7 @@ public class TestTuple {
 
         assertEquals(
                 "Wrong size after initializing many items tuple",
-                5, tuple.length()
+                5, tuple.size()
         );
     }
 
@@ -100,7 +100,7 @@ public class TestTuple {
 
         assertEquals(
                 "Wrong size after initializing many items tuple",
-                2, tuple.length()
+                2, tuple.size()
         );
     }
 
@@ -165,7 +165,7 @@ public class TestTuple {
 
         assertEquals(
                 "Wrong size after initializing tuple from iterable",
-                5, tuple.length()
+                5, tuple.size()
         );
 
         assertEquals(

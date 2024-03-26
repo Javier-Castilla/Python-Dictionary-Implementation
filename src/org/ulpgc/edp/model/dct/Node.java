@@ -1,6 +1,7 @@
 package org.ulpgc.edp.model.dct;
 
 import java.util.Arrays;
+import java.util.Objects;
 
 /**
  * Node class used to storage a pair key - value and its index of and indexes
@@ -78,6 +79,30 @@ class Node {
      */
     void index(int index) {
         this.index = index;
+    }
+
+    /**
+     * Compares another object with the current one.
+     *
+     * @param object to compare
+     * @return true if objects are equal else false
+     */
+    @Override
+    public boolean equals(Object object) {
+        if (this == object) return true;
+        if (object == null || getClass() != object.getClass()) return false;
+        Node node = (Node) object;
+        return Objects.equals(key, node.key) && Objects.equals(value, node.value);
+    }
+
+    /**
+     * Calculates and returns the hashCode value.
+     *
+     * @return hashCode value
+     */
+    @Override
+    public int hashCode() {
+        return Objects.hash(key, value, index);
     }
 
     /**

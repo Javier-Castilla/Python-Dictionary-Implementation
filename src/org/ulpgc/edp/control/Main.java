@@ -7,8 +7,6 @@ import org.ulpgc.edp.model.dct.*;
 import org.ulpgc.edp.model.tpl.*;
 import org.ulpgc.edp.tests.*;
 
-import java.util.Iterator;
-
 @RunWith(Suite.class)
 @SuiteClasses({
         TestEmptyDictionary.class,
@@ -23,41 +21,41 @@ public class Main {
     public static final int LIMIT = 16777216;
     public static final String SEPARATOR = "\n=============================================\n";
     static final String URL = "To access this Dictionary documentation you can" +
-            " visit the Documentation Website with the URL given in" +
-            " doc/DocumentationWeb";
+            " visit the Documentation Website with next URL:" +
+            " https://javier-castilla.github.io/Java-own-Python-dictionary-implementation-DOCUMENTATION/";
     public static void main(String[] args) {
         System.out.printf("\u001B[1;33m%s\u001B[m\n%n", URL);
 
         // Comment the lines below to make your own tests.
-        //org.junit.runner.JUnitCore.main("org.ulpgc.edp.control.Main");
+        org.junit.runner.JUnitCore.main("org.ulpgc.edp.control.Main");
 
         // =====================================================================
 
         // Real example.
         // Get passed grades from specific subject and the students names.
         Dictionary subjects = new Dictionary(
-                "40953",
-                new Tuple("Fundamentos de Programación 1", 1, 6),
-                "12345",
-                new Tuple("Matemáticas", 2, 9)
+                new Tuple("40953",
+                new Tuple("Fundamentos de Programación 1", 1, 6)),
+                new Tuple("12345",
+                new Tuple("Matemáticas", 2, 9))
         );
         Dictionary students = new Dictionary(
-                "40444444X", "Pepíto Grillo",
-                "40555555Y", "María López",
-                "40666666M", "Javier Castilla"
+                new Tuple("40444444X", "Pepíto Grillo"),
+                new Tuple("40555555Y", "María López"),
+                new Tuple("40666666M", "Javier Castilla")
         );
         Dictionary grades = new Dictionary(
-                "40953",
+                new Tuple("40953",
                 new Dictionary(
-                        "40444444X", 7.5,
-                        "40555555Y", 4.0
-                ),
-                "12345",
+                        new Tuple("40444444X", 7.5),
+                        new Tuple("40555555Y", 4.0)
+                )),
+                new Tuple("12345",
                 new Dictionary(
-                        "40444444X", 5.5,
-                        "40555555Y", 8.0,
-                        "40666666M", 7.0
-                )
+                        new Tuple("40444444X", 5.5),
+                        new Tuple("40555555Y", 8.0),
+                        new Tuple("40666666M", 7.0)
+                ))
         );
 
         System.out.println("REAL EXAMPLE OF THE USE OF DICTIONARIES"
@@ -87,6 +85,15 @@ public class Main {
         //TimesTesting.doTestPop(2);
     }
 
+    /**
+     * Example case of use method. It returns a dictionary containing the
+     * students with the specified grades from a subject with a given id.
+     *
+     * @param information
+     * @param subjectId
+     * @param passedGrades
+     * @return new dictionary with filtered students
+     */
     public static Dictionary gradesExample(
             Tuple information, String subjectId, boolean passedGrades
     ) {

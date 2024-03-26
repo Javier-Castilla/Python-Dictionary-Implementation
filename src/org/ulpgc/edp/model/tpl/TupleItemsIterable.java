@@ -4,7 +4,7 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 /**
- * Iterable class used to iterate over the Tuple Items.
+ * Iterable class used to iterate over the tuple items.
  * This class represents a dynamic view of the tuple items.
  *
  * @author Javier Castilla
@@ -12,7 +12,6 @@ import java.util.NoSuchElementException;
  */
 class TupleItemsIterable implements Iterable<Object> {
     private Tuple tuple;
-    private int length;
 
     /**
      * Constructor of the iterable class.
@@ -29,7 +28,7 @@ class TupleItemsIterable implements Iterable<Object> {
      * @return length of dynamic view
      */
     public int length() {
-        return tuple.length();
+        return tuple.size();
     }
 
     /**
@@ -59,7 +58,7 @@ class TupleItemsIterable implements Iterable<Object> {
          */
         @Override
         public boolean hasNext() {
-            return index < tuple.length() && tuple.items()[index] != null;
+            return index < tuple.size() && tuple.items()[index] != null;
         }
 
         /**
