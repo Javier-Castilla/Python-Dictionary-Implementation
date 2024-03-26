@@ -7,8 +7,6 @@ import org.ulpgc.edp.model.dct.*;
 import org.ulpgc.edp.model.tpl.*;
 import org.ulpgc.edp.tests.*;
 
-import java.util.ArrayList;
-
 @RunWith(Suite.class)
 @SuiteClasses({
         TestEmptyDictionary.class,
@@ -23,8 +21,8 @@ public class Main {
     public static final int LIMIT = 16777216;
     public static final String SEPARATOR = "\n=============================================\n";
     static final String URL = "To access this Dictionary documentation you can" +
-            " visit the Documentation Website with the URL given in" +
-            " doc/DocumentationWeb";
+            " visit the Documentation Website with next URL:" +
+            " https://javier-castilla.github.io/Java-own-Python-dictionary-implementation-DOCUMENTATION/";
     public static void main(String[] args) {
         System.out.printf("\u001B[1;33m%s\u001B[m\n%n", URL);
 
@@ -85,10 +83,17 @@ public class Main {
         //TimesTesting.doTestPut(2);
         //TimesTesting.doTestGet(2);
         //TimesTesting.doTestPop(2);
-
-        Dictionary d = new Dictionary(new Tuple(new Integer[10], 10));
     }
 
+    /**
+     * Example case of use method. It returns a dictionary containing the
+     * students with the specified grades from a subject with a given id.
+     *
+     * @param information
+     * @param subjectId
+     * @param passedGrades
+     * @return new dictionary with filtered students
+     */
     public static Dictionary gradesExample(
             Tuple information, String subjectId, boolean passedGrades
     ) {
