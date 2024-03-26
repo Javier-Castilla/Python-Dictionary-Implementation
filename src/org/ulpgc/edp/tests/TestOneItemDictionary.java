@@ -25,40 +25,16 @@ public class TestOneItemDictionary {
     }
 
     /**
-     * Test about one item dictionary put and pop method. Checks size after
-     * adding item.
+     * Test about one item dictionary put method.
      */
     @Test
-    public void testPutAndPop1() {
+    public void testPut() {
         dictionary.put("2", 2);
-        int len = dictionary.size();
         assertEquals(
                 "Wrong size",
-                2, len
+                2, dictionary.size()
         );
-    }
 
-    /**
-     * Test about one item dictionary put and pop method. Checks size after
-     * doing pop.
-     */
-    @Test
-    public void testPutAndPop2() throws KeyErrorException {
-        dictionary.put("2", 2);
-        dictionary.pop("2");
-        int len = dictionary.size();
-        assertEquals(
-                "Wrong size",
-                1, len
-        );
-    }
-
-    /**
-     * Test about one item dictionary put and pop method. Checks last item introduced.
-     */
-    @Test
-    public void testPutAndPop3() throws KeyErrorException {
-        dictionary.put("2", 2);
         Tuple item = dictionary.popItem();
         assertEquals(
                 "Wrong value",
@@ -67,39 +43,34 @@ public class TestOneItemDictionary {
     }
 
     /**
-     * Test about one item dictionary put and pop method. Checks last value introduced.
+     * Test about one item dictionary pop method.
      */
     @Test
-    public void testPutAndPop4() throws KeyErrorException {
-        dictionary.put("2", 2);
-        Object value = dictionary.pop("2");
+    public void testPop() {
+        Object value = dictionary.pop("1");
+        assertEquals(
+                "Wrong size",
+                0, dictionary.size()
+        );
+
         assertEquals(
                 "Wrong value",
-                2, value
+                1, value
         );
     }
 
     /**
      * Test about one item dictionary put method when key is already in the dictionary.
-     * Checks size after replacing.
      */
     @Test
-    public void testReplace1() {
+    public void testReplace() {
         dictionary.put("1", 100);
         int dictionaryLength = dictionary.size();
         assertEquals(
                 "Wrong size",
                 1, dictionaryLength
         );
-    }
 
-    /**
-     * Test about one item dictionary put method when key is already in the dictionary.
-     * Checks value after replacing.
-     */
-    @Test
-    public void testReplace2() throws KeyErrorException {
-        dictionary.put("1", 100);
         Object value = dictionary.get("1");
         assertEquals(
                 "Wrong value",
@@ -108,37 +79,25 @@ public class TestOneItemDictionary {
     }
 
     /**
-     * Test about one item dictionary setDefault method. Checks size after updating.
+     * Test about one item dictionary setDefault method.
      */
     @Test
-    public void testUpdate1() {
+    public void testUpdate() {
         Dictionary otherDictionary = new Dictionary();
         for (int i = 0; i < 4; i++) {
             otherDictionary.put(i, i);
         }
+
         dictionary.update(otherDictionary);
         int dictionaryLength = dictionary.size();
         assertEquals(
                 "Wrong size",
                 5, dictionaryLength
         );
-    }
 
-    /**
-     * Test about one item dictionary setDefault method. Checks dictionary
-     * string after updating.
-     */
-    @Test
-    public void testUpdate2() {
-        Dictionary otherDictionary = new Dictionary();
-        for (int i = 0; i < 4; i++) {
-            otherDictionary.put(i, i);
-        }
-        dictionary.update(otherDictionary);
-        String str = dictionary.toString();
         assertEquals(
                 "The elements are not correct ",
-                "{'1': 1, 0: 0, 1: 1, 2: 2, 3: 3}", str
+                "{'1': 1, 0: 0, 1: 1, 2: 2, 3: 3}", dictionary.toString()
         );
     }
 
@@ -155,26 +114,16 @@ public class TestOneItemDictionary {
     }
 
     /**
-     * Test about one item dictionary clear method. Checks size clearing.
+     * Test about one item dictionary clear method.
      */
     @Test
-    public void testClear1() {
+    public void testClear() {
         dictionary.clear();
         int dictionaryLength = dictionary.size();
         assertEquals(
                 "Wrong size",
                 0, dictionaryLength
         );
-    }
-
-    /**
-     * Test about one item dictionary clear method. Checks if exception is thrown
-     * when used popItem.
-     */
-    @Test(expected = KeyErrorException.class)
-    public void testClear2() throws KeyErrorException {
-        dictionary.clear();
-        dictionary.popItem();
     }
 
     /**
@@ -217,49 +166,35 @@ public class TestOneItemDictionary {
     }
 
     /**
-     * Test about one item dictionary containsKey method. Checks an existing key.
+     * Test about one item dictionary containsKey method.
      */
     @Test
-    public void testContainsKey1() {
+    public void testContainsKey() {
         assertTrue(
-                "Wrong value",
+                "Wrong value with contained value",
                 dictionary.containsKey("1")
         );
-    }
 
-    /**
-     * Test about one item dictionary containsKey method. Checks a non-existing key.
-     */
-    @Test
-    public void testContainsKey2() {
         assertFalse(
-                "Wrong value",
+                "Wrong value with not-contained value",
                 dictionary.containsKey("test")
         );
     }
 
     /**
-     * Test about one item dictionary popItem method. Checks a returned item.
+     * Test about one item dictionary popItem method.
      */
     @Test
-    public void testPopItem1() throws KeyErrorException {
+    public void testPopItem() throws KeyError {
         Tuple values = dictionary.popItem();
         assertEquals(
                 "Wrong value",
                 new Tuple("1", 1), values
         );
-    }
 
-    /**
-     * Test about one item dictionary popItem method. Checks size after deleting.
-     */
-    @Test
-    public void testPopItem2() throws KeyErrorException {
-        dictionary.popItem();
-        int dictionaryLength = dictionary.size();
         assertEquals(
                 "Wrong size",
-                0, dictionaryLength
+                0, dictionary.size()
         );
     }
 
@@ -267,58 +202,36 @@ public class TestOneItemDictionary {
      * Test about one item dictionary getItem method. Checks if exception is
      * thrown with non-existing key.
      */
-    @Test(expected = KeyErrorException.class)
-    public void testGetNoneExistingKey() throws KeyErrorException {
+    @Test(expected = KeyError.class)
+    public void testGetNoneExistingKey() throws KeyError {
         dictionary.getItem("2");
     }
 
     /**
-     * Test about one item dictionary pop method. Checks removed value.
+     * Test about one item dictionary getItem method.
      */
     @Test
-    public void tesPop() throws KeyErrorException {
-        Object value = dictionary.pop("1");
+    public void testGetItem() {
+        Object value = dictionary.get("1");
         assertEquals(
-                "The element when removing a pair key - value " +
-                        "is not correct",
+                "Wrong value with contained element",
                 1, value
         );
     }
 
     /**
-     * Test about one item dictionary equals method. Checks other dictionary equality.
+     * Test about one item dictionary equals method.
      */
     @Test
     public void testEquals1() {
         Dictionary otherDictionary = new Dictionary();
         otherDictionary.put("1", 1);
-        assertTrue(
-                "Wrong value",
-                dictionary.equals(otherDictionary)
-        );
-    }
+        assertEquals("Wrong value", dictionary, otherDictionary);
+        otherDictionary.clear();
 
-    /**
-     * Test about one item dictionary equals method. Checks self dictionary equality.
-     */
-    @Test
-    public void testEquals2() {
-        assertTrue(
-                "Wrong value",
-                dictionary.equals(dictionary)
-        );
-    }
+        assertEquals("Wrong value", dictionary, dictionary);
 
-    /**
-     * Test about one item dictionary equals method. Checks copy dictionary equality.
-     */
-    @Test
-    public void testEquals3() {
-        Dictionary otherDictionary = new Dictionary();
         otherDictionary.put(1, 1);
-        assertFalse(
-                "Wrong value",
-                dictionary.equals(otherDictionary)
-        );
+        assertNotEquals("Wrong value", dictionary, otherDictionary);
     }
 }

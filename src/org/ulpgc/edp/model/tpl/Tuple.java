@@ -1,9 +1,10 @@
 package org.ulpgc.edp.model.tpl;
 
-import org.ulpgc.edp.exceptions.IndexErrorException;
+import org.ulpgc.edp.exceptions.IndexError;
 
 import java.util.Arrays;
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 /**
  * Tuple class used to storage elements, not allowing editing the data structure
@@ -13,16 +14,34 @@ import java.util.Iterator;
  * @version 22-03-2024
  */
 public class Tuple implements Iterable<Object> {
-    private Object[] items;
-    private int length;
+    private final Object[] items;
+    private int size;
 
     /**
-     * Constructor given dynamically all the items wanted to be into the tuple.
+     * Constructor given dynamically all the items wanted to be into the tuple
+     * or items into an array.
      *
      * @param items to add into de tuple
      */
     public Tuple(Object... items) {
-        this(Arrays.asList(items));
+        this(
+                () -> new Iterator<>() {
+                    private int index = 0;
+
+                    @Override
+                    public boolean hasNext() {
+                        return index < items.length;
+                    }
+
+                    @Override
+                    public Object next() {
+                        if (hasNext()) {
+                            return items[index++];
+                        }
+                        throw new NoSuchElementException();
+                    }
+                }
+        );
     }
 
     /**
@@ -37,7 +56,7 @@ public class Tuple implements Iterable<Object> {
         int index = 0;
         for (Object item : items) {
             this.items[index++] = item;
-            length++;
+            size++;
         }
     }
 
@@ -63,26 +82,36 @@ public class Tuple implements Iterable<Object> {
     }
 
     /**
+     * Returns the tuple length.
+     *
+     * @return tuple length
+     */
+    public int size() {
+        return size;
+    }
+
+    /**
      * Returns the element located in the specified index.
      *
      * @param index of the item
      * @return item at given index
-     * @exception IndexErrorException thrown when index is not suitable
+     * @exception IndexError if index is not suitable
      */
-    public Object get(int index) throws IndexErrorException {
-        if (length == 0 || index < 0 || index >= length) {
-            throw new IndexErrorException();
+    public Object get(int index) throws IndexError {
+        if (size == 0 || index < 0 || index >= size) {
+            throw new IndexError("tuple index out of range");
         }
         return items[index];
     }
 
     /**
-     * Returns the tuple length.
+     * Override method used to iterate over the tuple.
      *
-     * @return tuple length
+     * @return an iterator of the Tuple class
      */
-    public int length() {
-        return length;
+    @Override
+    public Iterator<Object> iterator() {
+        return new TupleItemsIterable(this).iterator();
     }
 
     /**
@@ -96,22 +125,19 @@ public class Tuple implements Iterable<Object> {
         if (this == object) return true;
         if (object == null || getClass() != object.getClass()) return false;
         Tuple other = (Tuple) object;
-        if (length() != other.length()) return false;
+        if (size() != other.size()) return false;
 
         Iterator<Object> it1 = iterator();
         Iterator<Object> it2 = other.iterator();
 
-        int counter = 0;
         while (it1.hasNext() && it2.hasNext()) {
             Object item1 = it1.next();
             Object item2 = it2.next();
 
             if (!item1.equals(item2)) return false;
-
-            counter += 2;
         }
 
-        return counter == this.length() * 2;
+        return true;
     }
 
     /**
@@ -122,16 +148,6 @@ public class Tuple implements Iterable<Object> {
     @Override
     public int hashCode() {
         return Arrays.hashCode(items);
-    }
-
-    /**
-     * Override method used to iterate over the Tuple.
-     *
-     * @return an iterator of the Tuple class
-     */
-    @Override
-    public Iterator<Object> iterator() {
-        return new TupleItemsIterable(this).iterator();
     }
 
     /**
@@ -148,7 +164,7 @@ public class Tuple implements Iterable<Object> {
             if (item.getClass() == String.class) {
                 str.append(String.format("'%s', ", item));
             } else {
-                str.append(item + ", ");
+                str.append(item).append(", ");
             }
         }
 

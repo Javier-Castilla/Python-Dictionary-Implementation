@@ -52,9 +52,9 @@ public class TestDictionaryConstructors {
             otherDictionary.put(i, i++ * 10);
         }
 
-        assertTrue(
+        assertEquals(
                 "Dictionaries must be equals",
-                dictionary.equals(otherDictionary)
+                dictionary, otherDictionary
         );
     }
 
@@ -68,11 +68,15 @@ public class TestDictionaryConstructors {
             otherDictionary.put(i, i + 1);
         }
 
-        Dictionary dictionary = new Dictionary(0, 1, 2, 3, 4, 5);
+        Dictionary dictionary = new Dictionary(
+                new Tuple(0, 1),
+                new Tuple(2, 3),
+                new Tuple(4, 5)
+        );
 
-        assertTrue(
+        assertEquals(
                 "Dictionaries must be equals",
-                dictionary.equals(otherDictionary)
+                dictionary, otherDictionary
         );
     }
 
@@ -88,9 +92,9 @@ public class TestDictionaryConstructors {
 
         Dictionary dictionary = new Dictionary(otherDictionary);
 
-        assertTrue(
+        assertEquals(
                 "Dictionaries must be equals",
-                dictionary.equals(otherDictionary)
+                dictionary, otherDictionary
         );
     }
 }

@@ -1,9 +1,7 @@
 package org.ulpgc.edp.model.dct;
 
-import java.util.Arrays;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
-import java.util.Objects;
 
 /**
  * Iterable class used to iterate over the dictionary values.
@@ -27,7 +25,7 @@ class DictionaryValuesIterable implements Iterable<Object> {
      *
      * @return length of dynamic view
      */
-    public int length() {
+    public int size() {
         return dict.size();
     }
 
@@ -94,6 +92,7 @@ class DictionaryValuesIterable implements Iterable<Object> {
         if (this == object) return true;
         if (object == null || getClass() != object.getClass()) return false;
         DictionaryValuesIterable other = (DictionaryValuesIterable) object;
+        if (size() != other.size()) return false;
         return toString().equals(other.toString());
     }
 
@@ -105,9 +104,10 @@ class DictionaryValuesIterable implements Iterable<Object> {
      */
     @Override
     public int hashCode() {
-        int result = Objects.hash(dict);
-        result = 11 * result + Arrays.hashCode(dict.indexes());
-        result = 11 * result + Arrays.hashCode(dict.entries());
+        int result = 0;
+        for (Object value : this) {
+            result += 11 * value.hashCode();
+        }
         return result;
     }
 
@@ -122,7 +122,6 @@ class DictionaryValuesIterable implements Iterable<Object> {
         str.append("DictionaryValues([");
 
         for (Object value : this) {
-            System.out.println(value);
             if (value.getClass() == String.class) {
                 str.append(String.format("'%s', ", value));
             } else {

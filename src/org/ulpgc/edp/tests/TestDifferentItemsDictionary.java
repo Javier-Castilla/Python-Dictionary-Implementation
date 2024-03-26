@@ -72,13 +72,10 @@ public class TestDifferentItemsDictionary {
                 "{'test': (1, 2, 3)}", dictionary.toString()
         );
 
-        Tuple innerTuple = (Tuple) dictionary.get("test");
-        for (int i = 0; i < 3; i++) {
-            assertEquals(
-                    "Wrong value from inner tuple",
-                    i + 1, innerTuple.get(i)
-            );
-        }
+        assertTrue(
+                "Dictionary inner tuple must be equal to previous tuple",
+                tuple.equals(dictionary.get("test"))
+        );
     }
 
     /**
@@ -116,7 +113,11 @@ public class TestDifferentItemsDictionary {
      */
     @Test
     public void testSeveralItemsDictionary3() {
-        Tuple otherTuple = new Tuple(new Dictionary(1, 2, 3, 4), "test");
+        Tuple otherTuple = new Tuple(
+                new Dictionary(
+                        new Tuple(1, 2), new Tuple(3, 4)
+                ), "test"
+        );
         dictionary.put("test", otherTuple);
 
         assertEquals(

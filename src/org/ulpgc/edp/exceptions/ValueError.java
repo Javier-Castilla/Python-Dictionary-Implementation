@@ -1,17 +1,17 @@
 package org.ulpgc.edp.exceptions;
 
 /**
- * Exception class thrown when indexes are not correct.
+ * Exception class thrown when an error related to given value occurs.
  *
  * @author Javier Castilla
  * @version 22-03-2024
  */
-public class IndexErrorException extends IndexOutOfBoundsException {
+public class ValueError extends RuntimeException {
 
     /**
      * Constructor by default, no message needed.
      */
-    public IndexErrorException() {
+    public ValueError() {
         this("");
     }
 
@@ -20,7 +20,7 @@ public class IndexErrorException extends IndexOutOfBoundsException {
      *
      * @param msg to show when the exception is thrown
      */
-    public IndexErrorException(String msg) {
+    public ValueError(String msg) {
         super(msg);
     }
 }

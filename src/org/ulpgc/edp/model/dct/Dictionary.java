@@ -2,9 +2,8 @@ package org.ulpgc.edp.model.dct;
 
 import org.ulpgc.edp.exceptions.*;
 import org.ulpgc.edp.model.tpl.*;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.Objects;
+
+import java.util.*;
 
 /**
  * Class which represents a dictionary data structure.
@@ -29,6 +28,7 @@ public class Dictionary implements Iterable<Object> {
     private static final double OV_FACTOR = 0.66;
     private static final int PERTURB_SHIFT = 5;
     private static final int INITIAL_SIZE = 8;
+    private static final Object NONE = "none";
     private Integer[] indexes;
     private Node[] items;
     private int size, lastIndex, mask;
@@ -44,55 +44,33 @@ public class Dictionary implements Iterable<Object> {
 
     /**
      * Constructor given an iterable of pairs key - value as tuples
-     * to put into the new dictionary.
+     * to put into the new dictionary. Length of tuples must be 2, nor mores
+     * neither less.
      *
      * @param items to put into the new dictionary
-     * @throws ValueErrorException if the elements contained
-     * into the iterable are not tuples or length of those elements is not 2
+     * @throws TypeError thrown if non Tuple object is found or first
+     * element of tuple is unhashable
+     * @throws ValueError thrown when a Tuple with length different from 2 is found
      * @author Javier Castilla
      */
-    public Dictionary(Iterable<?> items) throws ValueErrorException {
+    public Dictionary(Iterable<?> items) {
         initDictionary();
-
-        for (Object item : items) {
-            if (item.getClass() != Tuple.class) {
-                throw new ValueErrorException(
-                        "Pairs into iterable must be tuples"
-                );
-            }
-
-            Tuple pair = (Tuple) item;
-
-            if (pair.length() != 2) {
-                throw new ValueErrorException(
-                        "The size of the pair ("
-                        + pair.length() + ") differs from the expected (2)"
-                );
-            }
-            put(pair.get(0), pair.get(1));
-        }
+        update(items);
     }
 
     /**
-     * Constructor given some arguments dynamically. The first argument
-     * will be the key, the next one its value, and so on and so for.
-     * It is absolutely necessary an even number of arguments.
-     * @throws ValueErrorException if the number of elements is not even
+     * Constructor given some arguments dynamically as Tuples. The tuples must
+     * have a length of 2, nor more neither less. This is necessary because
+     * the first element will be the key and the second one its value.
+     *
+     * @throws TypeError thrown if non Tuple object is found or first
+     * element of tuple is unhashable
+     * @throws ValueError thrown when a Tuple with length different from 2 is found
      * @author Javier Castilla
      */
-    public Dictionary(Object... items) throws ValueErrorException {
+    public Dictionary(Object... items) {
         initDictionary();
-
-        if (items.length % 2 != 0) {
-            throw new ValueErrorException(
-                    "The number or arguments given does not match the" +
-                            " needed dimensions. It must be multiple of 2"
-            );
-        }
-
-        for (int i = 0; i < items.length - 1;) {
-            put(items[i++], items[i++]);
-        }
+        update(items);
     }
 
     /**
@@ -164,16 +142,38 @@ public class Dictionary implements Iterable<Object> {
      *
      * @param keys an iterable containing desire keys to add
      * @return a new dictionary containing given keys and null as values
+     * @throws TypeError thrown if some key is unhashable
      * @author Javier Castilla
      */
     public static Dictionary fromKeys(Iterable<?> keys) {
-        Dictionary newDictionary = new Dictionary();
+        return fromKeys(keys, null);
+    }
 
-        for (Object key : keys) {
-            newDictionary.put(key, null);
-        }
+    /**
+     * Static method that creates a new dictionary given some keys as an array
+     * or dynamic number of arguments. Value will be default as null.
+     *
+     * @param keys array containing all the keys desire to add
+     * @throws TypeError thrown if some key is unhashable
+     * @return a new dictionary containing all given keys and null as value
+     */
+    public static Dictionary fromKeys(Object... keys) {
+        return fromKeys(() -> new Iterator<>() {
+            private int index = 0;
 
-        return newDictionary;
+            @Override
+            public boolean hasNext() {
+                return index < keys.length;
+            }
+
+            @Override
+            public Object next() {
+                if (hasNext()) {
+                    return keys[index++];
+                }
+                throw new NoSuchElementException();
+            }
+        }, null);
     }
 
     /**
@@ -184,6 +184,7 @@ public class Dictionary implements Iterable<Object> {
      * @param keys an iterable containing desire keys to add
      * @param value to associate with the given keys
      * @return a new dictionary containing given keys and values
+     * @throws TypeError thrown if some key is unhashable
      * @author Javier Castilla
      */
     public static Dictionary fromKeys(Iterable<?> keys, Object value) {
@@ -197,26 +198,23 @@ public class Dictionary implements Iterable<Object> {
     }
 
     /**
-     * Static method that creates a new dictionary given some keys as an array.
-     * Value will be default as null.
+     * Inserts a pair key - value into the dictionary.
      *
-     * @param keys array containing all the keys desire to add
-     * @return a new dictionary containing all given keys and null as value
+     * @param key to store or update
+     * @param value associated to the key
+     * @throws TypeError thrown if key is unhashable
+     * @author Javier Castilla
      */
-    public static Dictionary fromKeys(Object[] keys) {
-        return Dictionary.fromKeys(Arrays.asList(keys));
-    }
+    public void put(Object key, Object value) {
+        if (
+                key instanceof Collection
+                        || key.getClass().isArray()
+                        || key.getClass() == Dictionary.class
+        ) {
+            throw new TypeError("unhashable type", key);
+        }
 
-    /**
-     * Static method that creates a new dictionary given some keys as an array
-     * and a value to associate with the given keys.
-     *
-     * @param keys array containing all the keys desire to add
-     * @param value to associate with the given keys
-     * @return a new dictionary containing all given keys with the given value
-     */
-    public static Dictionary fromKeys(Object[] keys, Object value) {
-        return Dictionary.fromKeys(Arrays.asList(keys), value);
+        addEntries(key, value, this.indexes, this.items);
     }
 
     /**
@@ -250,14 +248,15 @@ public class Dictionary implements Iterable<Object> {
     }
 
     /**
-     * Inserts a pair key - value into the dictionary.
+     * Removes the pair key - value associated to the given key.
+     * None element is returned when deleted.
+     * <b>If it is needed to know if the element was deleted,
+     * use {@link #pop(Object)} or {@link #pop(Object, Object)} instead</b>.
      *
-     * @param key to store or update
-     * @param value associated to the key
-     * @author Javier Castilla
+     * @param key
      */
-    public void put(Object key, Object value) {
-        addEntries(key, value, this.indexes, this.items);
+    public void del(Object key) {
+        pop(key, NONE);
     }
 
     /**
@@ -266,15 +265,15 @@ public class Dictionary implements Iterable<Object> {
      *
      * @param key to remove
      * @return the value of the removed pair key - value
-     * @throws KeyErrorException if the dictionary does not contain the given key
+     * @throws KeyError thrown if the dictionary does not contain the given key
      * @author Javier Castilla
      * @author Esteban Trujillo
      */
-    public Object pop(Object key) throws KeyErrorException {
-        Object result = pop(key, null);
+    public Object pop(Object key) {
+        Object result = pop(key, NONE);
 
-        if (result == null) {
-            throw new KeyErrorException(key.toString());
+        if (result == NONE) {
+            throw new KeyError(key);
         }
 
         return result;
@@ -285,30 +284,20 @@ public class Dictionary implements Iterable<Object> {
      * into the dictionary, a default value will be returned.
      *
      * @param key to remove from the dictionary
+     * @param defaultValue to return if the key is not contained
      * @return the value of the removed pair key - value
      * @author Javier Castilla
      */
     public Object pop(Object key, Object defaultValue) {
         int index = hash(key, indexes);
 
-        Integer itemIndex = indexes[hash(key, indexes)];
-        if (itemIndex == null) {
+        Integer itemIndex = indexes[index];
+        if (itemIndex == null || itemIndex == -1) {
             return defaultValue;
         }
 
-        return remove(index);
-    }
-
-    /**
-     * Private inner method used to remove a pair key - value located in the
-     * given index.
-     *
-     * @param index where the pair is located
-     * @return the removed value
-     * @author Javier Castilla
-     */
-    private Object remove(int index) {
-        Node node = items[indexes[index]];
+        if (itemIndex == lastIndex) lastIndex--;
+        Node node = items[itemIndex];
         node.index(-1);
         indexes[index] = -1;
         size--;
@@ -320,12 +309,12 @@ public class Dictionary implements Iterable<Object> {
      * Removes the last introduced pair key - value.
      *
      * @return the removed pair key - value
-     * @throws KeyErrorException if the dictionary is empty
+     * @throws KeyError thrown if the dictionary is empty
      * @author Javier Castilla
      */
-    public Tuple popItem() throws KeyErrorException {
+    public Tuple popItem() {
         if (size == 0) {
-            throw new KeyErrorException("The dictionary is empty");
+            throw new KeyError("'popItem(): dictionary is empty'");
         }
 
         Node node = items[lastIndex--];
@@ -341,29 +330,28 @@ public class Dictionary implements Iterable<Object> {
      * to avoid an exception, use {@link #get(Object)}  or
      * {@link #get(Object, Object)}.</b>
      *
-     * @param key to search the value
+     * @param key to search its value
      * @return the value in pair with the given key
-     * @throws KeyErrorException if the
+     * @throws KeyError thrown if the given key is not contained
      * @author Javier Castilla
      */
-    public Object getItem(Object key) throws KeyErrorException {
-        int index = hash(key, indexes);
+    public Object getItem(Object key) {
+        Object result = get(key, NONE);
 
-        Integer itemIndex = indexes[index];
-        if (itemIndex != null) {
-            return items[itemIndex].value();
+        if (result == NONE) {
+            throw new KeyError(key);
         }
 
-        throw new KeyErrorException(key.toString());
+        return result;
     }
 
     /**
      * Searches and returns the value paired with the given key.
-     * <b>This method could lead to confusions if some of the inserted values
+     * <b>This method could lead to ambiguity if some of the inserted values
      * were done as null. If not nullity of values could not be defended,
      * use {@link #get(Object, Object)} instead.</b>
      *
-     * @param key to search the value
+     * @param key to search its value
      * @return the value in pair with the given key if contained else null
      * @author Javier Castilla
      */
@@ -374,7 +362,7 @@ public class Dictionary implements Iterable<Object> {
     /**
      * Searches and returns the value in pair with the given key.
      *
-     * @param key to search the value
+     * @param key to search its value
      * @return the value in pair with the given key if contained else a default value
      * @author Javier Castilla
      */
@@ -382,7 +370,7 @@ public class Dictionary implements Iterable<Object> {
         int index = hash(key, indexes);
 
         Integer itemIndex = indexes[index];
-        if (itemIndex == null) {
+        if (itemIndex == null || itemIndex == -1) {
             return defaultValue;
         }
 
@@ -404,23 +392,23 @@ public class Dictionary implements Iterable<Object> {
     }
 
     /**
-     * Returns the value paired with the key if exists, else adds the
+     * Returns the value of the key if exists, else adds the
      * given pair key - value to the dictionary and returns that value.
      *
      * @param key to search or add
      * @param value to add if key not exists
-     * @return the value found or added
+     * @return the value of the found key or the value added
      * @author Javier Castilla
      */
     public Object setDefault(Object key, Object value) {
-        Object result = get(key);
+        Object result = get(key, NONE);
 
-        if (result == null) {
+        if (result == NONE) {
             put(key, value);
             return value;
         }
 
-        return result;
+        return key;
     }
 
     /**
@@ -428,11 +416,69 @@ public class Dictionary implements Iterable<Object> {
      * the dictionary given as a parameter has.
      *
      * @param dictionary to take items from
+     * @throws TypeError thrown if non Tuple object found or first
+     * element of tuple is unhashable
+     * @throws ValueError thrown when a Tuple with length different from 2 is found
      * @author Javier Castilla
      */
     public void update(Dictionary dictionary) {
-        for (Tuple item : dictionary.items()) {
-            put(item.get(0), item.get(1));
+        update(dictionary.items());
+    }
+
+    /**
+     * Updates the current dictionary with the elements given dynamically.
+     * Note that all the elements must be Tuples of 2 elements, nor more
+     * neither less.
+     *
+     * @param items to insert into the dictionary
+     * @throws TypeError thrown if non Tuple object found or first
+     * element of tuple is unhashable
+     * @throws ValueError thrown when a Tuple with length different from 2 is found
+     */
+    public void update(Object... items) {
+        update(() -> new Iterator<>() {
+            private int index = 0;
+            @Override
+            public boolean hasNext() {
+                return index < items.length;
+            }
+
+            @Override
+            public Tuple next() {
+                if (hasNext()) {
+                    return (Tuple) items[index++];
+                }
+                throw new NoSuchElementException();
+            }
+        });
+    }
+
+    /**
+     * Updates the current dictionary with all the elements given by the iterable.
+     * Elements into iterable must be tuples of length 2, nor mores neither less.
+     *
+     * @param items to iterate and take key - value from
+     * @throws TypeError thrown if non Tuple object is found or first
+     * element of tuple is unhashable
+     * @throws ValueError thrown when a Tuple with length different from 2 is found
+     */
+    public void update(Iterable<?> items) {
+        for (Object item : items) {
+            if (item.getClass() != Tuple.class) {
+                throw new TypeError(
+                        "unhashable type", item
+                );
+            }
+
+            Tuple entry = (Tuple) item;
+
+            if (entry.size() != 2) {
+                throw new ValueError(
+                        "The size of the tuple ("
+                                + entry.size() + ") differs from the expected (2)"
+                );
+            }
+            put(entry.get(0), entry.get(1));
         }
     }
 
@@ -470,8 +516,8 @@ public class Dictionary implements Iterable<Object> {
      * @author Javier Castilla
      */
     private int hash(Object key, Integer[] indexes) {
-        int index = key.hashCode() & mask;
         int perturb = key.hashCode();
+        int index = perturb & mask;
         Integer itemIndex = indexes[index];
 
         while (itemIndex != null) {
@@ -487,8 +533,10 @@ public class Dictionary implements Iterable<Object> {
     }
 
     /**
-     * Private method used to resize the dictionary when an overload factor
-     * (OV_FACTOR) is reached. The overload factor is originally defined as 2/3.
+     * Private method used to increments hash table of the dictionary when an
+     * overload factor (OV_FACTOR) is reached and rehashes the existing pairs.
+     * The overload factor is originally defined as 2/3.
+     *
      * @author Javier Castilla
      */
     private void resize() {
@@ -605,9 +653,10 @@ public class Dictionary implements Iterable<Object> {
      */
     @Override
     public int hashCode() {
-        int result = Objects.hash(size);
-        result = 31 * result + Arrays.hashCode(indexes);
-        result = 31 * result + Arrays.hashCode(items);
+        int result = 0;
+        for (Tuple item : items()) {
+            result += 5 * item.hashCode();
+        }
         return result;
     }
 
@@ -624,7 +673,7 @@ public class Dictionary implements Iterable<Object> {
 
         for (Node node : items) {
             if (node == null || node.index() == -1) continue;
-            str.append(node + ", ");
+            str.append(node).append(", ");
         }
 
         if (size != 0) {

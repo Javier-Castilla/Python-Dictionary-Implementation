@@ -2,10 +2,8 @@ package org.ulpgc.edp.model.dct;
 
 import org.ulpgc.edp.model.tpl.*;
 
-import java.util.Arrays;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
-import java.util.Objects;
 
 /**
  * Iterable class used to iterate over the dictionary items.
@@ -29,7 +27,7 @@ class DictionaryItemsIterable implements Iterable<Tuple> {
      *
      * @return length of dynamic view
      */
-    public int length() {
+    public int size() {
         return dict.size();
     }
 
@@ -70,10 +68,9 @@ class DictionaryItemsIterable implements Iterable<Tuple> {
          * Method that returns the entry iterating upon the items array.
          *
          * @return the next pair
-         * @exception NoSuchElementException when there are no more items to iterate
          */
         @Override
-        public Tuple next() throws NoSuchElementException {
+        public Tuple next() {
             if (hasNext()) {
                 Tuple returnedItems = new Tuple(node.key(), node.value());
                 node = dict.entries()[++index];
@@ -96,6 +93,7 @@ class DictionaryItemsIterable implements Iterable<Tuple> {
         if (this == object) return true;
         if (object == null || getClass() != object.getClass()) return false;
         DictionaryItemsIterable other = (DictionaryItemsIterable) object;
+        if (size() != other.size()) return false;
         return toString().equals(other.toString());
     }
 
@@ -107,9 +105,10 @@ class DictionaryItemsIterable implements Iterable<Tuple> {
      */
     @Override
     public int hashCode() {
-        int result = Objects.hash(dict);
-        result = 11 * result + Arrays.hashCode(dict.indexes());
-        result = 11 * result + Arrays.hashCode(dict.entries());
+        int result = 0;
+        for (Tuple item : this) {
+            result += 11 * item.hashCode();
+        }
         return result;
     }
 
