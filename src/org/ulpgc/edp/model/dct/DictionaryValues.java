@@ -8,15 +8,15 @@ import java.util.NoSuchElementException;
  * This class represents a dynamic view of the dictionary values.
  *
  * @author Javier Castilla
- * @version 22-03-2024
+ * @version 28-03-2024
  */
-class DictionaryValuesIterable implements Iterable<Object> {
-    private Dictionary dict;
+public class DictionaryValues implements Iterable<Object> {
+    private final Dictionary dict;
 
     /**
      * Constructor of the iterable class given a reference of a dictionary.
      */
-    DictionaryValuesIterable(Dictionary dict) {
+    DictionaryValues(Dictionary dict) {
         this.dict = dict;
     }
 
@@ -30,23 +30,41 @@ class DictionaryValuesIterable implements Iterable<Object> {
     }
 
     /**
+     * Checks if given value is contained into dictionary keys.
+     *
+     * @param value to check
+     * @return true it given value is contained else false
+     */
+    public boolean contains(Object value) {
+        for (Object dictValue : this) {
+            if (
+                    value == dictValue || (value != null && dictValue != null
+                            && value.equals(dictValue))
+            ) return true;
+        }
+
+        return false;
+    }
+
+    /**
      * Iterator method.
      *
      * @return an iterator
      */
     @Override
     public Iterator<Object> iterator() {
-        return new DictionaryValues();
+        return new DictionaryValuesIterator();
     }
 
     /**
      * Private inner class used to iterate over the dictionary values.
      */
-    private class DictionaryValues implements Iterator<Object> {
-        private int index, length;
+    private class DictionaryValuesIterator implements Iterator<Object> {
+        private int index;
+        private final int length;
         private Node node;
 
-        private DictionaryValues() {
+        private DictionaryValuesIterator() {
             this.index = 0;
             this.length = dict.entries().length;
             this.node = dict.entries()[index];
@@ -91,7 +109,7 @@ class DictionaryValuesIterable implements Iterable<Object> {
     public boolean equals(Object object) {
         if (this == object) return true;
         if (object == null || getClass() != object.getClass()) return false;
-        DictionaryValuesIterable other = (DictionaryValuesIterable) object;
+        org.ulpgc.edp.model.dct.DictionaryValues other = (org.ulpgc.edp.model.dct.DictionaryValues) object;
         if (size() != other.size()) return false;
         return toString().equals(other.toString());
     }
@@ -125,7 +143,7 @@ class DictionaryValuesIterable implements Iterable<Object> {
             if (value.getClass() == String.class) {
                 str.append(String.format("'%s', ", value));
             } else {
-                str.append(value + ", ");
+                str.append(value).append(", ");
             }
         }
 

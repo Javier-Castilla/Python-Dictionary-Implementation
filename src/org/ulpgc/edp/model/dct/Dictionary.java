@@ -2,8 +2,9 @@ package org.ulpgc.edp.model.dct;
 
 import org.ulpgc.edp.exceptions.*;
 import org.ulpgc.edp.model.tpl.*;
-
-import java.util.*;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 /**
  * Class which represents a dictionary data structure.
@@ -22,7 +23,7 @@ import java.util.*;
  * @author Esteban Trujillo
  * @author Elena Artiles
  * @see Tuple
- * @version 22-03-2024
+ * @version 28-03-2024
  */
 public class Dictionary implements Iterable<Object> {
     private static final double OV_FACTOR = 0.66;
@@ -86,6 +87,7 @@ public class Dictionary implements Iterable<Object> {
 
     /**
      * Clears all the dictionary, like if a new empty dictionary has been created.
+     *
      * @author Javier Castilla
      * @author Elena Artiles
      */
@@ -206,12 +208,14 @@ public class Dictionary implements Iterable<Object> {
      * @author Javier Castilla
      */
     public void put(Object key, Object value) {
-        if (
-                key instanceof Collection
-                        || key.getClass().isArray()
-                        || key.getClass() == Dictionary.class
-        ) {
-            throw new TypeError("unhashable type", key);
+        if (key != null) {
+            if (
+                    key instanceof Collection
+                            || key.getClass().isArray()
+                            || key.getClass() == Dictionary.class
+            ) {
+                throw new TypeError("unhashable type: null");
+            }
         }
 
         addEntries(key, value, this.indexes, this.items);
@@ -230,7 +234,7 @@ public class Dictionary implements Iterable<Object> {
     private void addEntries(
             Object key, Object value, Integer[] indexes, Node[] items
     ) {
-        int index = hash(key, indexes);
+        int index = (key == null) ? 0 : hash(key, indexes);
 
         Integer itemIndex = indexes[index];
         if (itemIndex != null) {
@@ -253,7 +257,7 @@ public class Dictionary implements Iterable<Object> {
      * <b>If it is needed to know if the element was deleted,
      * use {@link #pop(Object)} or {@link #pop(Object, Object)} instead</b>.
      *
-     * @param key
+     * @param key to delete
      */
     public void del(Object key) {
         pop(key, NONE);
@@ -289,7 +293,7 @@ public class Dictionary implements Iterable<Object> {
      * @author Javier Castilla
      */
     public Object pop(Object key, Object defaultValue) {
-        int index = hash(key, indexes);
+        int index = (key == null) ? 0 : hash(key, indexes);
 
         Integer itemIndex = indexes[index];
         if (itemIndex == null || itemIndex == -1) {
@@ -367,7 +371,7 @@ public class Dictionary implements Iterable<Object> {
      * @author Javier Castilla
      */
     public Object get(Object key, Object defaultValue) {
-        int index = hash(key, indexes);
+        int index = (key == null) ? 0 : hash(key, indexes);
 
         Integer itemIndex = indexes[index];
         if (itemIndex == null || itemIndex == -1) {
@@ -396,16 +400,16 @@ public class Dictionary implements Iterable<Object> {
      * given pair key - value to the dictionary and returns that value.
      *
      * @param key to search or add
-     * @param value to add if key not exists
+     * @param defaultValue to add if key not exists
      * @return the value of the found key or the value added
      * @author Javier Castilla
      */
-    public Object setDefault(Object key, Object value) {
+    public Object setDefault(Object key, Object defaultValue) {
         Object result = get(key, NONE);
 
         if (result == NONE) {
-            put(key, value);
-            return value;
+            put(key, defaultValue);
+            return defaultValue;
         }
 
         return key;
@@ -464,10 +468,14 @@ public class Dictionary implements Iterable<Object> {
      */
     public void update(Iterable<?> items) {
         for (Object item : items) {
-            if (item.getClass() != Tuple.class) {
-                throw new TypeError(
-                        "unhashable type", item
-                );
+            if (item == null || item.getClass() != Tuple.class) {
+                if (item != null) {
+                    throw new TypeError(
+                            "unhashable type", item
+                    );
+                } else {
+                    throw new TypeError("unhashable type: null");
+                }
             }
 
             Tuple entry = (Tuple) item;
@@ -502,7 +510,7 @@ public class Dictionary implements Iterable<Object> {
      * @author Elena Artiles
      */
     public boolean containsKey(Object key) {
-        Integer index = indexes[hash(key, indexes)];
+        Integer index = indexes[(key == null) ? 0 : hash(key, indexes)];
         return index != null && index != -1;
     }
 
@@ -583,8 +591,8 @@ public class Dictionary implements Iterable<Object> {
      *
      * @return all the dictionary's keys iterable
      */
-    public Iterable<Object> keys() {
-        return new DictionaryKeysIterable(this);
+    public DictionaryKeys keys() {
+        return new DictionaryKeys(this);
     }
 
     /**
@@ -596,8 +604,8 @@ public class Dictionary implements Iterable<Object> {
      * @return all the dictionary values iterable
      * @author Javier Castilla
      */
-    public Iterable<Object> values() {
-        return new DictionaryValuesIterable(this);
+    public DictionaryValues values() {
+        return new DictionaryValues(this);
     }
 
     /**
@@ -609,8 +617,8 @@ public class Dictionary implements Iterable<Object> {
      * @return all the dictionary pairs key - value (Tuple) iterable
      * @author Javier Castilla
      */
-    public Iterable<Tuple> items() {
-        return new DictionaryItemsIterable(this);
+    public DictionaryItems items() {
+        return new DictionaryItems(this);
     }
 
     /**
@@ -621,7 +629,7 @@ public class Dictionary implements Iterable<Object> {
      */
     @Override
     public Iterator<Object> iterator() {
-        return new DictionaryKeysIterable(this).iterator();
+        return new DictionaryKeys(this).iterator();
     }
 
     /**

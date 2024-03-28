@@ -7,7 +7,7 @@ import org.ulpgc.edp.model.dct.Dictionary;
  * The class creates a file with the time of execution.
  *
  * @author Javier Castilla
- * @version 22-03-2024
+ * @version 28-03-2024
  */
 public class TimesTesting {
     private static final String SEPARATOR = "\n=============================================\n";
@@ -35,7 +35,7 @@ public class TimesTesting {
             double ms = duration / 1e6;
             double sc = ms / 1000;
 
-            System.out.println(String.format("%d;%.3f;%.3f", size, ms, sc));
+            System.out.printf("%d;%.3f;%.3f%n", size, ms, sc);
             size <<= 1;
         }
         System.out.println(SEPARATOR);
@@ -67,7 +67,7 @@ public class TimesTesting {
             double ms = duration / 1e6;
             double sc = ms / 1000;
 
-            System.out.println(String.format("%d;%.3f;%.3f", size, ms, sc));
+            System.out.printf("%d;%.3f;%.3f%n", size, ms, sc);
             size <<= 1;
         }
         System.out.println(SEPARATOR);
@@ -99,7 +99,7 @@ public class TimesTesting {
             double ms = duration / 1e6;
             double sc = ms / 1000;
 
-            System.out.println(String.format("%d;%.3f;%.3f", size, ms, sc));
+            System.out.printf("%d;%.3f;%.3f%n", size, ms, sc);
             size <<= 1;
         }
         System.out.println(SEPARATOR);

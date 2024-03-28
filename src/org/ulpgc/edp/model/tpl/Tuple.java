@@ -1,7 +1,6 @@
 package org.ulpgc.edp.model.tpl;
 
 import org.ulpgc.edp.exceptions.IndexError;
-
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
@@ -11,7 +10,7 @@ import java.util.NoSuchElementException;
  * once it is created.
  *
  * @author Javier Castilla
- * @version 22-03-2024
+ * @version 28-03-2024
  */
 public class Tuple implements Iterable<Object> {
     private final Object[] items;
@@ -111,7 +110,7 @@ public class Tuple implements Iterable<Object> {
      */
     @Override
     public Iterator<Object> iterator() {
-        return new TupleItemsIterable(this).iterator();
+        return new TupleItemsIterator();
     }
 
     /**
@@ -161,7 +160,9 @@ public class Tuple implements Iterable<Object> {
         str.append("(");
 
         for (Object item : items) {
-            if (item.getClass() == String.class) {
+            if (item == null) {
+                str.append("null, ");
+            } else if (item.getClass() == String.class) {
                 str.append(String.format("'%s', ", item));
             } else {
                 str.append(item).append(", ");
@@ -175,5 +176,42 @@ public class Tuple implements Iterable<Object> {
         str.append(")");
 
         return str.toString();
+    }
+
+    /**
+     * Inner private class used to iterate over the tuple items.
+     */
+    private class TupleItemsIterator implements Iterator<Object> {
+        private int index;
+
+        public TupleItemsIterator() {
+            this.index = 0;
+        }
+
+        /**
+         * Override method which returns if there is such a next element.
+         *
+         * @return true if it has next element else false
+         */
+        @Override
+        public boolean hasNext() {
+            return index < size() && items()[index] != null;
+        }
+
+        /**
+         * Method that returns the item iterating upon the items array of the tuple.
+         *
+         * @return the next item
+         * @exception NoSuchElementException when there are no more items to iterate
+         */
+        @Override
+        public Object next() throws NoSuchElementException {
+            if (hasNext()) {
+                Object item = items()[index];
+                index++;
+                return item;
+            }
+            throw new NoSuchElementException();
+        }
     }
 }

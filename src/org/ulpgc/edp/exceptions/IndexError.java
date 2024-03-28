@@ -4,7 +4,7 @@ package org.ulpgc.edp.exceptions;
  * Exception class thrown when indexes are not correct.
  *
  * @author Javier Castilla
- * @version 22-03-2024
+ * @version 28-03-2024
  */
 public class IndexError extends IndexOutOfBoundsException {
 

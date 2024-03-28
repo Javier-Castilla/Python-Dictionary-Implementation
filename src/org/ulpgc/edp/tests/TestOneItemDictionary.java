@@ -10,7 +10,7 @@ import static org.junit.Assert.*;
  * Testing class for test a Dictionary with one element.
  *
  * @author Javier Castilla
- * @version 22-03-2024
+ * @version 28-03-2024
  */
 public class TestOneItemDictionary {
     private Dictionary dictionary;
@@ -223,7 +223,7 @@ public class TestOneItemDictionary {
      * Test about one item dictionary equals method.
      */
     @Test
-    public void testEquals1() {
+    public void testEquals() {
         Dictionary otherDictionary = new Dictionary();
         otherDictionary.put("1", 1);
         assertEquals("Wrong value", dictionary, otherDictionary);

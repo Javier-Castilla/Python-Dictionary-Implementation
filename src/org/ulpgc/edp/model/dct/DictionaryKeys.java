@@ -8,15 +8,16 @@ import java.util.NoSuchElementException;
  * This class represents a dynamic view of the dictionary keys.
  *
  * @author Javier Castilla
- * @version 22-03-2024
+ * @version 28-03-2024
  */
-class DictionaryKeysIterable implements Iterable<Object> {
-    private Dictionary dict;
+public class DictionaryKeys implements Iterable<Object> {
+    private final static Object NONE = "none";
+    private final Dictionary dict;
 
     /**
      * Constructor of the iterable class given a reference of a dictionary.
      */
-    DictionaryKeysIterable(Dictionary dict) {
+    DictionaryKeys(Dictionary dict) {
         this.dict = dict;
     }
 
@@ -30,23 +31,48 @@ class DictionaryKeysIterable implements Iterable<Object> {
     }
 
     /**
+     * Checks if given iterable and current dictionary items set are disjoint.
+     *
+     * @param other to compare
+     * @return true if are disjoint else false
+     */
+    public boolean isDisjoint(Iterable<?> other) {
+        for (Object item : other) {
+            if (dict.get(item, NONE) != NONE) return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Checks if given value is contained into dictionary keys.
+     *
+     * @param value to check
+     * @return true it given value is contained else false
+     */
+    public boolean contains(Object value) {
+        return dict.get(value, NONE) != NONE;
+    }
+
+    /**
      * Iterator method.
      *
      * @return an iterator
      */
     @Override
     public Iterator<Object> iterator() {
-        return new DictionaryKeys();
+        return new DictionaryKeysIterator();
     }
 
     /**
      * Private inner class used to iterate over the dictionary keys.
      */
-    private class DictionaryKeys implements Iterator<Object> {
-        private int index, length;
+    private class DictionaryKeysIterator implements Iterator<Object> {
+        private int index;
+        private final int length;
         private Node node;
 
-        private DictionaryKeys() {
+        private DictionaryKeysIterator() {
             this.index = 0;
             this.length = dict.entries().length;
             this.node = dict.entries()[index];
@@ -89,7 +115,7 @@ class DictionaryKeysIterable implements Iterable<Object> {
     public boolean equals(Object object) {
         if (this == object) return true;
         if (object == null || getClass() != object.getClass()) return false;
-        DictionaryKeysIterable other = (DictionaryKeysIterable) object;
+        org.ulpgc.edp.model.dct.DictionaryKeys other = (org.ulpgc.edp.model.dct.DictionaryKeys) object;
         if (size() != other.size()) return false;
         return toString().equals(other.toString());
     }
@@ -123,7 +149,7 @@ class DictionaryKeysIterable implements Iterable<Object> {
             if (key.getClass() == String.class) {
                 str.append(String.format("'%s', ", key));
             } else {
-                str.append(key + ", ");
+                str.append(key).append(", ");
             }
         }
 

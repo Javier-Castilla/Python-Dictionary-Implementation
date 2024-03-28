@@ -4,14 +4,13 @@ import org.junit.*;
 import org.ulpgc.edp.exceptions.*;
 import org.ulpgc.edp.model.dct.Dictionary;
 import org.ulpgc.edp.model.tpl.Tuple;
-
 import static org.junit.Assert.*;
 
 /**
  * Testing class for test an empty Dictionary.
  *
  * @author Javier Castilla
- * @version 22-03-2024
+ * @version 28-03-2024
  */
 public class TestEmptyDictionary {
     private Dictionary dictionary;
@@ -111,9 +110,8 @@ public class TestEmptyDictionary {
 
         );
 
-        assertTrue(
-                "True expected",
-                dictionary.equals(dictionaryCopy)
+        assertEquals("True expected",
+                dictionary, dictionaryCopy
         );
     }
 
@@ -123,10 +121,7 @@ public class TestEmptyDictionary {
     @Test
     public void testSetDefault() {
         Object value = dictionary.setDefault("Test");
-        assertEquals(
-                "Wrong value",
-                null, value
-        );
+        assertNull("Wrong value", value);
 
         dictionary.pop("Test");
 
@@ -141,7 +136,7 @@ public class TestEmptyDictionary {
      * Test about empty dictionary get method.
      */
     @Test
-    public void testGet1() {
+    public void testGet() {
         Object value = dictionary.get("Test", 100);
         assertEquals(
                 "Wrong value",
@@ -149,10 +144,7 @@ public class TestEmptyDictionary {
         );
 
         value = dictionary.get("Test");
-        assertEquals(
-                "Wrong value",
-                null, value
-        );
+        assertNull("Wrong value", value);
     }
 
     /**
@@ -209,20 +201,20 @@ public class TestEmptyDictionary {
     @Test
     public void testEquals() {
         Dictionary otherDictionary = new Dictionary();
-        assertTrue(
+        assertEquals(
                 "True expected after comparing dictionary copy",
-                dictionary.equals(otherDictionary)
+                dictionary, otherDictionary
         );
 
-        assertTrue(
+        assertEquals(
                 "True expected after comparing self dictionary",
-                dictionary.equals(dictionary)
+                dictionary, dictionary
         );
 
         otherDictionary.put(1, 1);
-        assertFalse(
+        assertNotEquals(
                 "False expected after comparing non equal dictionary",
-                dictionary.equals(otherDictionary)
+                dictionary, otherDictionary
         );
     }
 

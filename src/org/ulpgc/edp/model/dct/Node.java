@@ -8,7 +8,7 @@ import java.util.Objects;
  * hash table.
  *
  * @author Javier Castilla
- * @version 22-03-2024
+ * @version 28-03-2024
  */
 class Node {
     private Object key, value;
@@ -112,11 +112,7 @@ class Node {
      */
     @Override
     public String toString() {
-        StringBuilder str = new StringBuilder();
-        str.append(format(key) + ": ");
-        str.append(format(value));
-
-        return str.toString();
+        return format(key) + ": " + format(value);
     }
 
     /**
@@ -128,7 +124,7 @@ class Node {
      */
     private String format(Object item) {
         if (item == null) {
-            return "null";
+            return "None";
         } else if (item.getClass() == String.class) {
             return String.format("'%s'", item);
         } else {

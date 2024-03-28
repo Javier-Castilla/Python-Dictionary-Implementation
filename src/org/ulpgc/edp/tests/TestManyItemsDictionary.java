@@ -10,7 +10,7 @@ import static org.junit.Assert.*;
  * Testing class for test a Dictionary with many items.
  *
  * @author Javier Castilla
- * @version 22-03-2024
+ * @version 28-03-2024
  */
 public class TestManyItemsDictionary {
     private Dictionary dictionary;

@@ -4,7 +4,7 @@ package org.ulpgc.edp.exceptions;
  * Exception class thrown when an error related to given object type occurs.
  *
  * @author Javier Castilla
- * @version 22-03-2024
+ * @version 28-03-2024
  */
 public class TypeError extends RuntimeException {
 
@@ -16,29 +16,28 @@ public class TypeError extends RuntimeException {
     }
 
     /**
+     * Constructor with message needed.
+     */
+    public TypeError(String msg) {
+        super(msg);
+    }
+
+    /**
      * Constructor of the class given a message and a value.
      *
      * @param msg to show when the exception is thrown
-     * @param value that caused the exception
+     * @param type that caused the exception
      */
-    public TypeError(String msg, Object value) {
-        super(
-                (value.getClass() == String.class) ?
-                        String.format("%s: '%s'", msg, value.getClass())
-                        : String.format("%s: %s", msg, value.getClass())
-        );
+    public TypeError(String msg, Object type) {
+        super(String.format("%s: '%s'", msg, (type == null) ? null : type.getClass()));
     }
 
     /**
      * Constructor given the value that caused the exception. No message needed.
      *
-     * @param value that caused the exception
+     * @param type that caused the exception
      */
-    public TypeError(Object value) {
-        super(
-                (value.getClass() == String.class) ?
-                        String.format("'%s'", value.getClass())
-                        : value.toString()
-        );
+    public TypeError(Object type) {
+        super(String.format("'%s'", (type == null) ? null : type.getClass()));
     }
 }

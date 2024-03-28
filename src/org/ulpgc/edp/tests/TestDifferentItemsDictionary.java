@@ -10,7 +10,7 @@ import static org.junit.Assert.*;
  * Testing class for a dictionary containing several value types in it.
  *
  * @author Javier Castilla
- * @version 22-03-2024
+ * @version 28-03-2024
  */
 public class TestDifferentItemsDictionary {
     private Dictionary dictionary;
@@ -72,9 +72,9 @@ public class TestDifferentItemsDictionary {
                 "{'test': (1, 2, 3)}", dictionary.toString()
         );
 
-        assertTrue(
+        assertEquals(
                 "Dictionary inner tuple must be equal to previous tuple",
-                tuple.equals(dictionary.get("test"))
+                tuple, dictionary.get("test")
         );
     }
 

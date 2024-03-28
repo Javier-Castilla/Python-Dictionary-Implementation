@@ -27,7 +27,7 @@ public class Main {
         System.out.printf("\u001B[1;33m%s\u001B[m\n%n", URL);
 
         // Comment the lines below to make your own tests.
-        org.junit.runner.JUnitCore.main("org.ulpgc.edp.control.Main");
+        //org.junit.runner.JUnitCore.main("org.ulpgc.edp.control.Main");
 
         // =====================================================================
 
@@ -83,6 +83,9 @@ public class Main {
         //TimesTesting.doTestPut(2);
         //TimesTesting.doTestGet(2);
         //TimesTesting.doTestPop(2);
+
+        Tuple t = new Tuple(1, 2, 4, 5);
+        System.out.println();
     }
 
     /**
