@@ -83,9 +83,6 @@ public class Main {
         //TimesTesting.doTestPut(2);
         //TimesTesting.doTestGet(2);
         //TimesTesting.doTestPop(2);
-
-        Tuple t = new Tuple(1, 2, 4, 5);
-        System.out.println();
     }
 
     /**

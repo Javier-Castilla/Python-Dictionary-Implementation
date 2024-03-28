@@ -208,15 +208,10 @@ public class Dictionary implements Iterable<Object> {
      * @author Javier Castilla
      */
     public void put(Object key, Object value) {
-        if (key != null) {
-            if (
-                    key instanceof Collection
-                            || key.getClass().isArray()
-                            || key.getClass() == Dictionary.class
-            ) {
-                throw new TypeError("unhashable type: null");
-            }
-        }
+        if (key != null && (key instanceof Collection
+                || key.getClass().isArray()
+                || key.getClass() == Dictionary.class)
+        ) throw new TypeError("unhashable type", key);
 
         addEntries(key, value, this.indexes, this.items);
     }
@@ -468,14 +463,8 @@ public class Dictionary implements Iterable<Object> {
      */
     public void update(Iterable<?> items) {
         for (Object item : items) {
-            if (item == null || item.getClass() != Tuple.class) {
-                if (item != null) {
-                    throw new TypeError(
-                            "unhashable type", item
-                    );
-                } else {
-                    throw new TypeError("unhashable type: null");
-                }
+            if (item != null && item.getClass() != Tuple.class) {
+                throw new TypeError("unhashable type", item);
             }
 
             Tuple entry = (Tuple) item;
