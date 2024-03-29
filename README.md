@@ -17,11 +17,11 @@ import org.ulpgc.edp.model.dct.*;
 public static void main(String[] args) {
         // Creates an empty dictionary
         Dictionary myDict = new Dictionary();
-        
+
         // Creates a dictionary via other dictionary
         Dictionary otherDict = new Dictionary(myDict);
         System.out.println(anotherDict.equals(myDict)); // Will print true
-        
+
         // Cereates a dictionary with dynamic number of arguments
         Dictionary otherDict2 = new Dictionary(1, 2, 3, 4);
         System.out.println(otherDict2); // Will print {1: 2, 3: 4}
@@ -32,7 +32,7 @@ public static void main(String[] args) {
 
         // Get an element from the dictionary
         System.out.println(myDict.get("key1")); // Will print 1
-}
+        }
 ```
 
 ## Tuple
@@ -51,11 +51,11 @@ public static void main(String[] args) {
 
         // Get an element from the tuple (via index)
         System.out.println(myTuple.get(0)); // Will print 1
-        
+
         // Create a tuple via iterable object
         Tuple otherTuple = new Tuple(myTuple);
         System.out.println(otherTuple.equals(myTuple));  // Will print true
-}
+        }
 ```
 
 For a more real example, see Main Class contained in org.ulpgc.edp.control package.
@@ -66,7 +66,7 @@ To see full documentation of both classes visit the [Official Documentation Webs
 
 ## Authors
 
-Developed by **Javier Castilla** with help of
+Developed by **Javier Castilla** with little help of
 - David Miranda
 - Esteban Trujillo
 - Elena Artiles

@@ -34,28 +34,30 @@ public class Main {
         // Real example.
         // Get passed grades from specific subject and the students names.
         Dictionary subjects = new Dictionary(
-                new Tuple("40953",
-                new Tuple("Fundamentos de Programación 1", 1, 6)),
-                new Tuple("12345",
-                new Tuple("Matemáticas", 2, 9))
+                "40953",
+                new Tuple("Fundamentos de Programación 1", 1, 6),
+                "12345",
+                new Tuple("Matemáticas", 2, 9)
         );
+
         Dictionary students = new Dictionary(
-                new Tuple("40444444X", "Pepíto Grillo"),
-                new Tuple("40555555Y", "María López"),
-                new Tuple("40666666M", "Javier Castilla")
+                "40444444X", "Pepíto Grillo",
+                "40555555Y", "María López",
+                "40666666M", "Javier Castilla"
         );
+
         Dictionary grades = new Dictionary(
-                new Tuple("40953",
+                "40953",
                 new Dictionary(
-                        new Tuple("40444444X", 7.5),
-                        new Tuple("40555555Y", 4.0)
-                )),
-                new Tuple("12345",
+                        "40444444X", 7.5,
+                        "40555555Y", 4.0
+                ),
+                "12345",
                 new Dictionary(
-                        new Tuple("40444444X", 5.5),
-                        new Tuple("40555555Y", 8.0),
-                        new Tuple("40666666M", 7.0)
-                ))
+                        "40444444X", 5.5,
+                        "40555555Y", 8.0,
+                        "40666666M", 7.0
+                )
         );
 
         System.out.println("REAL EXAMPLE OF THE USE OF DICTIONARIES"

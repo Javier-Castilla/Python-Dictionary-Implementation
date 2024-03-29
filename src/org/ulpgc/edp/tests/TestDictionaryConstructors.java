@@ -69,9 +69,7 @@ public class TestDictionaryConstructors {
         }
 
         Dictionary dictionary = new Dictionary(
-                new Tuple(0, 1),
-                new Tuple(2, 3),
-                new Tuple(4, 5)
+                0, 1, 2, 3, 4, 5
         );
 
         assertEquals(

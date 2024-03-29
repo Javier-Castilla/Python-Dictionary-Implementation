@@ -1,6 +1,7 @@
 package org.ulpgc.edp.model.tpl;
 
 import org.ulpgc.edp.exceptions.IndexError;
+import org.ulpgc.edp.flags.Flags;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
@@ -13,6 +14,7 @@ import java.util.NoSuchElementException;
  * @version 28-03-2024
  */
 public class Tuple implements Iterable<Object> {
+    private static final Flags NONE = Flags.NONE;
     private final Object[] items;
     private int size;
 
@@ -47,7 +49,7 @@ public class Tuple implements Iterable<Object> {
      * Constructor given an iterable to build the new tuple. The elements
      * contained into that iterable must be tuples.
      *
-     * @param items
+     * @param items to iterate and add
      */
     public Tuple(Iterable<?> items) {
         this.items = new Object[getSuitableLength(items)];
@@ -195,14 +197,14 @@ public class Tuple implements Iterable<Object> {
          */
         @Override
         public boolean hasNext() {
-            return index < size() && items()[index] != null;
+            return index < size() && items()[index] != NONE;
         }
 
         /**
          * Method that returns the item iterating upon the items array of the tuple.
          *
          * @return the next item
-         * @exception NoSuchElementException when there are no more items to iterate
+         * @exception NoSuchElementException if there are no more items to iterate
          */
         @Override
         public Object next() throws NoSuchElementException {

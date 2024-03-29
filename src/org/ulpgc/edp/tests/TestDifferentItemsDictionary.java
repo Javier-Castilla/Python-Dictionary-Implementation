@@ -115,7 +115,7 @@ public class TestDifferentItemsDictionary {
     public void testSeveralItemsDictionary3() {
         Tuple otherTuple = new Tuple(
                 new Dictionary(
-                        new Tuple(1, 2), new Tuple(3, 4)
+                        1, 2, 3, 4
                 ), "test"
         );
         dictionary.put("test", otherTuple);

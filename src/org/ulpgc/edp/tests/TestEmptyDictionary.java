@@ -57,7 +57,7 @@ public class TestEmptyDictionary {
         value = dictionary.setDefault("1");
         assertEquals(
                 "Wrong value after inserting new pair into empty dictionary",
-                "1", value
+                1, value
         );
 
         assertTrue(

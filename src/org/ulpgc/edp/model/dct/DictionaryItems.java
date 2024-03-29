@@ -1,8 +1,10 @@
 package org.ulpgc.edp.model.dct;
 
+import org.ulpgc.edp.flags.Flags;
 import org.ulpgc.edp.model.tpl.*;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
+import java.util.Objects;
 
 /**
  * Iterable class used to iterate over the dictionary items.
@@ -12,14 +14,17 @@ import java.util.NoSuchElementException;
  * @version 28-03-2024
  */
 public class DictionaryItems implements Iterable<Tuple> {
-    private final static Object NONE = "none";
+    private static final int REMOVED = -1;
+    private static final Flags NONE = Flags.NONE;
     private final Dictionary dict;
+    private boolean isReversed;
 
     /**
      * Constructor of the iterable class given the reference of the dictionary.
      */
     DictionaryItems(Dictionary dict) {
         this.dict = dict;
+        this.isReversed = false;
     }
 
     /**
@@ -33,6 +38,7 @@ public class DictionaryItems implements Iterable<Tuple> {
 
     /**
      * Checks if given iterable and current dictionary items set are disjoint.
+     * Given values must be a Tuples, otherwise result will always be false.
      *
      * @param other to compare
      * @return true if are disjoint else false
@@ -58,7 +64,7 @@ public class DictionaryItems implements Iterable<Tuple> {
      * @return true it given tuple is contained else false
      */
     public boolean contains(Tuple tuple) {
-        if (tuple.size() != 2) return false;
+        if (tuple == null || tuple.size() != 2) return false;
         Object value = dict.get(tuple.get(0), NONE);
         Object otherValue = tuple.get(1);
         return compareEquality(value, otherValue);
@@ -67,14 +73,31 @@ public class DictionaryItems implements Iterable<Tuple> {
     /**
      * Private method that checks equality between two given values.
      *
-     * @param value
-     * @param otherValue
+     * @param value to compare
+     * @param otherValue to compare
      * @return true if equals else false
      */
     private boolean compareEquality(Object value, Object otherValue) {
-        return value == otherValue || (
-                value != null && otherValue != null
-                        && value.equals(otherValue));
+        return value != NONE && (Objects.equals(value, otherValue));
+    }
+
+    /**
+     * Tells if the current object is reversed or not.
+     *
+     * @return true if reversed else false
+     */
+    public boolean isReversed() {
+        return isReversed;
+    }
+
+    /**
+     * Reverse the current iterable object.
+     *
+     * @return this object
+     */
+    public DictionaryItems reverse() {
+        this.isReversed = !isReversed;
+        return this;
     }
 
     /**
@@ -84,7 +107,8 @@ public class DictionaryItems implements Iterable<Tuple> {
      */
     @Override
     public Iterator<Tuple> iterator() {
-        return new DictionaryItemsIterator();
+        return (isReversed) ? new DictionaryItemsReversedIterator()
+                : new DictionaryItemsIterator();
     }
 
     /**
@@ -107,7 +131,7 @@ public class DictionaryItems implements Iterable<Tuple> {
          */
         @Override
         public boolean hasNext() {
-            return index < length && node != null && node.index() != -1;
+            return index < length && node != null && node.index() != REMOVED;
 
         }
 
@@ -121,6 +145,52 @@ public class DictionaryItems implements Iterable<Tuple> {
             if (hasNext()) {
                 Tuple returnedItems = new Tuple(node.key(), node.value());
                 node = dict.entries()[++index];
+                return returnedItems;
+            }
+            throw new NoSuchElementException();
+        }
+    }
+
+    /**
+     * Private inner class used to reverse iterate over the dictionary items.
+     */
+    private class DictionaryItemsReversedIterator implements Iterator<Tuple> {
+        private int index;
+        private Node node;
+
+        private DictionaryItemsReversedIterator() {
+            this.index = dict.getLastIndex();
+            this.node = dict.entries()[index];
+        }
+
+        /**
+         * Override method which returns if there is such a next element.
+         *
+         * @return true if it has next element else false
+         */
+        @Override
+        public boolean hasNext() {
+            return index >= 0 && node != null && node.index() != REMOVED;
+
+        }
+
+        /**
+         * Method that returns the entry iterating upon the items array.
+         *
+         * @return the next pair
+         */
+        @Override
+        public Tuple next() {
+            if (hasNext()) {
+                Tuple returnedItems = new Tuple(node.key(), node.value());
+                index--;
+
+                if (index < 0) {
+                    node = null;
+                } else {
+                    node = dict.entries()[index];
+                }
+
                 return returnedItems;
             }
             throw new NoSuchElementException();
