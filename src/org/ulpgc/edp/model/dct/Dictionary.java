@@ -26,6 +26,9 @@ import java.util.NoSuchElementException;
  * @author Esteban Trujillo
  * @author Elena Artiles
  * @see Tuple
+ * @see DictionaryKeys
+ * @see DictionaryValues
+ * @see DictionaryItems
  * @version 28-03-2024
  */
 public class Dictionary implements Iterable<Object> {
@@ -251,7 +254,7 @@ public class Dictionary implements Iterable<Object> {
      * <u>
      *     {@link Collection}
      *     {@link Map}
-     *     {@link Object[]}
+     *     {@link java.util.Arrays}
      *     {@link Dictionary}
      * </u>
      *
@@ -576,6 +579,7 @@ public class Dictionary implements Iterable<Object> {
      * Creates a DictionaryKeys view and reverse its content.
      *
      * @return a DictionaryKeys view reversed
+     * @see DictionaryKeys
      * @author Javier Castilla
      */
     public DictionaryKeys reverse() {
@@ -659,6 +663,8 @@ public class Dictionary implements Iterable<Object> {
      * Order of insertion is preserved.
      *
      * @return all the dictionary keys iterable
+     * @see DictionaryKeys
+     * @author Javier Castilla
      */
     public DictionaryKeys keys() {
         return new DictionaryKeys(this);
@@ -671,6 +677,7 @@ public class Dictionary implements Iterable<Object> {
      * insertion is preserved.
      *
      * @return all the dictionary values iterable
+     * @see DictionaryValues
      * @author Javier Castilla
      */
     public DictionaryValues values() {
@@ -684,6 +691,7 @@ public class Dictionary implements Iterable<Object> {
      * Order of insertion is preserved.
      *
      * @return all the dictionary pairs key - value (Tuple) iterable
+     * @see DictionaryItems
      * @author Javier Castilla
      */
     public DictionaryItems items() {
@@ -694,6 +702,7 @@ public class Dictionary implements Iterable<Object> {
      * Iterator method of the dictionary object.
      *
      * @return a dictionary keys iterator
+     * @see DictionaryKeys
      * @author Javier Castilla
      */
     @Override

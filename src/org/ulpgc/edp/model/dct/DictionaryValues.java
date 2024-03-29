@@ -9,6 +9,7 @@ import java.util.Objects;
  * This class represents a dynamic view of the dictionary values.
  *
  * @author Javier Castilla
+ * @see Dictionary
  * @version 28-03-2024
  */
 public class DictionaryValues implements Iterable<Object> {

@@ -11,6 +11,8 @@ import java.util.Objects;
  * This class represents a dynamic view of dictionary items.
  *
  * @author Javier Castilla
+ * @see Dictionary
+ * @see Tuple
  * @version 28-03-2024
  */
 public class DictionaryItems implements Iterable<Tuple> {

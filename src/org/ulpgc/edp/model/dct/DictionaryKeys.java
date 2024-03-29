@@ -9,6 +9,7 @@ import java.util.NoSuchElementException;
  * This class represents a dynamic view of the dictionary keys.
  *
  * @author Javier Castilla
+ * @see Dictionary
  * @version 28-03-2024
  */
 public class DictionaryKeys implements Iterable<Object> {
