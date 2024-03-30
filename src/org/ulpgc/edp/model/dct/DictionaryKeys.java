@@ -186,7 +186,7 @@ public class DictionaryKeys implements Iterable<Object> {
     public boolean equals(Object object) {
         if (this == object) return true;
         if (object == null || getClass() != object.getClass()) return false;
-        org.ulpgc.edp.model.dct.DictionaryKeys other = (org.ulpgc.edp.model.dct.DictionaryKeys) object;
+        DictionaryKeys other = (DictionaryKeys) object;
         if (size() != other.size()) return false;
         return toString().equals(other.toString());
     }

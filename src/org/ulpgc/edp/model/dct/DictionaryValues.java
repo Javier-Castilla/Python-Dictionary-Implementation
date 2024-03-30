@@ -177,7 +177,7 @@ public class DictionaryValues implements Iterable<Object> {
     public boolean equals(Object object) {
         if (this == object) return true;
         if (object == null || getClass() != object.getClass()) return false;
-        org.ulpgc.edp.model.dct.DictionaryValues other = (org.ulpgc.edp.model.dct.DictionaryValues) object;
+        DictionaryValues other = (DictionaryValues) object;
         if (size() != other.size()) return false;
         return toString().equals(other.toString());
     }

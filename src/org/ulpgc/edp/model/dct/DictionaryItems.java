@@ -210,7 +210,7 @@ public class DictionaryItems implements Iterable<Tuple> {
     public boolean equals(Object object) {
         if (this == object) return true;
         if (object == null || getClass() != object.getClass()) return false;
-        org.ulpgc.edp.model.dct.DictionaryItems other = (org.ulpgc.edp.model.dct.DictionaryItems) object;
+        DictionaryItems other = (DictionaryItems) object;
         if (size() != other.size()) return false;
         return toString().equals(other.toString());
     }
