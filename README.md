@@ -62,7 +62,7 @@ For a more real example, see Main Class contained in org.ulpgc.edp.control packa
 
 ## Documentation
 
-To see full documentation of both classes visit the [Official Documentation Website](https://javier-castilla.github.io/Java-own-Python-dictionary-implementation-DOCUMENTATION/)
+To see full documentation of both classes visit the [Official Documentation Website]([https://javier-castilla.github.io/Java-own-Python-dictionary-implementation-DOCUMENTATION/](https://javier-castilla.github.io/Python-Dictionary-Implementation/))
 
 ## Authors
 
